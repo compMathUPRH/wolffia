@@ -1,0 +1,86 @@
+ATOM      1 C3   SDS A   1       4.449   0.484  -0.562  0.00  0.00           C
+ATOM      2 C3   SDS A   1       5.852  -0.266  -0.146  0.00  0.00           C
+ATOM      3 C3   SDS A   1       3.136  -0.256   0.117  0.00  0.00           C
+ATOM      4 C3   SDS A   1       7.152   0.423  -0.883  0.00  0.00           C
+ATOM      5 C3   SDS A   1       8.557  -0.296  -0.415  0.00  0.00           C
+ATOM      6 C3   SDS A   1       9.854   0.371  -1.178  0.00  0.00           C
+ATOM      7 C3   SDS A   1      11.264  -0.303  -0.662  0.00  0.00           C
+ATOM      8 C3   SDS A   1      12.561   0.369  -1.422  0.00  0.00           C
+ATOM      9 C3   SDS A   1      13.975  -0.266  -0.868  0.00  0.00           C
+ATOM     10 C3   SDS A   1      15.271   0.420  -1.614  0.00  0.00           C
+ATOM     11 C3   SDS A   1      16.691  -0.186  -1.047  0.00  0.00           C
+ATOM     12 C3   SDS A   1      17.988   0.506  -1.783  0.00  0.00           C
+ATOM     13 O2   SDS A   1      -0.898   1.012  -0.274  0.00  0.00           O
+ATOM     14 O2   SDS A   1      -0.041  -1.523  -0.806  0.00  0.00           O
+ATOM     15 O3   SDS A   1       1.828   0.460  -0.248  0.00  0.00           O
+ATOM     16 O3   SDS A   1       0.129  -0.529   1.727  0.00  0.00           O
+ATOM     17 Sac  SDS A   1       0.262  -0.142   0.100  0.00  0.00           S
+ATOM     18 H    SDS A   1       4.335   0.478  -1.724  0.00  0.00           H
+ATOM     19 H    SDS A   1       4.486   1.598  -0.214  0.00  0.00           H
+ATOM     20 H    SDS A   1       5.791  -1.394  -0.443  0.00  0.00           H
+ATOM     21 H    SDS A   1       5.990  -0.212   1.013  0.00  0.00           H
+ATOM     22 H    SDS A   1       3.107  -1.376  -0.241  0.00  0.00           H
+ATOM     23 H    SDS A   1       3.278  -0.284   1.284  0.00  0.00           H
+ATOM     24 H    SDS A   1       7.035   0.331  -2.041  0.00  0.00           H
+ATOM     25 H    SDS A   1       7.191   1.560  -0.618  0.00  0.00           H
+ATOM     26 H    SDS A   1       8.685  -0.183   0.740  0.00  0.00           H
+ATOM     27 H    SDS A   1       8.509  -1.438  -0.658  0.00  0.00           H
+ATOM     28 H    SDS A   1       9.875   1.521  -0.974  0.00  0.00           H
+ATOM     29 H    SDS A   1       9.748   0.216  -2.331  0.00  0.00           H
+ATOM     30 H    SDS A   1      11.245  -1.452  -0.870  0.00  0.00           H
+ATOM     31 H    SDS A   1      11.368  -0.151   0.491  0.00  0.00           H
+ATOM     32 H    SDS A   1      12.476   0.182  -2.572  0.00  0.00           H
+ATOM     33 H    SDS A   1      12.558   1.523  -1.248  0.00  0.00           H
+ATOM     34 H    SDS A   1      13.983  -1.418  -1.055  0.00  0.00           H
+ATOM     35 H    SDS A   1      14.053  -0.091   0.284  0.00  0.00           H
+ATOM     36 H    SDS A   1      15.249   1.576  -1.446  0.00  0.00           H
+ATOM     37 H    SDS A   1      15.201   0.229  -2.765  0.00  0.00           H
+ATOM     38 H    SDS A   1      16.718  -1.341  -1.223  0.00  0.00           H
+ATOM     39 H    SDS A   1      16.758  -0.003   0.105  0.00  0.00           H
+ATOM     40 H    SDS A   1      18.978   0.056  -1.356  0.00  0.00           H
+ATOM     41 H    SDS A   1      17.988   1.660  -1.597  0.00  0.00           H
+ATOM     42 H    SDS A   1      17.951   0.309  -2.933  0.00  0.00           H
+ATOM     43 Na   SDS A   1      -2.849  -1.332   0.777  0.00  0.00          Na
+ENDMDL
+CONECT    1   19    2    3   18
+CONECT    2    1    4   21   20
+CONECT    3    1   23   22   15
+CONECT    4   24   25    2    5
+CONECT    5   26   27    4    6
+CONECT    6   29   28    5    7
+CONECT    7    8   30    6   31
+CONECT    8   32    9   33    7
+CONECT    9    8   10   35   34
+CONECT   10    9   11   36   37
+CONECT   11   10   12   38   39
+CONECT   12   40   41   42   11
+CONECT   13   17
+CONECT   14   17
+CONECT   15   17    3
+CONECT   16   17
+CONECT   17   16   13   14   15
+CONECT   18    1
+CONECT   19    1
+CONECT   20    2
+CONECT   21    2
+CONECT   22    3
+CONECT   23    3
+CONECT   24    4
+CONECT   25    4
+CONECT   26    5
+CONECT   27    5
+CONECT   28    6
+CONECT   29    6
+CONECT   30    7
+CONECT   31    7
+CONECT   32    8
+CONECT   33    8
+CONECT   34    9
+CONECT   35    9
+CONECT   36   10
+CONECT   37   10
+CONECT   38   11
+CONECT   39   11
+CONECT   40   12
+CONECT   41   12
+CONECT   42   12

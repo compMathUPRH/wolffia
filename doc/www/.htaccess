@@ -1,0 +1,5 @@
+AuthName "Wolffia web page"
+AuthType Basic
+AuthUserFile /home/compsci/admin/.htpasswd
+require valid-user
+

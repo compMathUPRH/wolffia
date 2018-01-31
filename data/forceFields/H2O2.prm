@@ -1,0 +1,19 @@
+*>>>>>> CHARMM topology for WATER <<<<<<<<<<
+*> VdW for OT, Angles, O-O bond from:
+*> De Gioia L, Fantucci P: A molecular dynamics investigation of the
+*> resting, hydrogen peroxide-bound and compound II forms of cy-
+*> tochrome C peroxidase and Artromyces ramosus peroxidase. J. Mol.
+*> Struct. THEOCHEM 1999, 469:41–53.
+
+NONBONDED
+HT     0.000000  -0.046000     0.224500 ! ALLOW WAT
+OT     0.000000  -0.621665     1.58276 ! ALLOW   WAT
+
+BONDS
+HT   HT      0.000     1.5139 ! ALLOW WAT
+OT   HT    450.000     0.9572 ! ALLOW   WAT
+OT   OT     50.000     1.4 ! ALLOW   WAT
+
+ANGLES
+HT   OT   HT     30.000   95.0 ! ALLOW WAT
+

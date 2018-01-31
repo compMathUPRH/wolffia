@@ -1,0 +1,69 @@
+PSF
+
+       1 !NTITLE
+ REMARKS 
+
+      22 !NATOM
+       1 MAIN A    LIG   C3  C3       +0.103670   12.0107           0
+       2 MAIN A    LIG   C3  C5       +0.085116   12.0107           0
+       3 MAIN A    LIG   C3  C1       +0.113285   12.0107           0
+       4 MAIN A    LIG   C3  C4       +0.073024   12.0107           0
+       5 MAIN A    LIG   C3  C        +0.174404   12.0107           0
+       6 MAIN A    LIG   HC  H1       +0.118694    1.0079           0
+       7 MAIN A    LIG   HC  H1       +0.118694    1.0079           0
+       8 MAIN A    LIG   HO  H3       +0.058370    1.0079           0
+       9 MAIN A    LIG   O3  O        -0.834000   15.9994           0
+      10 MAIN A    LIG   C3  C2       +0.117395   12.0107           0
+      11 MAIN A    LIG   O3  O1       -0.341495   15.9994           0
+      12 MAIN A    LIG   N3  N        -0.321122   14.0067           0
+      13 MAIN A    LIG   HC  H7       +0.065016    1.0079           0
+      14 MAIN A    LIG   HC  H2       +0.092457    1.0079           0
+      15 MAIN A    LIG   HC  H        +0.053487    1.0079           0
+      16 MAIN A    LIG   HC  H4       +0.064676    1.0079           0
+      17 MAIN A    LIG   HC  H6       +0.065016    1.0079           0
+      18 MAIN A    LIG   HC  H5       +0.063726    1.0079           0
+      19 MAIN A    LIG   HC  H5       +0.063726    1.0079           0
+      20 MAIN A    ELT    O  O        -0.834000   15.9994           0
+      21 MAIN A    LIG   HO  HO       +0.209508    1.0079           0
+      22 MAIN A    ELT    O  O        -0.834000   15.9994           0
+
+      22 !NBOND
+       1       9       1      10       1       2       1      14
+       2      12       2       3       2      15       3      22
+       3      11       3      16       4       5       4      10
+       4      11       4      17       5      18       5      19
+       5      20       6      12       7      12       8       9
+      10      13      20      21
+
+      39 !NTHETA: angles
+       9       1      10       9       1      14      10       1      14
+       2       1       9       2       1      10       2       1      14
+      12       2      15       1       2      12       1       2       3
+       1       2      15       3       2      12       3       2      15
+       2       3      22       2       3      11       2       3      16
+      11       3      22      11       3      16      16       3      22
+       5       4      10       5       4      11       5       4      17
+      10       4      11      10       4      17      11       4      17
+      18       5      19      18       5      20      19       5      20
+       4       5      18       4       5      19       4       5      20
+       1       9       8       1      10       4       1      10      13
+       4      10      13       3      11       4       2      12       6
+       2      12       7       6      12       7       5      20      21
+
+
+       0 !NPHI: dihedrals
+
+
+       0 !NIMPHI: impropers
+
+
+       0 !NDON: donors
+
+
+       0 !NACC: acceptors
+
+
+       0 !NNB
+
+
+       0 !NGRP

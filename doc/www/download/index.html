@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Title      : Aquaria
+Version    : 1.0
+Released   : 20070602
+Description: A two-column fixed-width template. Suitable for blogs and small business websites.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Wolffia</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="../default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="menu">
+	<ul>
+		<li><a href="../" accesskey="1" title="">Home</a></li>
+		<li><a href="../about.html" accesskey="2" title="">About</a></li>
+		<li class="active"><a href="./" accesskey="3" title="">Download</a></li>
+		<li><a href="http://jaguey.uprh.edu/bugzilla3/buglist.cgi?quicksearch=wolffia" accesskey="4" title="">Bugs</a></li>
+		<li><a href="#" accesskey="5" title="">Documentation</a></li>
+		<li><a href="../credits.html" accesskey="6" title="">Credits</a></li>
+	</ul>
+</div>
+<!-- end #menu -->
+<div id="header">
+	<div id="logo">
+		<h1><a href="#">Wolffia</a></h1>
+		<h2><a href="http://jaguey.uprh.edu/compsci/wolffia/">Computational Science Group<br>UPR at Humacao</a></h2>
+	</div>
+	<div id="banner"><a href="#"><h1>Wolffia</h1><br>A graphical user interface to setup, execute, monitor and analyze molecular dynamics simulations.</div>
+</a></div>
+<!-- end #header -->
+<div id="page">
+	<div id="content">
+		<div class="post">
+			<h1 class="title">Downloads</h1>
+			<div class="story">
+				<h2>Requisites</h2>
+				<p><strong>Wolffia</strong> rqeuires the following libraries and/or applications
+				(descriptions are quotes from the products' web sites):</p>
+				<ul>
+					<li><a href="http://www.python.org/">Python 2.7.1</a> programming language interpreter.
+					<li><a href="http://www.riverbankcomputing.com/software/pyqt/intro">PyQt v4</a> set of Python bindings for Nokia's Qt application framework and the
+					<a href="http://qt.nokia.com/products/">Qt 4</a> libraries.
+					<li><a href="http://networkx.lanl.gov/">NetworkX v4.1.6</a> a Python language software 
+					package for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
+					<li><a href="http://openbabel.org/docs/2.3.1/UseTheLibrary/Python_Pybel.html">PyBel</a> functions and classes that make it simpler to use the Open Babel
+					<li><a href="http://openbabel.org/">Openbabel v2.3.1</a> chemical toolbox.
+					<li><a href="http://pyqwt.sourceforge.net/">PyQwt</a> - Qt Widgets for Technical Applications (v6.0).
+					<li><a href="http://pyopengl.sourceforge.net/">PyOpenGL 3.x</a>, a Python binding to OpenGL and related APIs.
+					<li><a href="http://www.ks.uiuc.edu/Research/namd/">NAMD</a>, a parallel molecular dynamics code designed for high-performance simulation of large biomolecular systems.
+				</ul>
+				<p>Please don't get scared by the long list.  Most of the avove libraries are part of the LINUX distributions or are
+				included in a single Windows installation package.
+
+				<h2>Hardware and Operating systems</h2>
+				<p>Wolffia has been tested using the following combinations of hardware/OS:
+	<ul>
+		<li>Ubuntu 12.04, Intel Core 2, 2GB RAM.
+		<li>OpenSUSE, Intel Core 2, 2GB RAM.
+		<li>Windows 7 Home and WIndows 7 Professional, Intel Core 2, 4GB RAM.
+		<li>MacOS 10.6, Mac Mini, XXXX.
+	</ul>
+
+	<h2>Installation</h2>
+		<p>The current version of Wolffia uses NAMD to run the simulations.  You may build
+		mixtures, edit force fields and other configuraton parameters and save all necessary configuration files
+		without it.
+		But if you plan to run simulations on the local computer you need NAMD.  Therefore, for all installation
+		options you should <a href="http://www.ks.uiuc.edu/Development/Download/download.cgi?PackageName=NAMD" target=new>download and install NAMD</a>.  You should install the multicore version
+		if the option is available for your platform.  Please make sure that the executable <tt>namd2</tt> (or a link to it) is
+		in your PATH environment variable.</p>
+
+	<h3>Ubuntu 12.04:</h3>
+		<p><ol>
+		<li> Download the <a href="./debian/wolffia_0.2-1_all.deb">wolffia_0.2-1_all.deb</a> debian package.
+		<li> Open a terminal and change to the folder in which the debian packaged was copied.
+		<li> In an account with administrator priviledges run 
+			<br><center><tt>sudo dpkg -i ./wolffia_0.2-1_all.deb</tt></center>
+		</ol>
+		<p>There are debian package managers with graphical user interfaces
+		that you can use instead <tt>dpkg</tt>.  </p>
+
+		<p>This debian package should work fine with
+		other debian-based LINUX distributions but we have not tested them yet.</p>
+
+		<p>You may remove the package executing <tt>sudo dpkg -r wolffia</tt>.</p>
+
+	<h3>Other Linux distributions:</h3>
+		<p><ol>
+		<li> Install the requisite packages listed above.
+		<li> Download <a href="./linux/wolffia0_2.tgz">wolffia0_2.tgz</a>.
+		<li> Open a terminal and change to the folder in which the tgz package was copied.
+		<li> In an account with administrator priviledges run 
+			<br><tt>tar -xzf wolffia0_2InstallScript<br>
+			ln -s /usr/share/wolffia/wolffia.py /usr/local/bin/wolffia</tt><br>
+		This step will 
+			<ul>
+			<li> copy the code to the directory <tt>/usr/share/wolffia</tt>.
+			<li> create a link in order to be able to run wolffia by entering the command <tt>wolffia</tt>.
+			</ul>
+		
+		</ol>
+
+ 	<h3>Windows 7:</h3>
+		<p><ol>
+		<li> Download and install the <a href="http://ftp.ntua.gr/pub/devel/pythonxy/Python(x,y)-2.7.2.2.exe">
+		Python(x,y) scientific and engineering development software</a>. The default installation options don't include
+		some of Wolffia's requisites.  To make sure everything needed gets installed we suggest selecting all python packages
+		for installation.  Extra applications are not needed.
+		<li> Download and install <a href="http://sourceforge.net/projects/openbabel/files/openbabel/2.3.1/OpenBabel2.3.1_Windows_Installer.exe/download">OpenBabel</a> and <a href="http://sourceforge.net/projects/openbabel/files/openbabel-python/1.7/openbabel-python-1.7.py27.exe/download">PyBabel</a>.
+		<li> Download and execute <! a href="./windows/wolffia0_2Install.exe">Wolffia's installation wizard</a>
+		(or you may download, decompress and install <a href="./windows/wolffia0_2.zip">wolffia0_2.zip</a> manually).
+		</ol>
+	<h3>MacOS 10.06:</h3>
+		<p><i>Macintosheros</i> will have to follow some extra steps. But all the installations
+		are straightforward. We provide direct links to the installation images for Mac.</p>
+		<ol>
+		<li> <a href="http://www.python.org/ftp/python/2.7.3/python-2.7.3-macosx10.6.dmg">Python 2.7</a>
+		<li> <a href="http://www.riverbankcomputing.com/static/Downloads/PyQt4/PyQt-mac-gpl-4.9.1.tar.gz">PyQt</a>
+		<li><a href="http://pypi.python.org/packages/2.7/n/networkx/networkx-1.6-py2.7.egg#md5=846f86c5af02c61ad6ed3ba3bcc3753d">Networkx 1.6</a>
+		<li> <a href="http://sourceforge.net/projects/openbabel/files/openbabel/2.3.1/OpenBabel-2.3.1.mac.zip/download">PyBel</a>
+		<li> <a href="ftp://ftp.trolltech.com/qt/source/qt-mac-opensource-4.5.2.dmg">PyQwt</a>
+		<li> <a href="http://pypi.python.org/pypi/PyOpenGL/3.0.2a5">PyOpenGL</a>
+		<li> <a href="http://www.ks.uiuc.edu/Development/Download/download.cgi?UserID=&AccessCode=&ArchiveID=1256">NAMD</a>
+		<li> And finally <a href="./downloads/mac">Wolffia</a>
+		</ol>
+
+			</div>
+		</div>
+	</div>
+	<!-- end #content -->
+	<div id="sidebar">
+		<a href="../images/buildTab.png"><img src="../images/buildTab.png" width=225></a>
+		<a href="../images/forceTab.png"><img src="../images/forceTab.png" width=225></a>
+		<a href="../images/setupTab.png"><img src="../images/setupTab.png" width=225></a>
+		<a href="../images/minTab.png"><img src="../images/minTab.png" width=225></a>
+		<a href="../images/simTab.png"><img src="../images/simTab.png" width=225></a>
+	</div>
+	<!-- end #sidebar -->
+	<div style="clear: both;">&nbsp;</div>
+</div>
+<!-- end #page -->
+<div id="footer">
+	<p id="legal">Copyright &copy; 2007 Aquaria. Designed by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></p>
+	<p id="links"> <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a> | <a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional"><abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a> | <a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page validates as CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a></p>
+</div>
+<!-- end #footer -->
+</body>
+</html>

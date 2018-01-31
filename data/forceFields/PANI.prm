@@ -1,0 +1,51 @@
+* CHARMM
+* 
+* REFERENCE: Manel Canales,*,† David Curco,‡ and Carlos Aleman
+* Modeling of Amorphous Polyaniline Emeraldine Base
+* J. Phys. Chem. B 2010, 114, 9771–9777
+
+
+NONBONDED
+CA  0.000000    -0.0663      3.5812 
+CB  0.000000    -0.0663      3.2464 
+CC  0.000000    -0.0663      3.5812 
+CD  0.000000    -0.0663      3.2464 
+CE  0.000000    -0.0663      3.5812 
+CF  0.000000    -0.0663      3.2464 
+N   0.000000    -0.0663      3.2464 
+NM  0.000000    -0.1529      3.1365 
+H   0.000000    -0.0000      0.0000
+
+BONDS
+CA  CB     400.0  1.387
+CA  N      400.0  1.380
+CB  CB     400.0  1.375
+N   H      350.0  1.003
+CC  CD     400.0  1.391
+CC  NM     400.0  1.376
+CD  CD     400.0  1.373
+CE  NM     400.0  1.278
+CF  CF     400.0  1.332
+CA  H      309.0  1.111
+CB  H      309.0  1.111
+CC  H      309.0  1.111
+CD  H      309.0  1.111
+CE  H      309.0  1.111
+CF  H      309.0  1.111
+
+
+ANGLES
+CA  CB  CB   70.000  121.1 
+CA  N   CA   62.300  127.3
+CA  N   H    35.000  116.1
+CB  CA  CB   70.000  117.7
+CB  CA  N    70.000  121.1
+CC  CD  CD   70.000  120.8
+CC  NM  CD   62.300  123.1
+CD  CC  CD   70.000  118.3
+CD  CC  NM   70.000  120.7
+CE  CF  CF   70.000  121.7
+CF  CE  CF   70.000  116.7
+CF  CE  NM   70.000  121.6
+
+

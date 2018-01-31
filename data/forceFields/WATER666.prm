@@ -1,0 +1,13 @@
+>>>>>> CHARMM topology for WATER <<<<<<<<<<
+
+NONBONDED
+HT     0.000000  -0.666666     6.666666 ! ALLOW WAT
+OT     0.000000  -0.666666     6.666666 ! ALLOW   WAT
+
+BONDS
+HT   HT      0.000     6.6666 ! ALLOW WAT
+OT   HT    666.666     6.6666 ! ALLOW   WAT
+
+ANGLES
+HT   OT   HT     66.666   666.6666 ! ALLOW WAT
+

@@ -1,0 +1,11 @@
+<RCC>
+	<qresource prefix="/">
+		<file>images/PMMA-chain.png</file>
+		<file>images/PolyCYT.png</file>
+		<file>images/PolyTHY.png</file>
+		<file>images/PolyGUA.png</file>
+		<file>images/PolyADE.png</file>
+		<file>images/Chitosan.png</file>
+		<file>images/Cellulose.png</file>
+	</qresource>
+</RCC>

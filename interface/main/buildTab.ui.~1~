@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>buildTab</class>
+ <widget class="QDialog" name="buildTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1043</width>
+    <height>604</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Build or Modify structure files</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTreeWidget" name="molCatalog">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="cursor" stdset="0">
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Molecular Stucture Catalog</string>
+         </property>
+         <property name="statusTip">
+          <string>Select molecular structures by double clicking over selection.</string>
+         </property>
+         <property name="dragEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::NoDragDrop</enum>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>false</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string>Molecular Structure Catalog</string>
+          </property>
+         </column>
+         <item>
+          <property name="text">
+           <string notr="true">Polymer</string>
+          </property>
+          <property name="flags">
+           <set>ItemIsEnabled</set>
+          </property>
+          <item>
+           <property name="text">
+            <string notr="true">Copolymer</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+           <item>
+            <property name="text">
+             <string notr="true">Polyaniline</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string notr="true">Homopolymer</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+           <item>
+            <property name="text">
+             <string notr="true">PolyADE</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">PolyCYT</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">PolyGUA</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">PolyTHY</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">PMMA</string>
+            </property>
+           </item>
+          </item>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">Carbon Allotrope</string>
+          </property>
+          <property name="flags">
+           <set>ItemIsEnabled</set>
+          </property>
+          <item>
+           <property name="text">
+            <string notr="true">swCNT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string notr="true">Graphene</string>
+           </property>
+          </item>
+         </item>
+         <item>
+          <property name="text">
+           <string>Surfactant</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>SDS</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SDBS</string>
+           </property>
+          </item>
+         </item>
+         <item>
+          <property name="text">
+           <string>Elements</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>A through Z</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Argon (Ar)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Carbon (C)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Chlorine (Cl)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Fluorine (F)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Hydrogen (H)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Nitrogen (N)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Oxygen (O)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Phosphorous (P)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sodium (Na)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sulfur (S)</string>
+            </property>
+           </item>
+          </item>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">Solvent</string>
+          </property>
+          <property name="flags">
+           <set>ItemIsEnabled</set>
+          </property>
+          <item>
+           <property name="text">
+            <string>AcetoneAllH</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>AcetoneNoH</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string notr="true">Chloroform</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Chloroform (4 atoms)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>DMF</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Hydrogen Peroxide</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>THF</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string notr="true">Water</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Xylene</string>
+           </property>
+           <property name="flags">
+            <set>ItemIsEnabled</set>
+           </property>
+          </item>
+         </item>
+         <item>
+          <property name="text">
+           <string>Custom</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>13</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_15">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Manage Molecular Structures</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="copyButton">
+           <property name="toolTip">
+            <string>Copy</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeButton">
+           <property name="toolTip">
+            <string>Cut</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="duplicateButton">
+           <property name="toolTip">
+            <string>Paste</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addCustomButton">
+           <property name="toolTip">
+            <string>Load PDB and PSF files.</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="saveButton">
+           <property name="toolTip">
+            <string>Save the PDB and PSF files.
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="updateButton">
+           <property name="toolTip">
+            <string>Update coordinates</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="structManager">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::MultiSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string notr="true"/>
+          </property>
+          <property name="toolTip">
+           <string>Show/hide molecules</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="toolTip">
+           <string>Fix/loose molecule</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string notr="true">Name</string>
+          </property>
+          <property name="toolTip">
+           <string>Unique identifier associated to each molecule</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string notr="true">Atoms</string>
+          </property>
+          <property name="toolTip">
+           <string>Atom count</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string notr="true">ID</string>
+          </property>
+          <property name="toolTip">
+           <string>Name of molecular structure</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="structPropertyLabel">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Property Editor</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="editorLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetFixedSize</enum>
+         </property>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

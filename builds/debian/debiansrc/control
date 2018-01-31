@@ -1,0 +1,14 @@
+Package: wolffia
+Version: 1.139
+Section: devel
+Priority: optional
+Architecture: all
+License: GPL-3
+Installed-Size: 1704
+Depends: python(>= 2.7), python-qt4-gl (>= 4.8.3), python-qwt5-qt4 (>= 5.2), pyqt4-dev-tools (>= 4.8.3), python-openbabel (>= 2.2.3), python-networkx (>= 1.1-2), python-opengl (>= 3.0), sshpass (>= 1.05)
+Maintainer: José O. Sotero-Esteva <jse@math.uprh.edu>
+Homepage: http://wolffia.uprh.edu/
+Description: Molecular dynamics simulation package.
+ Wolffia is a graphical user interface to setup, execute,
+ monitor and analyze molecular dynamics simulations.
+

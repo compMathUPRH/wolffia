@@ -1,0 +1,16 @@
+*>>>>>> CHARMM topology for CLOROFORM <<<<<<<<<<
+*>>>>>>Kamath et al. J. Phys. Chem. B, Vol. 109, No. 41, 2005<<<<<<<<<<
+
+NONBONDED
+CZ     0.000000  -0.179        2.706833
+CLA    0.000000  -0.087        1.85470
+HZ     0.000000  -0.082        1.48444
+
+BONDS
+CZ HZ  340.0    1.100 
+CZ CLA 232.4    1.758 
+
+ANGLES
+HZ  CZ CLA   38.1      107.68
+CLA CZ CLA   77.7       111.3 
+

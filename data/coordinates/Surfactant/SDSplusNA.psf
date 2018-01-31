@@ -1,0 +1,57 @@
+PSF
+
+       1 !NTITLE
+ REMARKS 
+
+      18 !NATOM
+       1 MAIN A    LIG   Na   Na      +0.000000   22.9898           0
+       2 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+       3 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+       4 MAIN A    LIG   C2   COH2    +0.000000   12.0107           0
+       5 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+       6 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+       7 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+       8 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+       9 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+      10 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+      11 MAIN A    LIG   C3   CH2     +0.000000   12.0107           0
+      12 MAIN A    LIG   C2   CH2     +0.000000   12.0107           0
+      13 MAIN A    LIG   C2   CH3     +0.000000   12.0107           0
+      14 MAIN A    LIG   O2   OSO     -0.330000   15.9994           0
+      15 MAIN A    LIG   O2   OSO     -0.330000   15.9994           0
+      16 MAIN A    LIG   O3   OSC     +0.000000   15.9994           0
+      17 MAIN A    LIG   O-   OSO     -0.330000   15.9994           0
+      18 MAIN A    LIG   Sac  S      +0.000000   32.0650           0
+
+      17 !NBOND
+       1      17       2       3       2       4       3       5
+       4      16       5       6       6       7       7       8
+       8       9       9      10      10      11      11      12
+      12      13      14      18      15      18      16      18
+      17      18
+
+      19 !NTHETA: angles
+       3       2       4       2       3       5       2       4      16
+       3       5       6       5       6       7       6       7       8
+       7       8       9       8       9      10       9      10      11
+      10      11      12      11      12      13       4      16      18
+       1      17      18      16      18      17      14      18      16
+      14      18      17      14      18      15      15      18      16
+      15      18      17
+
+       0 !NPHI: dihedrals
+
+
+       0 !NIMPHI: impropers
+
+
+       0 !NDON: donors
+
+
+       0 !NACC: acceptors
+
+
+       0 !NNB
+
+
+       0 !NGRP

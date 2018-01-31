@@ -1,0 +1,35 @@
+ATOM      1 Car  LIG A   1       1.488  -0.366   0.000  0.00  0.00           C
+ATOM      2 Car  LIG A   1       4.157  -0.460   0.000  0.00  0.00           C
+ATOM      3 Car  LIG A   1       1.415  -1.938   0.000  0.00  0.00           C
+ATOM      4 Car  LIG A   1       4.118  -2.034   0.000  0.00  0.00           C
+ATOM      5 Car  LIG A   1       2.738  -2.786   0.000  0.00  0.00           C
+ATOM      6 Car  LIG A   1       2.854   0.442   0.000  0.00  0.00           C
+ATOM      7 C2   LIG A   1       2.896   2.010   0.000  0.00  0.00           C
+ATOM      8 C2   LIG A   1       4.121   3.008   0.000  0.00  0.00           C
+ATOM      9 HC   LIG A   1       0.511   0.224   0.000  0.00  0.00           H
+ATOM     10 HC   LIG A   1       5.174   0.057   0.000  0.00  0.00           H
+ATOM     11 HC   LIG A   1       1.867   2.521   0.000  0.00  0.00           H
+ATOM     12 HC   LIG A   1       0.402  -2.460   0.000  0.00  0.00           H
+ATOM     13 HC   LIG A   1       5.091  -2.627   0.000  0.00  0.00           H
+ATOM     14 HC   LIG A   1       5.153   2.532   0.000  0.00  0.00           H
+ATOM     15 HC   LIG A   1       3.861   4.115   0.000  0.00  0.00           H
+ATOM     16 HC   LIG A   1       2.698  -3.924   0.000  0.00  0.00           H
+ATOM     17 HC   LIG A   1       5.460   4.056   0.083  0.00  0.00           H
+ENDMDL
+CONECT    1    9    3    6
+CONECT    2   10    4    6
+CONECT    3   12    5
+CONECT    4    5   13
+CONECT    5   16
+CONECT    6    7
+CONECT    7    8   11
+CONECT    8   17   15   14
+CONECT    9
+CONECT   10
+CONECT   11
+CONECT   12
+CONECT   13
+CONECT   14
+CONECT   15
+CONECT   16
+CONECT   17

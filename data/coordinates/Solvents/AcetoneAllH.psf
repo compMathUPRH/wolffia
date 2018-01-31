@@ -1,0 +1,46 @@
+PSF
+
+       1 !NTITLE
+ REMARKS 
+
+      10 !NATOM
+       1 MAIN A    LIG   C3   C3      -0.006343   12.0107           0
+       2 MAIN A    LIG   C3   C3      -0.006343   12.0107           0
+       3 MAIN A    LIG   O2   O2      -0.297996   15.9994           0
+       4 MAIN A    LIG   C2   C2      +0.127272   12.0107           0
+       5 MAIN A    LIG   HC   HC      +0.030568    1.0079           0
+       6 MAIN A    LIG   HC   HC      +0.030568    1.0079           0
+       7 MAIN A    LIG   HC   HC      +0.030568    1.0079           0
+       8 MAIN A    LIG   HC   HC      +0.030568    1.0079           0
+       9 MAIN A    LIG   HC   HC      +0.030568    1.0079           0
+      10 MAIN A    LIG   HC   HC      +0.030568    1.0079           0
+
+       9 !NBOND
+       1       4       1       5       1       6       1       7
+       2       8       2       9       2      10       2       4
+       3       4
+
+      15 !NTHETA: angles
+       4       1       5       4       1       6       4       1       7
+       5       1       6       5       1       7       6       1       7
+       8       2       9       8       2      10       9       2      10
+       4       2       8       4       2       9       4       2      10
+       1       4       2       1       4       3       2       4       3
+
+
+       0 !NPHI: dihedrals
+
+
+       0 !NIMPHI: impropers
+
+
+       0 !NDON: donors
+
+
+       0 !NACC: acceptors
+
+
+       0 !NNB
+
+
+       0 !NGRP

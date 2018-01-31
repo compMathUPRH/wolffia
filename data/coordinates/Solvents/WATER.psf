@@ -1,0 +1,34 @@
+PSF 
+
+   04 !NTITLE
+ REMARKS WTR  by Frances Martinez (18/nov/2011) 
+
+       3 !NATOM      
+       1 MAIN 1    WTR    O  OT1  -0.834         15.9994           0       
+       2 MAIN 1    WTR    H  HT1   0.417         1.00794           0   
+       3 MAIN 1    WTR    H  HT2   0.417         1.00794           0 
+
+       2 !NBOND: bonds
+       3       1       1       2      
+
+       1 !NTHETA: angles
+       3       1       2 
+
+       0 !NTHETA: angles
+
+       0 !NPHI: dihedrals
+ 
+       0 !NIMPHI: impropers
+
+       0 !NDON: donors
+
+       0 !NACC: acceptors
+
+       0 !NNB
+
+       0 !NGRP
+
+       
+
+
+

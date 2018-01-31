@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/../graphics">
+    <file>Wolffialogo.png</file>
+    <file>vanderwaals.png</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,8 @@
+HEADER    Wolffia
+ATOM      1 C24  CLF A   1       0.000   0.000   0.000  1.00  0.00           C       
+ATOM      2 CL1  CLF A   1       0.581  -1.076  -1.275  1.00  0.00          CL       
+ATOM      3 CL2  CLF A   1       1.299   0.291   1.162  1.00  0.00          CL       
+ATOM      4  H1  CLF A   1      -0.776  -0.425   0.467  1.00  0.00           H       
+ATOM      5 CL3  CLF A   1      -0.509   1.535  -0.711  1.00  0.00          CL        
+TER       6      CLF A   1 
+END   

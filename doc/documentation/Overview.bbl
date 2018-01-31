@@ -1,0 +1,491 @@
+% $ biblatex auxiliary file $
+% $ biblatex version 1.7 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\entry{pythonxy}{misc}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Raybaut}{R.}%
+     {Pierre}{P.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Davar}{D.}%
+     {Gabi}{G.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{RPDG1}
+  \strng{fullhash}{RPDG1}
+  \field{sortinit}{7}
+  \field{note}{(Online; accessed 10-June-2013)}
+  \field{title}{Python(x,y) Scientific-oriented Python Distribution based on Qt
+  and Spyder}
+  \verb{url}
+  \verb http://www.pythonxy.com/
+  \endverb
+  \field{year}{2013}
+\endentry
+
+\entry{Wolffia01}{article}{}
+  \name{author}{5}{}{%
+    {{}%
+     {{Medina Cuadrado}}{M.}%
+     {Mirgery}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {{Cort\'{e}s Mart\'{i}nez}}{C.}%
+     {Carlos}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {L\'{o}pez}{L.}%
+     {Melissa}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {{Mart\'{i}nez Miranda}}{M.}%
+     {Frances}{F.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {{Vega Alfaro}}{V.}%
+     {Radam\'{e}s}{R.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{MM+1}
+  \strng{fullhash}{MMCCLMMFVR1}
+  \field{sortinit}{7}
+  \field{booktitle}{Proceedings of 2012 NCUR}
+  \field{title}{An Implementation of a Graphical Interface for Molecular
+  Simulation Software using Python and Qt4}
+  \verb{url}
+  \verb http://www.ncurproceedings.org/ojs/index.php/NCUR2012/article/view/167
+  \endverb
+  \list{location}{1}{%
+    {Weber State University, Ogden-Utah}%
+  }
+  \field{year}{2012}
+  \warn{\item Invalid format of field 'month'}
+\endentry
+
+\entry{Collins2011}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Duan}{D.}%
+     {Wen~Hui}{W.~H.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Wang}{W.}%
+     {Quan}{Q.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Collins}{C.}%
+     {Frank}{F.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{DWHWQCF1}
+  \strng{fullhash}{DWHWQCF1}
+  \field{sortinit}{7}
+  \verb{doi}
+  \verb 10.1039/C0SC00616E
+  \endverb
+  \field{pages}{1407\bibrangedash 1413}
+  \field{title}{Dispersion of carbon nanotubes with SDS surfactants: a study
+  from a binding energy perspective}
+  \field{volume}{2}
+  \field{journaltitle}{Chem. Sci.}
+  \field{year}{2011}
+\endentry
+
+\entry{Pastor}{article}{}
+  \name{author}{9}{}{%
+    {{}%
+     {Klauda}{K.}%
+     {Jeffery~B.}{J.~B.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Venable}{V.}%
+     {Richard~M.}{R.~M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Freites}{F.}%
+     {J.~Alfredo}{J.~A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {O'Connor}{O.}%
+     {Joseph~W.}{J.~W.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Tobias}{T.}%
+     {Douglas~J.}{D.~J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Mondragon-Ramirez}{M.-R.}%
+     {Carlos}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Vorobyov}{V.}%
+     {Igor}{I.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {MacKerell}{M.}%
+     {Alexander~D.}{A.~D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Pastor}{P.}%
+     {Richard~W.}{R.~W.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{KJB+1}
+  \strng{fullhash}{KJBVRMFJAOJWTDJMRCVIMADPRW1}
+  \field{sortinit}{7}
+  \verb{doi}
+  \verb 10.1021/jp101759q
+  \endverb
+  \verb{eprint}
+  \verb http://pubs.acs.org/doi/pdf/10.1021/jp101759q
+  \endverb
+  \field{number}{23}
+  \field{pages}{7830\bibrangedash 7843}
+  \field{title}{Update of the CHARMM All-Atom Additive Force Field for Lipids:
+  Validation on Six Lipid Types}
+  \verb{url}
+  \verb http://pubs.acs.org/doi/abs/10.1021/jp101759q
+  \endverb
+  \field{volume}{114}
+  \field{journaltitle}{J. Phys. Chem. B}
+  \field{year}{2010}
+\endentry
+
+\entry{Lukyanov2010}{article}{}
+  \name{author}{6}{}{%
+    {{}%
+     {Lukyanov}{L.}%
+     {Alexander}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Malafeev}{M.}%
+     {Alexander}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Ivanov}{I.}%
+     {Viktor}{V.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Chen}{C.}%
+     {Hsin-Lung}{H.-L.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Kremer}{K.}%
+     {Kurt}{K.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Andrienko}{A.}%
+     {Denis}{D.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {The Royal Society of Chemistry}%
+  }
+  \strng{namehash}{LA+1}
+  \strng{fullhash}{LAMAIVCHLKKAD1}
+  \field{sortinit}{7}
+  \field{abstract}{%
+  We study dilute solutions of poly(2{,}3-diphenyl phenylene vinylene) with
+  hexyl (DP6-PPV) and decyl (DP10-PPV) side chains in two solvents{,}
+  chloroform and toluene. For this purpose{,} atomistic and coarse-grained
+  models are parametrized using quantum-chemical calculations and
+  structure-based coarse-graining{,} respectively. Our simulations indicate
+  that the difference in the aggregation behavior of two derivatives can not be
+  rationalized just in terms of the greater steric hindrance imposed by the
+  longer side chains of DP10-PPV. The coarse-grained model describes
+  qualitatively the DP10-PPV derivative in chloroform{,} where aggregation does
+  not occur. Although the computed structure factors for this system
+  qualitatively agree with experiments for low concentrations{,} the calculated
+  persistence length is bigger than the one experimentally reported{,} hinting
+  at the presence of defects in polymer chains.%
+  }
+  \verb{doi}
+  \verb 10.1039/C0JM01654C
+  \endverb
+  \field{issue}{46}
+  \field{pages}{10475\bibrangedash 10485}
+  \field{title}{Solvated poly-(phenylene vinylene) derivatives: conformational
+  structure and aggregation behavior}
+  \verb{url}
+  \verb http://dx.doi.org/10.1039/C0JM01654C
+  \endverb
+  \field{volume}{20}
+  \field{journaltitle}{J. Mater. Chem.}
+  \field{year}{2010}
+\endentry
+
+\entry{NetworkX}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Hagberg}{H.}%
+     {Aric~A.}{A.~A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Schult}{S.}%
+     {Daniel~A.}{D.~A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Swart}{S.}%
+     {Pieter~J.}{P.~J.}%
+     {}{}%
+     {}{}}%
+  }
+  \name{editor}{3}{}{%
+    {{}%
+     {Varoquaux}{V.}%
+     {Ga\"el}{G.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Vaught}{V.}%
+     {Travis}{T.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Millman}{M.}%
+     {Jarrod}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{HAASDASPJ1}
+  \strng{fullhash}{HAASDASPJ1}
+  \field{sortinit}{7}
+  \field{booktitle}{Proceedings of the 7th Python in Science Conference}
+  \field{note}{(Online; accessed 13-May-2013)}
+  \field{pages}{11 \bibrangedash  15}
+  \field{title}{Exploring Network Structure, Dynamics, and Function using
+  NetworkX}
+  \verb{url}
+  \verb http://conference.scipy.org/proceedings/SciPy2008/paper_2/
+  \endverb
+  \list{location}{1}{%
+    {Pasadena, CA USA}%
+  }
+  \field{year}{2008}
+\endentry
+
+\entry{Pybel}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {O'Boyle}{O.}%
+     {N.M.}{N.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Morley}{M.}%
+     {C.}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hutchison}{H.}%
+     {G.R.}{G.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{ONMCHG1}
+  \strng{fullhash}{ONMCHG1}
+  \field{sortinit}{7}
+  \verb{doi}
+  \verb 10.1186/1752-153X-2-5
+  \endverb
+  \field{number}{5}
+  \field{title}{Pybel: a Python wrapper for the OpenBabel cheminformatics
+  toolkit}
+  \field{volume}{2}
+  \field{journaltitle}{Chem. Cent. J.}
+  \field{year}{2008}
+\endentry
+
+\entry{Accelrys}{misc}{}
+  \name{author}{1}{}{%
+    {{}%
+     {{Accelrys Software Inc}}{A.}%
+     {}{}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{A1}
+  \strng{fullhash}{A1}
+  \field{sortinit}{7}
+  \field{title}{Materials Studio, Accelrys}
+  \field{year}{2001-2007}
+\endentry
+
+\entry{PyQt}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Remp}{R.}%
+     {B.}{B.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{RB1}
+  \strng{fullhash}{RB1}
+  \field{sortinit}{7}
+  \field{number}{26}
+  \field{pages}{88}
+  \field{title}{Python's PyQt toolkit}
+  \field{journaltitle}{Dr. Dobb's Journal of Software Tools}
+  \field{year}{2001}
+\endentry
+
+\entry{Leach1997}{book}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Leach}{L.}%
+     {A.}{A.}%
+     {}{}%
+     {}{}}%
+  }
+  \name{editor}{1}{}{%
+    {{}%
+     {Group}{G.}%
+     {Longman~Pub}{L.~P.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LA1}
+  \strng{fullhash}{LA1}
+  \field{sortinit}{8}
+  \field{pages}{359\bibrangedash 362}
+  \field{title}{Molecular Modeling: Principles and Applications}
+  \field{year}{1997}
+\endentry
+
+\entry{GAMESS}{article}{}
+  \name{author}{11}{}{%
+    {{}%
+     {Schmidt}{S.}%
+     {M.W.}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Baldridge}{B.}%
+     {K.K.}{K.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Boatz}{B.}%
+     {J.A.}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Elbert}{E.}%
+     {S.T.}{S.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Gordon}{G.}%
+     {M.S.}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Jensen}{J.}%
+     {J.H.}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Koseki}{K.}%
+     {S.}{S.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Matsunaga}{M.}%
+     {N.}{N.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Nguyen}{N.}%
+     {K.A.}{K.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Su}{S.}%
+     {S.J.}{S.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {al.}{a.}%
+     {}{}%
+     {et}{e.}%
+     {}{}}%
+  }
+  \strng{namehash}{SM+1}
+  \strng{fullhash}{SMBKBJESGMJJKSMNNKSSae1}
+  \field{sortinit}{8}
+  \field{number}{11}
+  \field{pages}{1347\bibrangedash 1363}
+  \field{title}{General atomic and molecular electronic structure system}
+  \field{volume}{14}
+  \field{journaltitle}{J. Comput. Chem.}
+  \field{year}{1993}
+\endentry
+
+\entry{PyOpenGL_openglpython}{misc}{}
+  \name{author}{1}{}{%
+    {{}%
+     {PyOpenGL}{P.}%
+     {}{}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{P1}
+  \strng{fullhash}{P1}
+  \field{sortinit}{9}
+  \field{note}{(Online; accessed 10-June-2013)}
+  \field{title}{OpenGL Python interface}
+  \verb{url}
+  \verb http://pyopengl.sourceforge.net
+  \endverb
+  \field{urlday}{10}
+  \field{urlmonth}{06}
+  \field{urlyear}{2013}
+\endentry
+
+\lossort
+\endlossort
+
+\endinput

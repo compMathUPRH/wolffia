@@ -1,0 +1,310 @@
+ATOM      1 C3   DRG A   1       2.014   3.907   2.280  0.00  0.00           C
+ATOM      2 H    DRG A   1       2.448   4.772   2.031  0.00  0.00           H
+ATOM      3 H    DRG A   1       1.338   4.069   2.999  0.00  0.00           H
+ATOM      4 H    DRG A   1       2.708   3.270   2.614  0.00  0.00           H
+ATOM      5 H    DRG A   1       0.531   0.000   0.000  0.00  0.00           H
+ATOM      6 H    DRG A   1      -0.531   0.000   0.792  0.00  0.00           H
+ATOM      7 H    DRG A   1      -0.452   0.000  -0.840  0.00  0.00           H
+ATOM      8 C3   DRG A   1      -0.001   1.540   0.000  0.00  0.00           C
+ATOM      9 C3   DRG A   1       0.579   2.091  -1.312  0.00  0.00           C
+ATOM     10 H    DRG A   1       0.103   1.677  -2.087  0.00  0.00           H
+ATOM     11 H    DRG A   1       0.459   3.084  -1.339  0.00  0.00           H
+ATOM     12 H    DRG A   1       1.554   1.873  -1.363  0.00  0.00           H
+ATOM     13 C2   DRG A   1       0.691   2.140   1.240  0.00  0.00           C
+ATOM     14 O2   DRG A   1       0.627   1.542   2.326  0.00  0.00           O
+ATOM     15 O3   DRG A   1       1.360   3.344   1.123  0.00  0.00           O
+ATOM     16 C3   DRG A   1       0.000   0.000   0.000  0.00  0.00           C
+ATOM     17 C3   DRG A   1       0.001   5.240   0.001  0.00  0.00           C
+ATOM     18 H    DRG A   1      -0.295   8.472  -3.167  0.00  0.00           H
+ATOM     19 H    DRG A   1       1.175   7.769  -3.067  0.00  0.00           H
+ATOM     20 H    DRG A   1      -0.066   6.970  -3.763  0.00  0.00           H
+ATOM     21 O3   DRG A   1      -0.168   7.044  -1.756  0.00  0.00           O
+ATOM     22 H    DRG A   1       0.936   3.700  -0.185  0.00  0.00           H
+ATOM     23 H    DRG A   1      -0.274   3.700   0.914  0.00  0.00           H
+ATOM     24 C3   DRG A   1       0.188   7.607  -3.036  0.00  0.00           C
+ATOM     25 C3   DRG A   1      -1.337   5.791   0.518  0.00  0.00           C
+ATOM     26 H    DRG A   1      -1.549   5.377   1.403  0.00  0.00           H
+ATOM     27 H    DRG A   1      -1.271   6.784   0.622  0.00  0.00           H
+ATOM     28 H    DRG A   1      -2.063   5.573  -0.135  0.00  0.00           H
+ATOM     29 C2   DRG A   1       0.388   5.840  -1.365  0.00  0.00           C
+ATOM     30 O2   DRG A   1       1.201   5.242  -2.088  0.00  0.00           O
+ATOM     31 C3   DRG A   1       0.000   3.700   0.000  0.00  0.00           C
+ATOM     32 C3   DRG A   1       0.000   8.940  -0.001  0.00  0.00           C
+ATOM     33 H    DRG A   1      -2.031  12.172   2.448  0.00  0.00           H
+ATOM     34 H    DRG A   1      -2.999  11.469   1.338  0.00  0.00           H
+ATOM     35 H    DRG A   1      -2.614  10.670   2.708  0.00  0.00           H
+ATOM     36 O3   DRG A   1      -1.123  10.744   1.360  0.00  0.00           O
+ATOM     37 H    DRG A   1      -0.792   7.400  -0.531  0.00  0.00           H
+ATOM     38 H    DRG A   1       0.840   7.400  -0.452  0.00  0.00           H
+ATOM     39 C3   DRG A   1      -2.280  11.307   2.014  0.00  0.00           C
+ATOM     40 C3   DRG A   1       1.312   9.491   0.579  0.00  0.00           C
+ATOM     41 H    DRG A   1       2.087   9.077   0.103  0.00  0.00           H
+ATOM     42 H    DRG A   1       1.339  10.484   0.459  0.00  0.00           H
+ATOM     43 H    DRG A   1       1.363   9.273   1.554  0.00  0.00           H
+ATOM     44 C2   DRG A   1      -1.240   9.540   0.691  0.00  0.00           C
+ATOM     45 O2   DRG A   1      -2.326   8.942   0.627  0.00  0.00           O
+ATOM     46 C3   DRG A   1       0.000   7.400   0.000  0.00  0.00           C
+ATOM     47 C3   DRG A   1      -0.001  12.640   0.001  0.00  0.00           C
+ATOM     48 H    DRG A   1       3.167  15.872  -0.295  0.00  0.00           H
+ATOM     49 H    DRG A   1       3.067  15.169   1.175  0.00  0.00           H
+ATOM     50 H    DRG A   1       3.763  14.370  -0.066  0.00  0.00           H
+ATOM     51 O3   DRG A   1       1.756  14.444  -0.168  0.00  0.00           O
+ATOM     52 H    DRG A   1       0.185  11.100   0.936  0.00  0.00           H
+ATOM     53 H    DRG A   1      -0.914  11.100  -0.274  0.00  0.00           H
+ATOM     54 C3   DRG A   1       3.036  15.007   0.188  0.00  0.00           C
+ATOM     55 C3   DRG A   1      -0.518  13.191  -1.337  0.00  0.00           C
+ATOM     56 H    DRG A   1      -1.403  12.777  -1.549  0.00  0.00           H
+ATOM     57 H    DRG A   1      -0.622  14.184  -1.271  0.00  0.00           H
+ATOM     58 H    DRG A   1       0.135  12.973  -2.063  0.00  0.00           H
+ATOM     59 C2   DRG A   1       1.365  13.240   0.388  0.00  0.00           C
+ATOM     60 O2   DRG A   1       2.088  12.642   1.201  0.00  0.00           O
+ATOM     61 C3   DRG A   1       0.000  11.100   0.000  0.00  0.00           C
+ATOM     62 C3   DRG A   1       0.001  16.340   0.000  0.00  0.00           C
+ATOM     63 H    DRG A   1      -2.448  19.572  -2.031  0.00  0.00           H
+ATOM     64 H    DRG A   1      -1.338  18.869  -2.999  0.00  0.00           H
+ATOM     65 H    DRG A   1      -2.708  18.070  -2.614  0.00  0.00           H
+ATOM     66 O3   DRG A   1      -1.360  18.144  -1.123  0.00  0.00           O
+ATOM     67 H    DRG A   1       0.531  14.800  -0.792  0.00  0.00           H
+ATOM     68 H    DRG A   1       0.452  14.800   0.840  0.00  0.00           H
+ATOM     69 C3   DRG A   1      -2.014  18.707  -2.280  0.00  0.00           C
+ATOM     70 C3   DRG A   1      -0.579  16.891   1.312  0.00  0.00           C
+ATOM     71 H    DRG A   1      -0.103  16.477   2.087  0.00  0.00           H
+ATOM     72 H    DRG A   1      -0.459  17.884   1.339  0.00  0.00           H
+ATOM     73 H    DRG A   1      -1.554  16.673   1.363  0.00  0.00           H
+ATOM     74 C2   DRG A   1      -0.691  16.940  -1.240  0.00  0.00           C
+ATOM     75 O2   DRG A   1      -0.627  16.342  -2.326  0.00  0.00           O
+ATOM     76 C3   DRG A   1       0.000  14.800   0.000  0.00  0.00           C
+ATOM     77 C3   DRG A   1      -0.001  20.040  -0.001  0.00  0.00           C
+ATOM     78 H    DRG A   1       0.295  23.272   3.167  0.00  0.00           H
+ATOM     79 H    DRG A   1      -1.175  22.569   3.067  0.00  0.00           H
+ATOM     80 H    DRG A   1       0.066  21.770   3.763  0.00  0.00           H
+ATOM     81 O3   DRG A   1       0.168  21.844   1.756  0.00  0.00           O
+ATOM     82 H    DRG A   1      -0.936  18.500   0.185  0.00  0.00           H
+ATOM     83 H    DRG A   1       0.274  18.500  -0.914  0.00  0.00           H
+ATOM     84 C3   DRG A   1      -0.188  22.407   3.036  0.00  0.00           C
+ATOM     85 C3   DRG A   1       1.337  20.591  -0.518  0.00  0.00           C
+ATOM     86 H    DRG A   1       1.549  20.177  -1.403  0.00  0.00           H
+ATOM     87 H    DRG A   1       1.271  21.584  -0.622  0.00  0.00           H
+ATOM     88 H    DRG A   1       2.063  20.373   0.135  0.00  0.00           H
+ATOM     89 C2   DRG A   1      -0.388  20.640   1.365  0.00  0.00           C
+ATOM     90 O2   DRG A   1      -1.201  20.042   2.088  0.00  0.00           O
+ATOM     91 C3   DRG A   1       0.000  18.500   0.000  0.00  0.00           C
+ATOM     92 C3   DRG A   1      -0.000  23.740   0.001  0.00  0.00           C
+ATOM     93 H    DRG A   1       2.031  26.972  -2.448  0.00  0.00           H
+ATOM     94 H    DRG A   1       2.999  26.269  -1.338  0.00  0.00           H
+ATOM     95 H    DRG A   1       2.614  25.470  -2.708  0.00  0.00           H
+ATOM     96 O3   DRG A   1       1.123  25.544  -1.360  0.00  0.00           O
+ATOM     97 H    DRG A   1       0.792  22.200   0.531  0.00  0.00           H
+ATOM     98 H    DRG A   1      -0.840  22.200   0.452  0.00  0.00           H
+ATOM     99 C3   DRG A   1       2.280  26.107  -2.014  0.00  0.00           C
+ATOM    100 C3   DRG A   1      -1.312  24.291  -0.579  0.00  0.00           C
+ATOM    101 H    DRG A   1      -2.087  23.877  -0.103  0.00  0.00           H
+ATOM    102 H    DRG A   1      -1.339  25.284  -0.459  0.00  0.00           H
+ATOM    103 H    DRG A   1      -1.363  24.073  -1.554  0.00  0.00           H
+ATOM    104 C2   DRG A   1       1.240  24.340  -0.691  0.00  0.00           C
+ATOM    105 O2   DRG A   1       2.326  23.742  -0.627  0.00  0.00           O
+ATOM    106 C3   DRG A   1       0.000  22.200   0.000  0.00  0.00           C
+ATOM    107 C3   DRG A   1       0.001  27.440  -0.001  0.00  0.00           C
+ATOM    108 H    DRG A   1      -3.167  30.672   0.295  0.00  0.00           H
+ATOM    109 H    DRG A   1      -3.067  29.969  -1.175  0.00  0.00           H
+ATOM    110 H    DRG A   1      -3.763  29.170   0.066  0.00  0.00           H
+ATOM    111 O3   DRG A   1      -1.756  29.244   0.168  0.00  0.00           O
+ATOM    112 H    DRG A   1      -0.185  25.900  -0.936  0.00  0.00           H
+ATOM    113 H    DRG A   1       0.914  25.900   0.274  0.00  0.00           H
+ATOM    114 C3   DRG A   1      -3.036  29.807  -0.188  0.00  0.00           C
+ATOM    115 C3   DRG A   1       0.518  27.991   1.337  0.00  0.00           C
+ATOM    116 H    DRG A   1       1.403  27.577   1.549  0.00  0.00           H
+ATOM    117 H    DRG A   1       0.622  28.984   1.271  0.00  0.00           H
+ATOM    118 H    DRG A   1      -0.135  27.773   2.063  0.00  0.00           H
+ATOM    119 C2   DRG A   1      -1.365  28.040  -0.388  0.00  0.00           C
+ATOM    120 O2   DRG A   1      -2.088  27.442  -1.201  0.00  0.00           O
+ATOM    121 C3   DRG A   1       0.000  25.900   0.000  0.00  0.00           C
+ATOM    122 C3   DRG A   1      -0.001  31.140  -0.000  0.00  0.00           C
+ATOM    123 H    DRG A   1       2.448  34.372   2.031  0.00  0.00           H
+ATOM    124 H    DRG A   1       1.338  33.669   2.999  0.00  0.00           H
+ATOM    125 H    DRG A   1       2.708  32.870   2.614  0.00  0.00           H
+ATOM    126 O3   DRG A   1       1.360  32.944   1.123  0.00  0.00           O
+ATOM    127 H    DRG A   1      -0.531  29.600   0.792  0.00  0.00           H
+ATOM    128 H    DRG A   1      -0.452  29.600  -0.840  0.00  0.00           H
+ATOM    129 C3   DRG A   1       2.014  33.507   2.280  0.00  0.00           C
+ATOM    130 C3   DRG A   1       0.579  31.691  -1.312  0.00  0.00           C
+ATOM    131 H    DRG A   1       0.103  31.277  -2.087  0.00  0.00           H
+ATOM    132 H    DRG A   1       0.459  32.684  -1.339  0.00  0.00           H
+ATOM    133 H    DRG A   1       1.554  31.473  -1.363  0.00  0.00           H
+ATOM    134 C2   DRG A   1       0.691  31.740   1.240  0.00  0.00           C
+ATOM    135 O2   DRG A   1       0.627  31.142   2.326  0.00  0.00           O
+ATOM    136 C3   DRG A   1       0.000  29.600   0.000  0.00  0.00           C
+ATOM    137 C3   DRG A   1       0.001  34.840   0.001  0.00  0.00           C
+ATOM    138 H    DRG A   1      -0.594  36.317   0.752  0.00  0.00           H
+ATOM    139 H    DRG A   1       0.818  37.139   0.370  0.00  0.00           H
+ATOM    140 H    DRG A   1      -0.489  37.246  -0.585  0.00  0.00           H
+ATOM    141 C3   DRG A   1       0.000  33.300   0.000  0.00  0.00           C
+ATOM    142 H    DRG A   1       0.936  33.300  -0.185  0.00  0.00           H
+ATOM    143 H    DRG A   1      -0.274  33.300   0.914  0.00  0.00           H
+ATOM    144 C3   DRG A   1       0.000  36.600   0.000  0.00  0.00           C
+ATOM    145 C3   DRG A   1      -1.337  35.391   0.518  0.00  0.00           C
+ATOM    146 H    DRG A   1      -1.549  34.977   1.403  0.00  0.00           H
+ATOM    147 H    DRG A   1      -1.271  36.384   0.622  0.00  0.00           H
+ATOM    148 H    DRG A   1      -2.063  35.173  -0.135  0.00  0.00           H
+ATOM    149 C2   DRG A   1       0.388  35.440  -1.365  0.00  0.00           C
+ATOM    150 O2   DRG A   1       1.201  34.842  -2.088  0.00  0.00           O
+ATOM    151 O3   DRG A   1      -0.168  36.644  -1.756  0.00  0.00           O
+ATOM    152 C3   DRG A   1       0.188  37.207  -3.036  0.00  0.00           C
+ATOM    153 H    DRG A   1      -0.295  38.072  -3.167  0.00  0.00           H
+ATOM    154 H    DRG A   1       1.175  37.369  -3.067  0.00  0.00           H
+ATOM    155 H    DRG A   1      -0.066  36.570  -3.763  0.00  0.00           H
+CONNECT    1    2    3    4   15
+CONNECT    2    1
+CONNECT    3    1
+CONNECT    4    1
+CONNECT    5   16
+CONNECT    6   16
+CONNECT    7   16
+CONNECT    8   16    9   13
+CONNECT    9    8   10   11   12
+CONNECT   10    9
+CONNECT   11    9
+CONNECT   12    9
+CONNECT   13    8   14   15
+CONNECT   14   13
+CONNECT   15    1   13
+CONNECT   16    8   17    5    6    7
+CONNECT   17   16   25   29   31
+CONNECT   18   24
+CONNECT   19   24
+CONNECT   20   24
+CONNECT   21   24   29
+CONNECT   22   31
+CONNECT   23   31
+CONNECT   24   18   19   20   21
+CONNECT   25   17   26   27   28
+CONNECT   26   25
+CONNECT   27   25
+CONNECT   28   25
+CONNECT   29   17   21   30
+CONNECT   30   29
+CONNECT   31   32   17   22   23
+CONNECT   32   40   44   46   31
+CONNECT   33   39
+CONNECT   34   39
+CONNECT   35   39
+CONNECT   36   44   39
+CONNECT   37   46
+CONNECT   38   46
+CONNECT   39   33   34   35   36
+CONNECT   40   32   41   42   43
+CONNECT   41   40
+CONNECT   42   40
+CONNECT   43   40
+CONNECT   44   32   36   45
+CONNECT   45   44
+CONNECT   46   32   37   38   47
+CONNECT   47   59   61   46   55
+CONNECT   48   54
+CONNECT   49   54
+CONNECT   50   54
+CONNECT   51   59   54
+CONNECT   52   61
+CONNECT   53   61
+CONNECT   54   48   49   50   51
+CONNECT   55   56   57   58   47
+CONNECT   56   55
+CONNECT   57   55
+CONNECT   58   55
+CONNECT   59   51   60   47
+CONNECT   60   59
+CONNECT   61   52   53   62   47
+CONNECT   62   74   76   61   70
+CONNECT   63   69
+CONNECT   64   69
+CONNECT   65   69
+CONNECT   66   74   69
+CONNECT   67   76
+CONNECT   68   76
+CONNECT   69   64   65   66   63
+CONNECT   70   72   73   62   71
+CONNECT   71   70
+CONNECT   72   70
+CONNECT   73   70
+CONNECT   74   66   75   62
+CONNECT   75   74
+CONNECT   76   67   68   77   62
+CONNECT   77   89   91   76   85
+CONNECT   78   84
+CONNECT   79   84
+CONNECT   80   84
+CONNECT   81   89   84
+CONNECT   82   91
+CONNECT   83   91
+CONNECT   84   80   81   78   79
+CONNECT   85   88   77   86   87
+CONNECT   86   85
+CONNECT   87   85
+CONNECT   88   85
+CONNECT   89   81   90   77
+CONNECT   90   89
+CONNECT   91   82   83   92   77
+CONNECT   92  104  106   91  100
+CONNECT   93   99
+CONNECT   94   99
+CONNECT   95   99
+CONNECT   96  104   99
+CONNECT   97  106
+CONNECT   98  106
+CONNECT   99   96   93   94   95
+CONNECT  100   92  101  102  103
+CONNECT  101  100
+CONNECT  102  100
+CONNECT  103  100
+CONNECT  104   96  105   92
+CONNECT  105  104
+CONNECT  106   97   98  107   92
+CONNECT  107  121  106  115  119
+CONNECT  108  114
+CONNECT  109  114
+CONNECT  110  114
+CONNECT  111  114  119
+CONNECT  112  121
+CONNECT  113  121
+CONNECT  114  108  109  110  111
+CONNECT  115  107  116  117  118
+CONNECT  116  115
+CONNECT  117  115
+CONNECT  118  115
+CONNECT  119  120  107  111
+CONNECT  120  119
+CONNECT  121  112  113  122  107
+CONNECT  122  136  121  130  134
+CONNECT  123  129
+CONNECT  124  129
+CONNECT  125  129
+CONNECT  126  129  134
+CONNECT  127  136
+CONNECT  128  136
+CONNECT  129  123  124  125  126
+CONNECT  130  122  131  132  133
+CONNECT  131  130
+CONNECT  132  130
+CONNECT  133  130
+CONNECT  134  122  126  135
+CONNECT  135  134
+CONNECT  136  128  137  122  127
+CONNECT  137  136  145  141  149
+CONNECT  138  144
+CONNECT  139  144
+CONNECT  140  144
+CONNECT  141  144  137  142  143
+CONNECT  142  141
+CONNECT  143  141
+CONNECT  144  138  139  140  141
+CONNECT  145  137  146  147  148
+CONNECT  146  145
+CONNECT  147  145
+CONNECT  148  145
+CONNECT  149  137  150  151
+CONNECT  150  149
+CONNECT  151  152  149
+CONNECT  152  153  154  155  151
+CONNECT  153  152
+CONNECT  154  152
+CONNECT  155  152

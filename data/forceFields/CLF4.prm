@@ -1,0 +1,12 @@
+*>>>>>> CHARMM parameter file for CLF <<<<<<<<<
+*>>>>>> Produced by Wolfia, wolffia.uprh.edu <<<<<<<<<
+
+NONB     ! CLF
+CH     0.000000  -0.078140     1.900000
+CL     0.000000  -0.300200     1.735000
+
+BOND   ! CLF
+CH   CL   1010.000     1.7580
+
+ANGL   ! CLF
+CL   CH   CL    143.400   111.0000

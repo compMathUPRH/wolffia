@@ -1,0 +1,5 @@
+Wolffia en Debian:
+
+Error al importar pybel: arreglo: descargar la versión actualizada de pybel.py en github y remplazar.
+
+

@@ -1,0 +1,36 @@
+ATOM      1 Na   LIG A   1       2.000  -0.000   0.000  1.00  0.00          Na0.0
+ATOM      2 C2   LIG A   1       6.330   0.500   0.000  1.00  0.00          C 0.0
+ATOM      3 C2   LIG A   1       7.196  -0.000   0.000  1.00  0.00          C 0.0
+ATOM      4 C2   LIG A   1       5.464   0.000   0.000  1.00  0.00          C 0.0
+ATOM      5 C2   LIG A   1       8.062   0.500   0.000  1.00  0.00          C 0.0
+ATOM      6 C2   LIG A   1       8.928  -0.000   0.000  1.00  0.00          C 0.0
+ATOM      7 C2   LIG A   1       9.794   0.500   0.000  1.00  0.00          C 0.0
+ATOM      8 C2   LIG A   1      10.660  -0.000   0.000  1.00  0.00          C 0.0
+ATOM      9 C2   LIG A   1      11.526   0.500   0.000  1.00  0.00          C 0.0
+ATOM     10 C2   LIG A   1      12.392  -0.000   0.000  1.00  0.00          C 0.0
+ATOM     11 C3   LIG A   1      13.258   0.500   0.000  1.00  0.00          C 0.0
+ATOM     12 C2   LIG A   1      14.124  -0.000   0.000  1.00  0.00          C 0.0
+ATOM     13 C2   LIG A   1      14.990   0.500   0.000  1.00  0.00          C 0.0
+ATOM     14 O3   LIG A   1       3.232   0.866   0.000  1.00  0.00          O -0.33
+ATOM     15 O3   LIG A   1       4.232  -0.866   0.000  1.00  0.00          O -0.33
+ATOM     16 O2   LIG A   1       4.598   0.500   0.000  1.00  0.00          O 0.0
+ATOM     17 X    LIG A   1       2.866  -0.500   0.000  1.00  0.00          Xx-0.33
+ATOM     18 X    LIG A   1       3.732   0.000   0.000  1.00  0.00          Xx0.0
+CONNECT    1   17
+CONNECT    2    3    4
+CONNECT    3    2    5
+CONNECT    4   16    2
+CONNECT    5    3    6
+CONNECT    6    5    7
+CONNECT    7    8    6
+CONNECT    8    9    7
+CONNECT    9    8   10
+CONNECT   10    9   11
+CONNECT   11   10   12
+CONNECT   12   11   13
+CONNECT   13   12
+CONNECT   14   18
+CONNECT   15   18
+CONNECT   16   18    4
+CONNECT   17    1   18
+CONNECT   18   16   17   14   15

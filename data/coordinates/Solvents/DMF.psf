@@ -1,0 +1,40 @@
+PSF 
+
+      04 !NTITLE
+ REMARKS DMF   by Frances Martinez (10/nov/2011) 
+
+      12 !NATOM
+       1 MAIN A    DMF    N   N1          0.509   14.0067           0
+       2 MAIN A    DMF    C   C1          0.509   12.0110           0
+       3 MAIN A    DMF    O   O1         -0.514   15.9994           0
+       4 MAIN A    DMF    C   C2          0.509   12.0110           0
+       5 MAIN A    DMF    C   C3          0.509   12.0110           0
+       6 MAIN A    DMF    H   H1          1.000    1.0079           0
+       7 MAIN A    DMF    H   H2          1.000    1.0079           0
+       8 MAIN A    DMF    H   H3          1.000    1.0079           0
+       9 MAIN A    DMF    H   H4          1.000    1.0079           0
+      10 MAIN A    DMF    H   H5          1.000    1.0079           0
+      11 MAIN A    DMF    H   H6          1.000    1.0079           0
+      12 MAIN A    DMF    H   H7          1.000    1.0079           0
+
+      11 !NBOND: bonds
+       1       2       1       4       1       5       2       3
+       2       6       4       7       4       8       4       9
+       5      10       5      11       5      12
+
+       4 !NTHETA: angles
+       2       1       4       2       1       5       4       1       5
+       3       2       1
+
+       2 !NPHI: dihedrals
+       3       2       1       4       3       2       1       5
+
+       0 !NIMPHI: impropers
+
+       0 !NDON: donors
+
+       0 !NACC: acceptors
+
+       0 !NNB
+
+       0 !NGRP
