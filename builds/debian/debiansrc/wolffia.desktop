@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Wolffia
+Comment=Molecular Dynamics using Wolffia
+TryExec=/usr/bin/wolffia
+Exec=/usr/bin/wolffia
+Icon=/usr/share/wolffia/interface/graphics/Wolffialogo.png
+Terminal=false
+Type=Application
+Categories=Science;Education
+StartupNotify=false
+X-Desktop-File-Install-Version=0.23

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>propertyEditor</class>
+ <widget class="QWidget" name="propertyEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>214</width>
+    <height>192</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QTreeWidget" name="propertyTree">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="autoScroll">
+      <bool>true</bool>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>false</bool>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">Property</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Value</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+     </column>
+     <item>
+      <property name="text">
+       <string>Name</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Rotate by     </string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <item>
+       <property name="text">
+        <string>X</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flags">
+        <set>ItemIsEditable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Y</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flags">
+        <set>ItemIsEditable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Z</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flags">
+        <set>ItemIsEditable|ItemIsEnabled</set>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Move by</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <item>
+       <property name="text">
+        <string>X</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flags">
+        <set>ItemIsEditable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Y</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flags">
+        <set>ItemIsEditable|ItemIsEnabled</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Z</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="flags">
+        <set>ItemIsEditable|ItemIsEnabled</set>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Comment</string>
+      </property>
+      <property name="flags">
+       <set>ItemIsEditable|ItemIsEnabled</set>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

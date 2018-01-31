@@ -1,0 +1,45 @@
+PSF
+
+       1 !NTITLE
+ REMARKS 
+
+      13 !NATOM
+       1 MAIN A    XXX    C   C2      -0.012000   14.0270           0
+       2 MAIN A    XXX    H   HA      +1.000000    1.0079           0
+       3 MAIN A    XXX    H   HB      +1.000000    1.0079           0
+       4 MAIN A    XXX    C   C3      +0.011000   14.0270           0
+       5 MAIN A    XXX    H   HG      +1.000000    1.0079           0
+       6 MAIN A    XXX    H   HH      +1.000000    1.0079           0
+       7 MAIN A    XXX    C   C4      +0.081000   14.0270           0
+       8 MAIN A    XXX    H   HE      +1.000000    1.0079           0
+       9 MAIN A    XXX    H   HF      +1.000000    1.0079           0
+      10 MAIN A    XXX    O   O       -0.139000   15.9994           0
+      11 MAIN A    XXX    C   C1      +0.081000   14.0270           0
+      12 MAIN A    XXX    H   HD      +1.000000    1.0079           0
+      13 MAIN A    XXX    H   HC      +1.000000    1.0079           0
+
+      13 !NBOND
+       1      11       1       2       1       3       1       4
+       4       5       4       6       4       7       7       8
+       7       9       7      10      10      11      11      12
+      11      13
+
+       0 !NTHETA: angles
+
+
+       0 !NPHI: dihedrals
+
+
+       0 !NIMPHI: impropers
+
+
+       0 !NDON: donors
+
+
+       0 !NACC: acceptors
+
+
+       0 !NNB
+
+
+       0 !NGRP

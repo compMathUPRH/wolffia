@@ -1,0 +1,447 @@
+
+/*
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+*/
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #FFFFFF url(images/img01.jpg) repeat-x;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #7F7772;
+}
+
+h1, h2, h3 {
+	margin-bottom: 15px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	color: #333333;
+}
+
+h1 {
+	font-size: 197%;
+}
+
+h2 {
+	font-size: 152%;
+}
+
+h3 {
+	font-size: 100%;
+	font-weight: bold;
+}
+
+p, ul, ol {
+	margin-bottom: 15px;
+	line-height: 1.6em;
+}
+
+ul, ol {
+	margin-left: 2em;
+}
+
+blockquote {
+	margin-left: 1em;
+	padding-left: 1em;
+	background: url(images/img09.gif) repeat-y;
+	font-style: italic;
+}
+
+a:link {
+	color: #0AAAFD;
+}
+
+a:hover, a:active {
+	text-decoration: none;
+	color: #FF6700;
+}
+
+a:visited {
+	color: #7F7772;
+}
+
+img {
+	border: none;
+}
+
+img.left {
+	float: left;
+	margin: 0 20px 0 0;
+}
+
+img.right {
+	float: right;
+	margin: 0 0 0 20px;
+}
+
+/* Menu */
+
+#menu {
+	width: 770px;
+	height: 105px;
+	margin: 0 auto;
+}
+
+#menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#menu li {
+	display: block;
+	float: left;
+	width: 122px;
+	height: 65px;
+	padding: 40px 0 0 0;
+}
+
+#menu a {
+	display: block;
+	width: 122px;
+	height: 32px;
+	padding: 13px 0 0 0;
+	background: url(images/img02.jpg) no-repeat;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+#menu a:hover {
+	background-image: url(images/img03.jpg);
+}
+
+#menu .active {
+	padding-top: 35px;
+}
+
+#menu .active a {
+	height: 37px;
+	padding-top: 16px;
+	background-image: url(images/img04.jpg);
+	color: #327EBE;
+}
+
+#menu .active a:hover {
+	background-image: url(images/img04.jpg);
+}
+
+/* Header */
+
+#header {
+	width: 770px;
+	height: 160px;
+	margin: 0 auto;
+}
+
+/* Logo */
+
+#logo {
+	float: left;
+	width: 250px;
+	height: 160px;
+	background: url(images/img05.jpg) no-repeat;
+}
+
+#logo h1, #logo h2 {
+	text-align: center;
+}
+
+#logo h1 {
+	padding-top: 85px;
+	background: url(images/WolffiaPlant.png) no-repeat center center;
+	letter-spacing: 8px;
+	font-size: 197%;
+}
+
+#logo h2 {
+	letter-spacing: 2px;
+	font-size: 85%;
+}
+
+#logo a {
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #FFFFFF;
+}
+
+/* Banner */
+
+#banner {
+	float: right;
+	width: 520px;
+	height: 160px;
+	/*background: url(images/img06.jpg) no-repeat;*/
+	background: #5A5
+}
+
+#banner h1 {
+	color: #FFF;
+}
+
+#banner a {
+	float: right;
+	padding: 10px 10px 0 0;
+	text-decoration: none;
+	text-align: right;
+	font-size: 136%;
+	font-style: italic;
+	color: #FFFFFF;
+}
+
+/* main links */
+#mainLinks {
+	float: left;
+	width: 172px;
+	height: 200px;
+	padding: 20px 10px 20px 10px;
+	/*background: url(images/img06.jpg) no-repeat;*/
+	background: #FFF
+}
+
+#mainLinks h1, h2, h3 {
+	margin-bottom: 15px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: normal;
+	font-size: 150%;
+	color: #383;
+}
+
+#mainLinks a {
+	color: #FFF;
+}}
+/* Options */
+
+#options {
+	float: right;
+	width: 770px;
+	height: 160px;
+}
+
+#options a {
+	float: right;
+	padding: 10px 10px 0 0;
+	text-decoration: none;
+	text-align: left;
+	font-size: 136%;
+	font-style: italic;
+	color: #000000;
+}
+
+/* Page */
+
+#page {
+	width: 760px;
+	margin: 0 auto;
+	padding: 20px 0 0 0;
+}
+
+/* Content */
+
+#content {
+	float: right;
+	width: 510px;
+}
+
+.post {
+	margin-bottom: 20px;
+}
+
+.post .title {
+	padding: 0 20px;
+}
+
+.post .story {
+	padding: 0 20px;
+}
+
+.post .meta {
+	padding: 5px 20px;
+	background: url(images/img09.gif) repeat-x;
+}
+
+.post .meta p {
+	margin: 0;
+	font-size: 77%;
+}
+
+.boxed .title {
+	height: 32px;
+	margin: 0;
+	padding: 8px 0 0 20px;
+	background: url(images/img08.jpg) no-repeat;
+	letter-spacing: -1px;
+	color: #FF3300;
+}
+
+.boxed .story {
+	padding: 20px;
+	border: 1px solid #FF8D17;
+}
+
+.boxed .meta {
+	padding: 5px 10px;
+	background: #FF8D17;
+	color: #FFFFFF;
+}
+
+.boxed .meta a {
+	color: #FFFFFF;
+}
+
+/* Sidebar */
+
+#sidebar {
+	float: left;
+	width: 240px;
+}
+
+#sidebar ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#sidebar li {
+	margin-bottom: 15px;
+}
+
+#sidebar li ul {
+	padding: 10px;
+	border: 1px solid #0AAAFD;
+	border-top: none;
+}
+
+#sidebar li li {
+	margin: 0;
+	padding: 3px 0;
+	background: url(images/img09.gif) repeat-x;
+}
+
+#sidebar li li.first {
+	background: none;
+}
+
+#sidebar li h2 {
+	height: 30px;
+	margin: 0;
+	padding: 10px 0 0 15px;
+	background: url(images/img10.jpg) no-repeat;
+	letter-spacing: -1px;
+	color: #327EBE;
+}
+
+#sidebar a:link {
+	text-decoration: none;
+}
+
+#sidebar a:hover {
+	text-decoration: underline;
+}
+
+#sidebar li a {
+	padding-left: 10px;
+	background: url(images/img11.gif) no-repeat left center;
+}
+
+/* Footer */
+
+#footer {
+	clear: both;
+	height: 100px;
+	padding: 15px 0;
+	background: #D1D1D1;
+	border-top: 5px solid #999999;
+	text-align: center;
+}
+
+#footer p {
+	margin: 0;
+	color: #999999;
+}
+
+#footer a {
+	color: #999999;
+}
+
+#footer a:hover {
+	color: #FFFFFF;
+}
+
+
+
+
+
+
+
+/* This imageless css button was generated by CSSButtonGenerator.com */
+.bugButton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #fab3ad;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #fab3ad;
+	box-shadow:inset 0px 1px 0px 0px #fab3ad;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fa665a), color-stop(1, #d34639) );
+	background:-moz-linear-gradient( center top, #fa665a 5%, #d34639 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fa665a', endColorstr='#d34639');
+	background-color:#fa665a;
+	-moz-border-radius:12px;
+	-webkit-border-radius:12px;
+	border-radius:12px;
+	border:2px solid #d83526;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:5px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #98231a;
+}.bugButton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #d34639), color-stop(1, #fa665a) );
+	background:-moz-linear-gradient( center top, #d34639 5%, #fa665a 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d34639', endColorstr='#fa665a');
+	background-color:#d34639;
+}.bugButton:active {
+	position:relative;
+	top:1px;
+}
+
+
+.bigButton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #caefab;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #caefab;
+	box-shadow:inset 0px 1px 0px 0px #caefab;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811) );
+	background:-moz-linear-gradient( center top, #77d42a 5%, #5cb811 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77d42a', endColorstr='#5cb811');
+	background-color:#77d42a;
+	-moz-border-radius:12px;
+	-webkit-border-radius:12px;
+	border-radius:12px;
+	border:2px solid #268a16;
+	display:inline-block;
+	color:#306108;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:5px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #aade7c;
+}.bigButton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #5cb811), color-stop(1, #77d42a) );
+	background:-moz-linear-gradient( center top, #5cb811 5%, #77d42a 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5cb811', endColorstr='#77d42a');
+	background-color:#5cb811;
+}.bigButton:active {
+	position:relative;
+	top:1px;
+}
+/* This imageless css button was generated by CSSButtonGenerator.com */
+

@@ -1,0 +1,53 @@
+PSF
+
+       1 !NTITLE
+ REMARKS Wolffia
+
+      13 !NATOM
+       1 O1   0    PAN  CB1  CA     0.361000       12.0107           0
+       2 O1   0    PAN  CB2  CA     0.361000       12.0107           0
+       3 O1   0    PAN  CB3  CB    -0.100000       12.0107           0
+       4 O1   0    PAN  HA   H      0.376000        1.0079           0
+       5 O1   0    PAN  CB4  CB    -0.100000       12.0107           0
+       6 O1   0    PAN  HA   H      0.376000        1.0079           0
+       7 O1   0    PAN  H3   H      0.376000        1.0079           0
+       8 O1   0    PAN  C5   CB    -0.100000       12.0107           0
+       9 O1   0    PAN  H4   H      0.376000        1.0079           0
+      10 O1   0    PAN  C6   CB    -0.100000       12.0107           0
+      11 O1   0    PAN  H5   H      0.376000        1.0079           0
+      12 O1   0    PAN  H6   H      0.376000        1.0079           0
+      13 O1   0    PAN  N    N     -0.698000       14.0067           0
+
+      13 !NBOND: bonds
+       1      10       1       5       1       7       2      13
+       2       3       2       8       3       4       3       5
+       5       6       8       9       8      10      10      11
+      12      13
+
+       8 !NTHETA: angles
+       1      10       8       1       5       3       2       3       5
+       5       1      10       8       3       2       10      8       2
+      13       2       3      13       2       8
+
+       0 !NPHI: dihedrals
+
+
+       0 !NIMPHI: impropers
+
+
+       0 !NDON: donors
+
+
+       0 !NACC: acceptors
+
+
+       0 !NNB
+
+       0       0       0       0       0       0       0       0
+       0       0       0       0       0       0       0       0
+       0       0       0       0       0       0       0       0
+       0       0
+
+       1       0 !NGRP
+       0       0       0
+

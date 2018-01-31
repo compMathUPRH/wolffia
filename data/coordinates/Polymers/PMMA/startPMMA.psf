@@ -1,0 +1,64 @@
+PSF 
+
+      04 !NTITLE
+ REMARKS PMMA backbone by JSE (1/jul/2011) based on output by PRODRG
+ REMARKS 
+ REMARKS 
+ REMARKS 
+
+      16 !NATOM
+       1 MAIN 1    DRG  CAI  CT            0.062   15.0350           0
+       2 MAIN 1    DRG 1HAI  HC     0.000000E+00    1.0000           0
+       3 MAIN 1    DRG 2HAI  HC     0.000000E+00    1.0000           0
+       4 MAIN 1    DRG 3HAI  HC     0.000000E+00    1.0000           0
+       5 MAIN 1    DRG 3HAD  HC     0.000000E+00    1.0000           0
+       6 MAIN 1    DRG 1HAD  HC     0.000000E+00    1.0000           0
+       7 MAIN 1    DRG 2HAD  HC     0.000000E+00    1.0000           0
+       8 MAIN 1    DRG  CAC  CT     0.000000E+00   12.0110           0
+       9 MAIN 1    DRG  CAB  CT     0.000000E+00   15.0350           0
+      10 MAIN 1    DRG 1HAB  HC     0.000000E+00    1.0000           0
+      11 MAIN 1    DRG 2HAB  HC     0.000000E+00    1.0000           0
+      12 MAIN 1    DRG 3HAB  HC     0.000000E+00    1.0000           0
+      13 MAIN 1    DRG  CAG   C            0.509   12.0110           0
+      14 MAIN 1    DRG  OAF   O           -0.514   15.9994           0
+      15 MAIN 1    DRG  OAH  OS           -0.119   15.9994           0
+      16 MAIN 1    DRG  CAD  CT     0.000000E+00   14.0270           0
+
+      15 !NBOND: bonds
+       1       2       1       3       1       4       1      15
+      16       6      16       7      16       8       8       9
+       8      13       9      10       9      11       9      12
+      13      14      13      15      16       5
+
+      23 !NTHETA: angles
+       1      15      13       2       1       3       2       1       4
+       2       1      15       3       1       4       3       1      15
+       4       1      15      16       8      13      16       8       9
+       6      16       7       6      16       8       7      16       8
+       8       9      10       8       9      11       8       9      12
+       8      13      14       8      13      15       9       8      13
+      10       9      11      10       9      12      11       9      12
+       6      16       5       5      16       8
+
+      21 !NPHI: dihedrals
+       1      15      13       8       1      15      13      14
+       1      15      13      15       2       1      15      13
+       3       1      15      13       4       1      15      13
+      16       8      13      14      16       8      13      15
+      16       8       9      10      16       8       9      11
+       6      16       8       9       6      16       8      12
+       6      16       8      13       7      16       8       9
+       7      16       8      12       7      16       8      13
+       9       8      13      14       9       8      13      15
+       5      16       8       9       5      16       8      12
+       5      16       8      13
+
+       0 !NIMPHI: impropers
+
+       0 !NDON: donors
+
+       0 !NACC: acceptors
+
+       0 !NNB
+
+       0 !NGRP

@@ -1,0 +1,11 @@
+parent_location = bzr+ssh://compsci@jaguey.uprh.edu/home_inv/compsci/Cuchifritos/bazaar/Wolffia/
+push_location = bzr+ssh://compsci@jaguey.uprh.edu/home_inv/compsci/Cuchifritos/bazaar/Wolffia/
+submit_branch = bzr+ssh://compsci@jaguey.uprh.edu/home_inv/compsci/Cuchifritos/bazaar/Wolffia/
+bound_location = bzr+ssh://compsci@jaguey.uprh.edu/home_inv/compsci/Cuchifritos/bazaar/Wolffia/
+bound = True
+[commit_data]
+message = """Revisión 250 también arregló enlaces en moléculas planas paralelas al plano x-y.
+Esta revisión arregló: 
+Bug 45 - Nanotube Editor Doesn't Work as a Standalone Programme
+Bug 51 - GUI nanotubo"""
+bugs = wolffia:51

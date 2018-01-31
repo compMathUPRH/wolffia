@@ -1,0 +1,73 @@
+
+VERSION=$(shell grep Version debian/debiansrc/control | cut -d' ' -f2)
+
+
+all: dist debian fedora zip source
+
+wolffia:
+	cd .. ; make
+
+compile: wolffia
+	rm -fR dist
+	mkdir -p dist
+	echo "import compileall\ncompileall.compile_dir(\"..\", force=1)" > dist/compile
+	python dist/compile
+	rm dist/compile
+
+copy:
+	cp -R ../interface dist    
+	cp -R ../data dist    
+	cp -R ../lib dist    
+	cp -R ../conf dist    
+	cp ../wolffia.py dist
+	cp ../nte dist
+	cp ../wolffia dist
+
+
+dist: compile copy
+	rm -f dist/*/*.py
+	rm -f dist/*/*/*.py
+	rm -f dist/*/*/*/*.py
+	rm -f dist/*/*/*/*/*.py
+	rm -f dist/*/*/*.ui
+	rm -f dist/*/*~
+	rm -f dist/*/*/*~
+	rm -f dist/*/*/*/*~
+	rm -f dist/*/*/*/*/*~
+	
+dist_src: wolffia copy
+	rm -f dist/*/*.pyc
+	rm -f dist/*/*/*.pyc
+	rm -f dist/*/*/*/*.pyc
+	rm -f dist/*/*/*/*/*.pyc
+	rm -f dist/*/*/*.ui
+	rm -f dist/*/*~
+	rm -f dist/*/*/*~
+	rm -f dist/*/*/*/*~
+	rm -f dist/*/*/*/*/*~
+
+
+debian: dist
+	cd debian ; make
+
+fedora: dist
+	cd fedora ; make
+
+windows: dist
+	cd fedora ; make
+
+zip: dist
+	cd zip ; make
+
+source: dist_src
+	cd source ; make
+
+
+clean:
+	rm -fR dist
+	cd debian ; make clean
+	cd fedora ; make clean
+	cd zip ; make clean
+	cd source ; make clean
+
+

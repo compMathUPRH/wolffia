@@ -1,0 +1,30 @@
+PSF
+
+       1 !NTITLE
+ REMARKS 
+
+       1 !NATOM
+       1 MAIN A    LIG   Na   Na00    +1.000000   22.9898           0
+
+       0 !NBOND
+
+
+       0 !NTHETA: angles
+
+
+       0 !NPHI: dihedrals
+
+
+       0 !NIMPHI: impropers
+
+
+       0 !NDON: donors
+
+
+       0 !NACC: acceptors
+
+
+       0 !NNB
+
+
+       0 !NGRP

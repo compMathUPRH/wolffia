@@ -1,0 +1,20 @@
+* CHARMM
+* 
+* REFERENCE: Alessio Alexiadis and Stavros Kassinos, Molecular Simulation of Water in Carbon Nanotubes, Chem. Rev. 2008, 108, 5014–5034
+
+* REFERENCE: DIHEDRALS from CHARMM22, par_all27_prot_lipid.prm
+
+NONBONDED
+C      0.000000  -0.070000     1.992400
+*C      0.000000  -0.00     1.992400
+
+BONDS
+C    C     305.000     1.3350 
+*C    C     305.000     1.421
+
+ANGLES
+C   C  C  40.0  120.0
+
+DIHEDRALS
+C   C  C  C       3.1000  2   180.00 
+

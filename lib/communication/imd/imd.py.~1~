@@ -1,0 +1,521 @@
+
+from abc import ABCMeta, abstractmethod
+import socket
+import struct
+from array import array
+import threading
+
+IMDVERSION = 2
+
+#IMDSemaphore = threading.Semaphore()
+
+class IMDType:
+    IMD_DISCONNECT = 0    #/**< close IMD connection, leaving sim running */
+    IMD_ENERGIES   = 1    #/**< energy data block                         */
+    IMD_FCOORDS    = 2    #/**< atom coordinates                          */
+    IMD_GO         = 3    #/**< start the simulation                      */
+    IMD_HANDSHAKE  = 4    #/**< endianism and version check message       */
+    IMD_KILL       = 5    #/**< kill the simulation job, shutdown IMD     */
+    IMD_MDCOMM     = 6    #/**< MDComm style force data                   */
+    IMD_PAUSE      = 7    #/**< pause the running simulation              */
+    IMD_TRATE      = 8    #/**< set IMD update transmission rate          */
+    IMD_IOERROR    = 9     #/**< indicate an I/O error                     */
+
+class IMDHeader:
+	IMDHeaderFormat = 'II'
+	IMDHeaderSize = struct.calcsize(IMDHeaderFormat)
+	
+	def __init__(self, rawHeader, packetType=IMDType.IMD_DISCONNECT):
+	    self.type          = packetType
+	    if rawHeader == None or len(rawHeader) == 0:
+	        self.sizeOrVersion = 0
+	    else:
+	        #print "IMDHeader __init__ ", len(rawHeader), IMDHeader.IMDHeaderSize, len(rawHeader[:IMDHeader.IMDHeaderSize])
+	        t = struct.unpack('I', rawHeader[:4])[0]
+	        pair          = struct.unpack(IMDHeader.IMDHeaderFormat, rawHeader[:IMDHeader.IMDHeaderSize])
+	        self.type       = socket.ntohl(pair[0])
+	        #print "IMDHeader __init__ self.type       = ", self.type
+	        try:
+	            self.sizeOrVersion = socket.ntohl(pair[1])
+	        except:
+	            #print "IMDHeader __init__ except", self.type,pair[1]
+	            self.sizeOrVersion = 0
+	        #print "IMDHeader __init__ pair", self.type,self.sizeOrVersion
+	
+	def format(self): return IMDHeader.IMDHeaderFormat
+	
+	def pack(self):
+		return struct.pack(
+				self.format(),
+				socket.htonl(self.type), 
+				socket.htonl(self.sizeOrVersion)
+		)
+		
+	def size(self): return self.sizeOrVersion
+    
+    
+
+class IMDData():
+	__metaclass__ = ABCMeta
+	def __init__(self, recvData=None):
+	    self.data = recvData
+	
+	#def format(self): return "ii"
+	
+	@abstractmethod
+	def pack(self):
+		'''
+		So far only meant to send signals, not data.  Should be overridden by extending classes.
+		'''
+		return self.format()
+	
+	@abstractmethod
+	def unpack(self):
+	    pass
+
+
+#class IMDGo(IMDData):
+#    pass
+
+
+class IMDEnergies(IMDData):
+	IMDEnergiesFormat = 'ifffffffff'
+	IMDEnergiesSize = struct.calcsize(IMDEnergiesFormat)
+	
+	def __init__(self, recvData=None):
+	    IMDData.__init__(self,recvData)
+	    self.reset()
+	    self.unpack()
+	
+	def format(self): return IMDEnergies.IMDEnergiesFormat
+	
+	def reset(self):
+	    self.tstep  = 0       #/**< integer timestep index                    */
+	    self.T      = 0.0     #/**< Temperature in degrees Kelvin             */
+	    self.Etot   = 0.0     #/**< Total energy, in Kcal/mol                 */
+	    self.Epot   = 0.0     #/**< Potential energy, in Kcal/mol             */
+	    self.Evdw   = 0.0     #/**< Van der Waals energy, in Kcal/mol         */
+	    self.Eelec  = 0.0     #/**< Electrostatic energy, in Kcal/mol         */
+	    self.Ebond  = 0.0     #/**< Bond energy, Kcal/mol                     */
+	    self.Eangle = 0.0     #/**< Angle energy, Kcal/mol                    */
+	    self.Edihe  = 0.0     #/**< Dihedral energy, Kcal/mol                 */
+	    self.Eimpr  = 0.0     #/**< Improper energy, Kcal/mol                 */
+	
+	def pack(self):
+		return struct.pack(
+				self.format(),
+				socket.htonl(self.tstep), 
+				socket.htonl(self.T), 
+				socket.htonl(self.Etot), 
+				socket.htonl(self.Epot), 
+				socket.htonl(self.Evdw), 
+				socket.htonl(self.Eelec), 
+				socket.htonl(self.Ebond), 
+				socket.htonl(self.Eangle), 
+				socket.htonl(self.Edihe), 
+				socket.htonl(self.Eimpr)
+		)
+		
+	def unpack(self, imdData=None):
+	    if imdData != None: self.data = imdData
+	    
+	    (self.tstep,self.T,self.Etot,self.Epot,self.Evdw,
+	    self.Eelec,self.Ebond,self.Eangle,self.Edihe,self.Eimpr) = struct.unpack(
+	        self.format(), 
+	        self.data)
+	
+	def sendTo(self, sock):
+	    pass
+
+
+
+class IMDCoords(IMDData):
+	IMDcoordsFormat = 'fff'
+	IMDcoordsSize = struct.calcsize(IMDcoordsFormat)
+	
+	def __init__(self, recvData=None):
+	    IMDData.__init__(self,recvData)
+	    self.reset()
+	    self.unpack()
+	
+	def format(self): return IMDCoords.IMDcoordsFormat
+	
+	def reset(self):
+	    self.rawCoords = array('f')
+	    self.numAtoms = 0
+	
+	def pack(self): pass # to be implemented
+	
+	def unpack(self, imdData=None):
+	    if imdData != None: self.data = imdData
+	            
+	    self.rawCoords.fromstring(self.data)
+	    if len(self.rawCoords) % 3 != 0:
+	        print "ERROR: Ammount of coordinates in data (", len(self.rawCoords), ")not divisible by 3."
+	    self.numAtoms = int(len(self.rawCoords) / 3)
+	
+	def sendTo(self, sock):
+	    pass
+
+class IMDTrate(IMDData):
+    IMDTrateFormat = 'i'
+    IMDTrateSize = struct.calcsize(IMDTrateFormat)
+    
+    def __init__(self, recvData=None):
+        IMDData.__init__(self,recvData)
+
+#===================================================================================
+class IMDPacket:
+	__metaclass__ = ABCMeta
+	@abstractmethod
+	def __init__(self, sock=None, header=None):
+		#print "IMDPacket __init__"
+		self.header = header
+		self.data   = None
+		
+		self.sock   = sock   # not part of the payload
+		if sock != None: self.recv()
+
+	def pack(self):
+		if self.data == None:
+			return self.header.pack()
+		else:
+			return self.header.pack() + self.data.pack()
+
+	@staticmethod
+	def readn(sock, n):
+	    '''
+	    Reads n bytes from the socket.  C to Python adaptation
+	    of the function imd_readn() in imdapi/imd.c
+	    '''
+	    
+	    nleft = n
+	    recvdData = ""
+	    #print "IMDPacket readn reading ",n 
+	    while nleft > 0:
+			try: # if IMD is killed in the middle of a read this recv will fail
+			    buffer = sock.recv(nleft)
+			except: return recvdData
+			nread = len(buffer)
+			#print "IMDPacket readn received ",nread
+			if nread == 0: break
+			recvdData += buffer
+			nleft -= nread
+	    return recvdData
+
+	@staticmethod
+	def recv(sock):
+		print " IMDPacket recv ", sock
+		
+		#IMDSemaphore.acquire()
+		repeat = True
+		while repeat:
+			repeat = False
+			try:
+				header = IMDHeader(sock.recv(IMDHeader.IMDHeaderSize))
+			except socket.timeout:
+				repeat = True
+				
+		print " IMDPacket recv type", header.type, header.size()
+		if header.type == IMDType.IMD_FCOORDS:
+		    size      = header.size() * IMDCoords.IMDcoordsSize
+		    return IMDCoordPacket(IMDCoords(IMDPacket.readn(sock, size)))
+		    
+		elif header.type == IMDType.IMD_ENERGIES:
+			size      = header.size() * IMDEnergies.IMDEnergiesSize
+			return IMDEnergiesPacket(IMDEnergies(IMDPacket.readn(sock, size)))
+		
+		#IMDSemaphore.release()
+		print " IMDPacket recv: normal return", header.type
+		return IMDTypeToClass[header.type]()
+	
+	def recv2(self, sock=None):
+		print " IMDPacket recv ", sock
+		if sock != None: self.sock = sock
+		
+		#IMDSemaphore.acquire()
+		try: # if IMD is killed in the middle of a read this recv will fail
+			self.header = IMDHeader(self.sock.recv(IMDHeader.IMDHeaderSize))
+		except: 
+			#IMDSemaphore.release()
+			self.header = None
+			print " IMDPacket recv: problems receiving header"
+			return None
+				
+		print " IMDPacket recv type", self.header.type, self.header.size()
+		if self.header.type == IMDType.IMD_FCOORDS:
+		    size      = self.header.size() * IMDCoords.IMDcoordsSize
+		    self.data = IMDCoords(self.readn(size))
+		    
+		elif self.header.type == IMDType.IMD_ENERGIES:
+			try: # if IMD is killed in the middle of a read this recv will fail
+			    self.data = IMDEnergies(self.sock.recv(self.header.size() * IMDEnergies.IMDEnergiesSize))
+			except:
+				#IMDSemaphore.release() 
+				return None
+		
+		#IMDSemaphore.release()
+		print " IMDPacket recv: normal return"
+		return self.header.type
+	
+	def send(self, sock):
+		print "IMDPacket send", self.__class__.__name__
+		#if self.header == None or self.data == None:
+		#	print "IMDPacket send: Nothing to send"
+		#else:
+		return sock.send(self.pack())
+	
+	def setGo(self):
+	    self.header.set(IMDType.IMD_GO, 0)
+	    self.data = IMDGo()
+	    
+	def type(self): return self.header.sizeOrVersion
+
+
+class IMDDisconnectPacket(IMDPacket):
+    def __init__(self):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_DISCONNECT))
+    	#print "IMDDisconnectPacket __init__"
+
+class IMDEnergiesPacket(IMDPacket):
+    def __init__(self, energies):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_ENERGIES))
+    	self.data = energies
+    	#print "IMDEnergiesPacket __init__"
+    	
+    def getEnergies(self):
+    	return self.data
+
+class IMDCoordPacket(IMDPacket):
+    def __init__(self, coordinates):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_FCOORDS))
+    	self.data = coordinates
+    	#print "IMDCoordPacket __init__"
+    	
+    def getCoordinates(self):
+    	return self.data
+
+class IMDKillPacket(IMDPacket):
+    def __init__(self):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_KILL))
+    	print "IMDKillPacket __init__"
+
+class IMDGoPacket(IMDPacket):
+    def __init__(self):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_GO))
+    	#print "IMDGoPacket __init__"
+
+class IMDHandshakePacket(IMDPacket):
+    def __init__(self):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_HANDSHAKE))
+    	#print "IMDHandshakePacket __init__"
+
+class IMDMDcommPacket(IMDPacket):
+    def __init__(self):
+    	raise NotImplementedError
+    	#print "IMDMDcommPacket __init__"
+
+class IMDPausePacket(IMDPacket):
+    def __init__(self):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_PAUSE))
+    	#print "IMDPausePacket __init__"
+
+class IMDTratePacket(IMDPacket):
+    def __init__(self, rate):
+    	IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_TRATE))
+    	self.data = rate
+    	#print "IMDTratePacket __init__"
+    	
+    def getRate(self):
+    	return self.data
+
+class IMDIOerrorPacket(IMDPacket):
+	def __init__(self):
+		IMDPacket.__init__(self,header=IMDHeader(None, packetType=IMDType.IMD_IOERROR),data=None)
+    	#print "IMDIOerrorPacket __init__"
+
+IMDTypeToClass = {
+	0:IMDDisconnectPacket,
+	1:IMDEnergiesPacket,
+	2:IMDCoordPacket,
+	3:IMDGoPacket,
+	4:IMDHandshakePacket,
+	5:IMDKillPacket,
+	6:IMDMDcommPacket,
+	7:IMDPausePacket,
+	8:IMDTratePacket,
+	9:IMDIOerrorPacket
+				}
+
+
+#===================================================================================
+class IMDConnection:
+	_TIMEOUT = 60
+	def __init__(self, host, port):
+		print "IMDConnection __init__", host, port
+		self.sock           = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.sock.            setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.server_address = (host, port)
+		self.connected      = False
+		self.packet         = None
+		
+		print "IMDConnection __init__ termino"
+		
+	def connect(self):
+		start     = time.clock()
+		self.connected = False
+		count     = 0
+		while time.clock() - start < IMDConnection._TIMEOUT and count < IMDConnection._TIMEOUT and self.connected == False:
+		    try:
+		    	print "IMDConnection __init__", time.clock()
+		        self.sock.connect(self.server_address)
+		        self.connected = True
+		    except:
+		        time.sleep(1)  
+		    count += 1
+		    
+		if not self.connected: raise socket.timeout
+		
+		self.sock.settimeout(5.)
+		
+		self.packet         = IMDPacket.recv(self.sock)  # Handshake
+		self.version        = self.packet.type()
+	
+	def close(self):
+		# busy wait until connection is verified
+		print "IMDConnection close: waiting for connection to be established", self.connected , self.packet
+		for i in range(int(IMDConnection._TIMEOUT)):
+			if self.connected and self.packet <> None: break
+			time.sleep(1)  
+			 
+		print "IMDConnection close: connection established. Now it will be closed!",self.connected , self.packet
+		#try: self.kill()
+		#except: pass
+		self.kill()
+		try: self.sock.shutdown(socket.SHUT_RDWR)
+		except: pass
+		self.sock.close()
+		self.sock = None
+		self.connected = False
+	
+	def kill(self):
+		'''
+		IMDPacket(
+				header=IMDHeader(None, packetType=IMDType.IMD_KILL), 
+				data=None).send(self.sock)
+		'''
+		IMDKillPacket().send(self.sock)
+		
+	def go(self):
+		self.connect()
+		self.sock.send(
+		    struct.pack(
+		        "ii", 
+		        socket.htonl(IMDType.IMD_GO), 
+		        socket.htonl(0)
+		))
+	
+	def recv(self):
+	    #return (IMDEnergies(self.sock), IMDCoords(self.sock))
+	    if self.sock == None: return IMDDisconnectPacket()
+	    return IMDPacket.recv(self.sock)
+    
+
+import threading, sys, os, time, random
+class IMDThread(threading.Thread):
+    def __init__(self, remoteHost=None, port=3000):
+        '''
+        Constructor
+        '''
+        threading.Thread.__init__(self)
+        
+        if remoteHost == None:
+	        self.remoteHost = 'localhost'
+        else:
+	        self.remoteHost = remoteHost
+        self.port       = port
+        
+        self.imd        = None
+        self.modTime    = time.time()
+        self.coordArray = None
+        self.energies   = None
+        self.modified   = False
+        #print "IMDThread __init__", self.remoteHost, port
+        
+    def cancel(self):
+        print "IMDThread cancel"
+        self.imd.close()
+
+    def coordinatesAreNew(self):
+        return self.modified
+    
+    def getCoordinatesArray(self):
+        self.modified = False
+        return self.coordArray
+
+    def run(self):
+		"""
+		Runs the thread. Called by self.start.
+		"""
+		
+		print "IMDThread run"
+		self.imd = IMDConnection(self.remoteHost, self.port)
+		self.imd.go()
+		
+		en = self.imd.recv()
+		while True:
+			p = self.imd.recv()
+			if   p.header.type == IMDType.IMD_DISCONNECT: break
+			elif p.header.type == IMDType.IMD_FCOORDS:
+			    self.coordArray = p.data.rawCoords
+			    self.modified   = True
+			elif p.header.type == IMDType.IMD_ENERGIES:
+			    self.energies   = p.data
+			    pass
+			
+			#if en.header.type == IMDType.IMD_ENERGIES:
+			#	print en.data.tstep, en.data.T, en.data.Etot, en.data.Epot, en.data.Evdw, en.data.Eelec, en.data.Ebond, en.data.Eangle, en.data.Edihe, en.data.Eimpr
+			#if en.header.type == IMDType.IMD_FCOORDS:
+			#	print en.data.rawCoords
+			print "IMDThread run packet received: ", p.header.__class__.__name__
+			time.sleep(1)  
+		
+		self.imd.close()
+
+    def getEnergies(self): return self.energies
+    
+    def coordinates(self):
+        '''
+        Returns coordinates as a linear array of float.
+        '''
+        return self.imd.packet.data.rawCoords
+
+
+if __name__ == '__main__':
+    imd = IMDConnection('molecula.uprh.edu', 3821)
+    
+    print 'starting up on %s port %s' % imd.server_address
+
+    imd.go()
+    
+    en = imd.recv()
+    i=0
+    while True:
+		en = imd.recv()
+		#print "recibi tipo ",en.header.type
+		if en.header.type == IMDType.IMD_DISCONNECT: break
+		#(en, cocr) = imd.recv()
+		
+		if en.header.type == IMDType.IMD_ENERGIES:
+			print en.data.tstep, en.data.T, en.data.Etot, en.data.Epot, en.data.Evdw, en.data.Eelec, en.data.Ebond, en.data.Eangle, en.data.Edihe, en.data.Eimpr
+		if en.header.type == IMDType.IMD_FCOORDS:
+			print en.data.rawCoords[:6]
+		i+=1
+		print i
+		if i % 10 == 0:
+			break
+		#c = imd.recv()
+    
+    imd.close()
+
+
