@@ -1,5 +1,5 @@
 #!/bin/bash
 # Launch Wolffia
 
-DIR="$( cd "$( dirname "$0" )" && pwd )"
+DIR="/usr/local/share/wolffia"
 python $DIR/wolffia.py
