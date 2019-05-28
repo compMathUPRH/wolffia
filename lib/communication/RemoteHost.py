@@ -135,7 +135,7 @@ class RemoteHost:
 		if err.find("No such file or directory") <> -1:
 			self.logArea.write( "RemoteHost.retrieveGPUs did not find NVIDIA drivers\n")
 		else:
-			(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['lspci | grep -i nvidia | grep VGA | wc -l'])
+			(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['lspci | grep -i nvidia | wc -l'])
 			self.maxGpus = int(resp)
 			self.logArea.write( "RemoteHost.retrieveGPUs number of GPU devices: " + str(self.maxGpus) + "\n")
 

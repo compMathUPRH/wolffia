@@ -90,7 +90,7 @@ class CoordinateFile:
 			name	 = etable.GetName(atom.atomicnum) 
 			residue = atom.OBAtom.GetResidue().GetName()
 			psfType = atom.OBAtom.GetResidue().GetAtomID(atom.OBAtom).strip()
-			print "'" + psfType + "'"
+			print "_processFirstFrame: '" + psfType + "'"
 			charge = atom.partialcharge
 			mass	 = atom.atomicmass	
 			if self.psf <> None:
@@ -105,7 +105,7 @@ class CoordinateFile:
 			n += 1
 		
 		# add edges
-		
+		print '_processFirstFrame add edges'
 		if self.psf <> None:
 			for b in self.psf.bonds:
 				try:  # avoids adding an edge twice
@@ -118,9 +118,10 @@ class CoordinateFile:
 			for bond in openbabel.OBMolBondIter(mol.OBMol):   
 				chemicalGraphMixed.add_edge([bond.GetBeginAtom().GetIdx(), bond.GetEndAtom().GetIdx()])	   
 					
-		molecules = chemicalGraphMixed.connectedComponents()	  
+		molecules = list(chemicalGraphMixed.connectedComponents())
 		self.currentMolecule = Mixture()
 		
+		#print '_processFirstFrame Añadir'+  str(list(molecules)) + ' moléculas a mezcla:  ', 
 		if len(molecules) == 1:
 			self.currentMolecule.add(Molecule(self.mixtureName, molecule=molecules[0]))
 		else:

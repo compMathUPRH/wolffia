@@ -162,8 +162,8 @@ class Load(QtGui.QDialog):
             elif (path_1[len(path_1)-3]+path_1[len(path_1)-2]+path_1[len(path_1)-1]) == 'psf' and (path_2[len(path_2)-3]+path_2[len(path_2)-2]+path_2[len(path_2)-1]) == 'pdb':
                 try:
                     self.history.currentState().getMixture().load(path_2,path_1)
-                except:
-                    QtGui.QMessageBox.warning(self,"Error 4 !!!","There is a problem with the file.")
+                except Exception  as e:
+                    QtGui.QMessageBox.warning(self,"Error 4 !!!","There is a problem with the file."+str(e))
             else:QtGui.QMessageBox.warning(self,"Error 5 !!!","There is a problem with the file.")  
             
         elif not(path_1 == '') and (path_1[len(path_1)-3]+path_1[len(path_1)-2]+path_1[len(path_1)-1]) == 'pdb':

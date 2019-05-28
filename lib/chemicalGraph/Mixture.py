@@ -1327,6 +1327,20 @@ class Mixture(Graph):
         #print "updateCoordinatesFromArray finished time=", time.clock() - start
             
 
+    def getAtomsCoordinatesAsArray(self):
+        import numpy as np
+        coordArray = np.empty((self.order(), 3))
+        i = 0
+        for molecule in self:
+            mol = self.getMolecule(molecule)
+            for atom in mol:
+                atr = mol.atom_attributes(atom)
+                #print 'getAtomsCoordinatesAsArray: ', i
+                coordArray[:i,:] = atr.getCoord()
+                i += 1
+
+        return coordArray
+
     def updateMixture(self,mix):
         self.setChanged()
         self.__dict__ = mix.__dict__

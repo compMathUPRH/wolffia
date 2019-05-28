@@ -315,7 +315,7 @@ class MinTab(QtGui.QFrame):
 		self.minTimer.stop()
 		namdOutput = self.simRun.getOutput()
 		if namdOutput != None:
-			#print "SimTab on_minTimer", namdOutput
+			print "SimTab on_minTimer", namdOutput
 			self.checkError(namdOutput)
 			if WOLFFIA_USES_IMD:
 			    self.energyPlot1.addValuesFromIMD(self.simRun.getEnergies())

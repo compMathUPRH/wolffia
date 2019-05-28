@@ -48,6 +48,7 @@ from conf.Wolffia_conf import WOLFFIA_DEFAULT_MIXTURE_LOCATION, WOLFFIA_DEFAULT_
 from lib.chemicalGraph.molecule.Molecule import Molecule
 import cPickle as pickle #Tremenda aportación por carlos cortés.
 
+from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
 
 __MAX_SIZE__ = 10
 
@@ -426,6 +427,98 @@ class NanoCADState(object):
 	#   .setValue(0)
 
 	def fillBox(self, solv, molNum, checkCollisions=False, replaceCollisions=False, applyPCBs=True, progress=None):
+		import math, random
+		import numpy as np
+
+		remaining = -1   # to track removng collissions
+		
+		totalDim = self.getDrawer().getBoxDimension()
+		boxmin = self.getDrawer().getCellOrigin()
+		boxmax =[ boxmin[0]+totalDim[0], boxmin[1]+totalDim[1], boxmin[2]+totalDim[2] ]
+		
+		#calculate the volume for a single solvent molecule
+		center = [0., 0., 0.]
+		pos = solv.massCenter()
+		solv.moveBy([center[0]-pos[0], center[1]-pos[1], center[2]-pos[2]])
+		#solvDiameter = solv.diameter()+ _SEPARATION_BETWEEN_SOLVENTS_
+		solvDiameter = math.pow(self.getDrawer().getBoxVolume() / molNum, 1./3.)
+		if solvDiameter == 0: return
+		
+		row = math.floor(totalDim[1]/solvDiameter)
+		col = math.floor(totalDim[0]/solvDiameter)
+		dep = math.floor(totalDim[2]/solvDiameter)
+
+		progressMax   = molNum
+		progressCount = 0
+		if progress != None:	
+			progress.setLabelText("Adding solvent")
+			progress.setRange(0,molNum-1)
+			progress.setValue(0)
+		
+		solvRadius = solvDiameter / 2
+		newPos = solv.massCenter()
+		refCoor = boxmin
+		
+		boxmax[0] -= solvDiameter/2.
+		boxmax[1] -= solvDiameter/2.
+		boxmax[2] -= solvDiameter/2.
+		
+		# add first molecule and rename solvent with the given name
+		mol = solv.copy()
+		mol.moveBy([random.uniform(boxmin[0], boxmax[0]), random.uniform(boxmin[1], boxmax[1]), random.uniform(boxmin[2], boxmax[2])])
+		nodeName = self.addMolecule(mol, checkForInconsistentNames=True)
+		self.shownMolecules.show(nodeName)
+		#print "fillBox ", mol.molname(),progressMax
+		solv.rename(mol.molname())
+		progressMax -= 1
+		
+		if progress != None:	
+			progress.setLabelText("Adding solvent")
+			progress.setRange(progressCount,progressMax)
+			progress.setValue(progressCount)
+
+		# lopps over a sequence of adding solvent and removing collisions
+		originalMolecules = self.getMixture().molecules()
+		originalCoords = self.getMixture().getAtomsCoordinatesAsArray()
+		solvRadius = solvDiameter / 2.0 + 1.5
+
+		#print "anadiendo... ", progressMax-progressCount
+		while progressCount < progressMax:  # adds solvent
+			#random rotation for solvent atoms
+			rx = random.uniform(0, 360)
+			ry = random.uniform(0, 360)
+			rz = random.uniform(0, 360)
+			
+			#random displacement for solvent atoms
+			rdx = random.uniform(boxmin[0], boxmax[0])
+			rdy = random.uniform(boxmin[1], boxmax[1])
+			rdz = random.uniform(boxmin[2], boxmax[2])
+			
+			#generate new molecule and assign next position
+			mol = solv.copy()
+			mol.rotateDeg(rx, ry, rz)
+			newPos = np.array([[rdx, rdy, rdz]])
+
+			if checkCollisions:
+				atomDistances = euclidean_distances(originalCoords, newPos)
+				if np.min(atomDistances) > solvRadius:
+					#print 'fillBox: añadiendo', progressCount, np.min(atomDistances), newPos
+					mol.moveBy(list(newPos)[0])
+					nodeName = self.addMolecule(mol, checkForInconsistentNames=False)
+					self.shownMolecules.show(nodeName)
+				else:
+					#print 'fillBox: colision'
+					if replaceCollisions: progressCount -= 1
+
+			progressCount += 1
+			if progress != None:	progress.setValue(progressCount)
+		
+				
+		#print "tiempo ", time.clock() - start
+		#print "Molecules after cleaning: ",mix.order()
+
+
+	def fillBoxBAK(self, solv, molNum, checkCollisions=False, replaceCollisions=False, applyPCBs=True, progress=None):
 		import math, random
 		remaining = -1   # to track removng collissions
 		
