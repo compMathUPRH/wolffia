@@ -69,7 +69,7 @@ class Plot(Qwt.QwtPlot):
         self.setType(plotType)
         
     def addValuePair(self, etype, x, y):
-    	print "addValuePair ",etype, x, y
+    	#print "addValuePair ",etype, x, y
         if len(self.charts[etype][self.xpos]) >= 0 and len(self.charts[etype][self.ypos]) >= 0:
             if (len(self.charts[etype][self.xpos]) == 0 and len(self.charts[etype][self.ypos]) == 0) or (self.charts[etype][self.xpos][-1] != x and self.charts[etype][self.ypos][-1] != y):
                 self.charts[etype][self.xpos].append(x)
@@ -140,7 +140,7 @@ class Plot(Qwt.QwtPlot):
         #else: print "addValuesFromIMD None"
 
         if imdEnergies != None and imdEnergies.tstep != None and imdEnergies.tstep > self.prevEnergyStep:
-            print "addValuesFromIMD ", imdEnergies.tstep, imdEnergies.Epot
+            #print "addValuesFromIMD ", imdEnergies.tstep, imdEnergies.Epot
             vdw     = imdEnergies.Evdw
             bond    = imdEnergies.Ebond
             angle   = imdEnergies.Eangle
@@ -210,7 +210,7 @@ class Plot(Qwt.QwtPlot):
                 self.average.setData([xx[0], xx[-1]], [y0, y1])
                 p = mean(yy)
                 s = 2. * std(yy)
-                print "updateCurve ", yy, p, s
+                #print "updateCurve ", yy, p, s
                 self.setAxisScale(Qwt.QwtPlot.yLeft, max(p-s,min(yy)), min(p+s,max(yy)), 0)
 
     def mousePressEvent(self, event):

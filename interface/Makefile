@@ -11,41 +11,23 @@ all:
 	cd PSS ; make
 	cd classifier ; make
 	cd main ; make
+	cd celluloseEditor ; make
+	cd diamondEditor ; make
+	cd PANI ; make
+	cd PEDOT ; make
+	cd PSS ; make
 	
-doc:
-	cd doc ; make
-
-builds: all
-	cd builds ; make
-
-debian:
-	cd builds ; make debian
-
-fedora:
-	cd builds ; make fedora
-
-windows:
-	cd builds ; make windows
-
-zip:
-	cd builds ; make zip
-
-source:
-	cd builds ; make source
-
-install: 
-	cd builds/debian ; make
-	sudo apt-get install builds/debian/wolffia_$(VERSION)-1_all.deb
-
-uninstall:
-	sudo apt-get uninstall wolffia
-
 clean:
-	cd interface/nanotubeEditor ; make clean
-	cd interface/grapheneEditor ; make clean
-	cd interface/homopolyEditor ; make clean
-	cd interface/classifier ; make clean
-	cd interface/main ; make clean
-	cd doc; make clean
-	cd builds ; make clean
+	cd nanotubeEditor ; make clean
+	cd grapheneEditor ; make clean
+	cd homopolyEditor ; make clean
+	cd classifier ; make clean
+	cd main ; make clean
+
+	cd celluloseEditor ; make clean
+	cd diamondEditor ; make clean
+	cd PANI ; make clean
+	cd PEDOT ; make clean
+	cd PSS ; make clean
+	rm -f *.pyc *.py~ ui_*.py
 

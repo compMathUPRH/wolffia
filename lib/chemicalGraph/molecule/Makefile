@@ -38,3 +38,9 @@ clean:
 	rm -f *.pyc *.py~ ui_*.py
 
 
+	cd allotrope ; make
+	cd element ; make
+	cd gas ; make
+	cd polymer ; make
+	cd solvent ; make
+

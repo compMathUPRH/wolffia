@@ -34,11 +34,9 @@ uninstall:
 	sudo apt-get uninstall wolffia
 
 clean:
-	cd interface/nanotubeEditor ; make clean
-	cd interface/grapheneEditor ; make clean
-	cd interface/homopolyEditor ; make clean
-	cd interface/classifier ; make clean
-	cd interface/main ; make clean
+	cd interface ; make clean
+	cd lib ; make clean
 	cd doc; make clean
 	cd builds ; make clean
+	cd conf ; make clean
 

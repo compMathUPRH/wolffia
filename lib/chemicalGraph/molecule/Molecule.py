@@ -786,7 +786,7 @@ class  Molecule(ChemicalGraph):
 	#-------------------------------------------------------------
 	def atomTypes(self):
 		#from chemicalGraph import Mixture
-		print "Molecule atomTypes molecula: '", self.molname(), "'"
+		#print "Molecule atomTypes molecula: '", self.molname(), "'"
 		
 		return sorted(set([ self.getAttributes(atom).getInfo().getType() for atom in self.atoms()]))
 	

@@ -48,6 +48,548 @@ from interface.main.WTimer import WTimer
 from interface.main.MixtureViewer import MixtureViewer
 from lib.chemicalGraph.molecule.ForceField import ForceField, NonBond
 
+#====================================================================
+class ChargesTable(QtGui.QTableWidget):
+    def __init__(self, hist, forceTab, parent=None):
+        super(ChargesTable, self).__init__(parent=parent)
+        print "ChargesTable init"
+        self.history = hist
+        self.forceTab = forceTab
+
+        self.setColumnCount(3)
+        self.setRowCount(0)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(2, item)
+
+        item = self.horizontalHeaderItem(0)
+        item.setText("Atom")
+        item = self.horizontalHeaderItem(1)
+        item.setText("Type")
+        item = self.horizontalHeaderItem(2)
+        item.setText("Charge")
+
+    def update(self):
+        print "ChargesTable update"
+        self.insertChargesTable()
+
+    def showEvent(self,e):
+        print "ChargesTable showEvent"
+        self.insertChargesTable()
+
+    def updateCharges(self):
+		#list all molecules in the Structure Manager
+		# count nonb in all molecules
+		#print "updateCharges start"
+		rows = 0
+		displayedMols=list()
+
+		self.blockSignals(True)
+		for molName in self.history.currentState().mixture:
+			molecule = self.history.currentState().mixture.getMolecule(molName)
+			if not molecule.molname() in displayedMols:
+				displayedMols.append(molecule.molname() )
+				rows += len(molecule.atoms())+2
+				chrow = rows - 1
+				charge = molecule.charge()
+				
+				totalCharge = QtGui.QTableWidgetItem("{:f}".format(charge))
+				totalCharge.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
+				#print "updateCharges ",rows,molecule.molname(),molecule.charge()
+				self.setItem(chrow, 2, totalCharge)
+				
+				if charge > 0:
+					self.item(chrow, 2).setBackground(QtGui.QBrush(QtGui.QColor(200,200,255)))
+				elif charge < 0:
+					self.item(chrow, 2).setBackground(QtGui.QBrush(QtGui.QColor(255,200,200)))
+				else:
+					self.item(chrow, 2).setBackground(QtGui.QBrush(QtGui.QColor(200,255,200)))
+		self.blockSignals(False)
+		#print "updateCharges end"
+			
+
+    def insertChargesTable(self):
+        '''
+        list all molecules in the Structure Manager
+        '''
+        # count nonb in all molecules
+        print "insertChargesTable start"
+        #timer = WTimer("ForceTab.insertChargesTable")
+        row = 0
+        rows = 0
+        molCount=0
+
+        self.setRowCount(0)
+        displayedMols=list()
+        charges = dict()
+        progress	  = QtGui.QProgressDialog("Updating charges...", QtCore.QString(), 0, len(self.history.currentState().mixture), self,QtCore.Qt.Dialog|QtCore.Qt.WindowTitleHint)
+        progress.setWindowModality(QtCore.Qt.WindowModal)
+
+        self.blockSignals(True)
+        for molName in self.history.currentState().mixture:
+            progress.setValue(molCount)
+            molCount +=  1
+            charVals = dict()
+            molecule = self.history.currentState().mixture.getMolecule(molName)
+            if not molecule.molname() in displayedMols:
+                print "insertChargesTable ", molecule.molname()
+                #self.allForceField[molName] = {"nonBonded" : [], "Bonds" : [] , "Angles": [], "Dihedrals": []}
+                displayedMols.append(molecule.molname() )
+                
+                #ff = molecule.getForceField()
+                ff = molecule.forceField
+                #print "insertChargesTable ", ff._NONBONDED
+                types = molecule.atomTypes()
+                #print "insertChargesTable types", types
+                rows += len(molecule.atoms())+2
+                self.setRowCount(rows)
+                  
+                # display molecule name
+                nameW = QtGui.QTableWidgetItem(molecule.molname())
+                nameW.setTextAlignment(4)
+                nameW.setFlags(QtCore.Qt.ItemIsEnabled)
+                nameW.setToolTip("Click to select.")
+                self.setItem(row, 0, nameW)
+                self.setSpan(row, 0, 1, 3)
+                self.item(row,0).setBackgroundColor (self.forceTab._selectedColor(molecule.molname()))
+                row += 1
+                
+                for atom in molecule.atoms():
+                    aType = molecule.getAtomAttributes(atom).getInfo().getType()
+                #    charges[molecule.getAttributes(atom).getType()] = molecule.getAttributes(atom).getCharge()
+                
+                #for aType in types:
+                    charType = QtGui.QTableWidgetItem(aType)
+                    charType.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
+                    self.setItem(row, 0, QtGui.QTableWidgetItem(str(atom)))
+                    self.setItem(row, 1, charType)
+                    
+                    #charge = ForceSpinBox([-20, 20], 6, parent=self, fl=self, \
+                                          #method= "setChargesInMolecule(\"" + molecule.molname() + "\",\"" + aType + "\", self.value())")
+                    charge = ChargeSpinBox([-10, 10], 6, parent=self.forceTab, molecule=molecule, atom=atom)
+
+                    self.setCellWidget(row, 2, charge)
+                    #print "start",
+                    #timer.report()
+                    #charge.setValue(charges[aType])
+                    #charge.setValue(molecule.getAtomAttributes(atom).getInfo().getCharge())
+                    #timer.report()
+                    
+                    charVals[aType] = [charge] 
+                    
+                    row += 1
+                    
+                    for otherMolecule in self.forceTab.equivalences[molecule.molname()]:
+							charge.addMolecule(otherMolecule)
+
+                #self.allForceField[molName]["charges"]=charVals
+                totalCharge = QtGui.QTableWidgetItem("{:f}".format(molecule.charge()))
+                totalCharge.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
+                self.setItem(row, 1, QtGui.QTableWidgetItem("net q:"))
+                self.setItem(row, 2, totalCharge)
+
+                row += 1
+        self.updateCharges()
+        progress.hide()
+        #timer.report()
+        self.blockSignals(False)
+
+#====================================================================
+class NonBondTable(QtGui.QTableWidget):
+    def __init__(self, hist, forceTab, parent=None):
+        super(NonBondTable, self).__init__(parent=parent)
+        print "ChargesTable init"
+        self.history = hist
+        self.forceTab = forceTab
+
+        self.setObjectName("nonBondTable")
+        self.setColumnCount(3)
+        self.setRowCount(0)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(2, item)
+
+        item = self.horizontalHeaderItem(0)
+        item.setText("Type")
+        item = self.horizontalHeaderItem(1)
+        item.setText("e")
+        item = self.horizontalHeaderItem(2)
+        item.setText("Rmin/2")
+
+    def update(self):
+        print "NonBondTable update"
+        self.insertAllToNonBondTable()
+
+    def showEvent(self,e):
+        print "BondsTable showEvent"
+        self.insertAllToNonBondTable()
+
+    def insertAllToNonBondTable(self):
+		#list all molecules in the Structure Manager
+		# count nonb in all molecules
+		#print "insertAllToNonBondTable start"
+		row = 0
+		rows = 0
+		self.setRowCount(0)
+		displayedMols=list()
+
+		self.blockSignals(True)
+		self.clearContents ()
+		for molName in self.history.currentState().mixture:
+			#nombVals = dict()
+			molecule = self.history.currentState().mixture.getMolecule(molName)
+			if not molecule.molname() in displayedMols:
+				#print "insertAllToNonBondTable ", molecule.molname(),molecule.atomTypes(),molecule.getForceField().getTypes()
+				#self.allForceField[molName] = {"nonBonded" : [], "Bonds" : [] , "Angles": [], "Dihedrals": []}
+				displayedMols.append(molecule.molname() )
+				
+				ff = molecule.getForceField()
+				types = molecule.atomTypes()
+				types.sort()  # to search for changed types in on_nonBondTable_itemChanged
+				rows += len(types)+1
+				self.setRowCount(rows)
+				  
+				# display molecule name
+				nameW = QtGui.QTableWidgetItem(molecule.molname())
+				nameW.setTextAlignment(4)
+				nameW.setFlags(QtCore.Qt.ItemIsEnabled)
+				nameW.setToolTip("Click to select.")
+				self.setItem(row, 0, nameW)
+				self.setSpan(row, 0, 1, 4)
+				self.item(row,0).setBackgroundColor (self.forceTab._selectedColor(molecule.molname()))
+				
+				row += 1
+				
+				for aType in types:
+					#print "insertAllToNonBondTable", aType, ff.nonBond(aType),ff.charge(aType)
+					atomType = QtGui.QTableWidgetItem(aType)
+					atomType.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
+					atomType.setToolTip("Double click to edit the name type.")
+					self.setItem(row, 0, atomType)
+					#atomType = QtGui.QLineEdit(aType)
+					#self.setCellWidget(row, 0, atomType)
+					
+					#print "insertAllToNonBondTable A"
+					epsilon = ForceSpinBox([-5, 0], 6, parent=self.forceTab, fl=ff, type=aType, \
+										method= ff.setNonBond, pos=0)
+					self.setCellWidget(row, 1, epsilon)
+					epsilon.setValue(ff.nonBond(aType)[NonBond._EPSILON])
+					#print "insertAllToNonBondTable epsilon", aType, ff.nonBond(aType)[NonBond._EPSILON]
+					
+					rmin = ForceSpinBox([0.000000, 20], 6, parent=self.forceTab, fl=ff, type=aType, \
+									method= ff.setNonBond, pos=1)
+					self.setCellWidget(row, 2, rmin)
+					rmin.setValue(ff.nonBond(aType)[NonBond._SIGMA])
+					#print "insertAllToNonBondTable sigma", aType, ff.nonBond(aType)[NonBond._SIGMA]
+					
+					
+					'''
+					for otherMolName in self.history.currentState().mixture:
+						otherMolecule = self.history.currentState().mixture.getMolecule(otherMolName)
+						#print "insertAllToNonBondTable ", otherMolecule.molname(), molecule.molname(),otherMolecule.molname() == molecule.molname()
+						if otherMolecule.molname() == molecule.molname():
+							otherMolecule = self.history.currentState().mixture.getMolecule(otherMolName)
+							epsilon.addForceField(otherMolecule.getForceField())
+							rmin.addForceField(otherMolecule.getForceField())
+							charge.addForceField(otherMolecule.getForceField())
+					'''
+					for otherMolecule in self.forceTab.equivalences[molecule.molname()]:
+							epsilon.addForceField(otherMolecule.getForceField())
+							rmin.addForceField(otherMolecule.getForceField())
+						
+					row += 1
+				
+		self.blockSignals(False)
+			
+
+
+#====================================================================
+class BondsTable(QtGui.QTableWidget):
+    def __init__(self, hist, forceTab, parent=None):
+        super(BondsTable, self).__init__(parent=parent)
+        print "BondsTable init"
+        self.history = hist
+        self.forceTab = forceTab
+
+        self.setColumnCount(3)
+        self.setRowCount(0)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(2, item)
+
+        item = self.horizontalHeaderItem(0)
+        item.setText("Type")
+        item = self.horizontalHeaderItem(1)
+        item.setText("Kb")
+        item = self.horizontalHeaderItem(2)
+        item.setText("b0")
+
+    def update(self):
+        print "BondsTable update"
+        self.insertAllBondTable()
+
+    def showEvent(self,e):
+        print "BondsTable showEvent"
+        self.insertAllBondTable()
+
+    def insertAllBondTable(self):
+        #list all molecules in the Structure Manager
+    
+        row = 0
+        rows = 0
+        self.setRowCount(0)
+        displayedMols=list()
+        self.blockSignals(True)
+        for molName in self.history.currentState().mixture:
+            bonds = dict()
+            molecule = self.history.currentState().mixture.getMolecule(molName)
+            #print "insertAllBondTable", molecule.molname(),molecule.atomTypes()
+            if not molecule.molname() in displayedMols:
+				displayedMols.append(molecule.molname())
+				
+				ff = molecule.getForceField()
+				bondTypes = molecule.bondTypes()
+				rows += len(bondTypes)+1
+				self.setRowCount(rows)
+				
+				# display molecule name
+				nameW = QtGui.QTableWidgetItem(molecule.molname())
+				nameW.setTextAlignment(4)
+				self.setItem(row, 0, nameW)
+				self.setSpan(row, 0, 1, 3)
+				self.item(row,0).setBackgroundColor (self.forceTab._selectedColor(molecule.molname()))
+				row += 1
+				
+				#print "insertAllToBondTable bonds", [(t1, t2) for [t1,t2] in bondTypes]
+				for (t1,t2) in bondTypes:
+					atomType = QtGui.QTableWidgetItem(t1+"-"+t2)
+					atomType.setFlags(QtCore.Qt.ItemIsEnabled)
+					self.setItem(row, 0, atomType)
+					
+					Kb = ForceSpinBox([000.000, 9999.99], 3, parent=self.forceTab, fl=ff, type=(t1,t2),\
+										method= ff.setBond, pos=0)
+					self.setCellWidget(row, 1, Kb)
+					Kb.setValue(ff.bond(t1,t2)[0])
+					#print "insertAllToBondTable K", t1, t2, ff.bond(t1,t2)[0],ff.__dict__
+					
+					b0 = ForceSpinBox([0.0000, 5], 4, parent=self.forceTab, fl=ff, type=(t1,t2),\
+										method= ff.setBond, pos=1)
+					self.setCellWidget(row, 2, b0)
+					b0.setValue(ff.bond(t1,t2)[1])
+					#print "insertAllToBondTable b0", t1, t2, ff.bond(t1,t2)[1]
+					 
+					bonds[t1,t2] = [Kb, b0] 
+					
+					for otherMolecule in self.forceTab.equivalences[molecule.molname()]:
+					        Kb.addForceField(otherMolecule.getForceField())
+					        b0.addForceField(otherMolecule.getForceField())
+					
+					row += 1
+				#self.allForceField[molName]["Bonds"]=bonds
+        #---------------------------------------------------------------
+        #list all molecules in the Structure Manager
+        self.blockSignals(False)
+        print "insertAllBondTable fin"
+
+    
+#====================================================================
+class AnglesTable(QtGui.QTableWidget):
+    def __init__(self, hist, forceTab, parent=None):
+        super(AnglesTable, self).__init__(parent=parent)
+        print "AnglesTable init"
+        self.history = hist
+        self.forceTab = forceTab
+
+        self.setObjectName("anglesTable")
+        self.setColumnCount(3)
+        self.setRowCount(0)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(2, item)
+
+        item = self.horizontalHeaderItem(0)
+        item.setText("Type")
+        item = self.horizontalHeaderItem(1)
+        item.setText("Ktheta")
+        item = self.horizontalHeaderItem(2)
+        item.setText(u"Ⲑ0")
+
+    def update(self):
+        print "AnglesTable update"
+        self.insertAllAngleTable()
+
+    def showEvent(self,e):
+        print "AnglesTable showEvent"
+        self.insertAllAngleTable()
+
+    def insertAllAngleTable(self):
+    
+        row = 0
+        rows = 0
+        self.setRowCount(0)
+        displayedMols=list()
+        self.blockSignals(True)
+        for molName in self.history.currentState().mixture:
+            angles = dict()
+            molecule = self.history.currentState().mixture.getMolecule(molName)
+            if not molecule.molname() in displayedMols:
+                displayedMols.append(molecule.molname())
+                
+                ff = molecule.getForceField()
+                angleTypes = molecule.angleTypes()
+                rows += len(angleTypes)+1
+                self.setRowCount(rows)
+                
+                # display molecule name
+                nameW = QtGui.QTableWidgetItem(molecule.molname())
+                nameW.setTextAlignment(4)
+                self.setItem(row, 0, nameW)
+                self.setSpan(row, 0, 1, 3)
+                self.item(row,0).setBackgroundColor (self.forceTab._selectedColor(molecule.molname()))
+                row += 1
+               
+                for (t1,t2,t3) in angleTypes:
+                    atomType = QtGui.QTableWidgetItem(t1+"-"+t2+"-"+t3)
+                    atomType.setFlags(QtCore.Qt.ItemIsEnabled)
+                    self.setItem(row, 0, atomType)
+                    
+                    Kth = ForceSpinBox([000.000, 999.999], 3,  parent=self.forceTab, fl=ff, type=(t1,t2,t3),\
+										method= ff.setAngle, pos=0)
+                    self.setCellWidget(row, 1, Kth)
+                    Kth.setValue(ff.angle(t1,t2,t3)[0])
+                    
+                    a0 = ForceSpinBox([0.0000, 180], 4,   parent=self.forceTab, fl=ff, type=(t1,t2,t3),\
+										method= ff.setAngle, pos=1)
+                    self.setCellWidget(row, 2, a0)
+                    a0.setValue(ff.angle(t1,t2,t3)[1])
+            
+                    angles[t1,t2,t3] = [Kth, a0] 
+                    
+                    for otherMolecule in self.forceTab.equivalences[molecule.molname()]:
+                            Kth.addForceField(otherMolecule.getForceField())
+                            a0.addForceField(otherMolecule.getForceField())
+            
+                    row += 1
+        
+                #self.allForceField[molName]["Angles"]=angles
+        self.blockSignals(False)
+
+    
+
+#====================================================================
+class DihedralsTable(QtGui.QTableWidget):
+    def __init__(self, hist, forceTab, parent=None):
+        super(DihedralsTable, self).__init__(parent=parent)
+        print "DihedralsTable init"
+        self.history = hist
+        self.forceTab = forceTab
+
+        self.setObjectName("dihedralTable")
+        self.setColumnCount(4)
+        self.setRowCount(0)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(0, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(2, item)
+        item = QtGui.QTableWidgetItem()
+        self.setHorizontalHeaderItem(3, item)
+
+        item = self.horizontalHeaderItem(0)
+        item.setText("Type")
+        item = self.horizontalHeaderItem(1)
+        item.setText("Kchi")
+        item = self.horizontalHeaderItem(2)
+        item.setText("n")
+        item = self.horizontalHeaderItem(3)
+        item.setText("Delta")
+
+    def update(self):
+        print "DihedralsTable update"
+        self.insertAllAngleTable()
+
+    def showEvent(self,e):
+        print "DihedralsTable showEvent"
+        self.insertAllAngleTable()
+
+    def insertAllDihedralTable(self):
+        #list all molecules in the Structure Manager
+    
+        row = 0
+        rows = 0
+        self.setRowCount(0)
+        displayedMols=list()
+        self.blockSignals(True)
+        self.clearContents ()
+        for molName in self.history.currentState().mixture:
+            dihedrals = dict()
+            molecule = self.history.currentState().mixture.getMolecule(molName)
+            if not molecule.molname() in displayedMols:
+                displayedMols.append(molecule.molname())
+
+                ff = molecule.getForceField()
+                dihedralTypes = molecule.dihedralTypes()
+                rows += len(dihedralTypes)+1
+                self.setRowCount(rows)
+                
+                # display molecule name
+                nameW = QtGui.QTableWidgetItem(molecule.molname())
+                nameW.setTextAlignment(4)
+                self.setItem(row, 0, nameW)
+                self.setSpan(row, 0, 1, 4)
+                self.item(row,0).setBackgroundColor (self._selectedColor(molecule.molname()))
+                row += 1
+               
+                for [t1,t2,t3,t4] in dihedralTypes:
+                    atomType = QtGui.QTableWidgetItem(t1+"-"+t2+"-"+t3+"-"+t4)
+                    atomType.setFlags(QtCore.Qt.ItemIsEnabled)
+                    self.setItem(row, 0, atomType)
+                    
+                    Kchi = ForceSpinBox([0.0000, 99.9999], 4, parent=self.forceTab, fl=ff, type=(t1,t2,t3,t4),\
+										method= ff.setDihedral, pos=0)
+                    self.setCellWidget(row, 1, Kchi)
+                    Kchi.setValue(ff.dihedral(t1,t2,t3,t4)[0])
+                    
+                    
+                    n = ForceSpinBox([0, 9], 0, parent=self.forceTab, fl=ff, type=(t1,t2,t3,t4),\
+										method= ff.setDihedral, pos=1)
+                    self.setCellWidget(row, 2, n)
+                    n.setValue(ff.dihedral(t1,t2,t3,t4)[1])
+                        
+                    Delta = ForceSpinBox([000.00, 999.99], 2, parent=self.forceTab, fl=ff, type=(t1,t2,t3,t4),\
+										method= ff.setDihedral, pos=2)
+                    self.setCellWidget(row, 3, Delta)
+                    Delta.setValue(ff.dihedral(t1,t2,t3,t4)[2])
+            
+                    dihedrals[t1,t2,t3,t4] = [Kchi,Delta,n] 
+            
+                    for otherMolecule in self.forceTab.equivalences[molecule.molname()]:
+                            n.addForceField(otherMolecule.getForceField())
+                            Delta.addForceField(otherMolecule.getForceField())
+                            Kchi.addForceField(otherMolecule.getForceField())
+                        
+                    row += 1
+                #self.allForceField[molName]["Dihedrals"]=dihedrals
+        self.blockSignals(False)
+
+
+
+#====================================================================
+#====================================================================
+
 class ForceTab(QtGui.QFrame):   
     def __init__(self, hist, parent, previewer):
         super(ForceTab, self).__init__(parent)
@@ -87,8 +629,25 @@ class ForceTab(QtGui.QFrame):
         #self.restoreForceField(self.history.currentState().forceFieldStorage)
         #self.history.push(force=True)
 
-        
-        #self.update()
+        #TABLES
+        self.ui.bondsTable = BondsTable(hist, self, self.ui.bondBox)
+        self.ui.gridLayout_2.addWidget(self.ui.bondsTable, 0, 0, 1, 1)
+
+        self.ui.chargesTable = ChargesTable(hist, self, self.ui.chargesBox)
+        self.ui.gridLayout_33.addWidget(self.ui.chargesTable, 0, 0, 1, 1)
+
+        self.ui.nonBondTable = NonBondTable(hist, self, self.ui.nonbondedBox)
+        self.ui.gridLayout_3.addWidget(self.ui.nonBondTable, 0, 0, 1, 1)
+
+        self.ui.anglesTable = AnglesTable(hist, self, self.ui.anglesBox)
+        self.ui.gridLayout_4.addWidget(self.ui.anglesTable, 0, 0, 1, 1)
+
+        self.ui.dihedralTable = AnglesTable(hist, self, self.ui.dihedralsBox)
+        self.ui.gridLayout_5.addWidget(self.ui.dihedralTable, 0, 0, 1, 1)
+
+
+        self._updateEquivalences()
+
 
     #def paintEvent (self,  event):
     #    QtGui.QFrame.paintEvent(self, event)
@@ -323,7 +882,7 @@ class ForceTab(QtGui.QFrame):
         #self.history.push()  # moved to hideEvent
         self.valueChanged = True
         #self.insertAllToNonBondTable()  # marronazo para actualizar carga total
-        self.updateCharges()
+        self.ui.chargesTable.updateCharges()
         pass
         
 
@@ -336,370 +895,12 @@ class ForceTab(QtGui.QFrame):
     def hideEvent(self,e):
         if self.valueChanged:
             self.history.push()
-            #print "ForceTab hideEvent"
+        print "ForceTab hideEvent"
     #    self.wolffia.update()
         
 
-    def insertAllBondTable(self):
-        #list all molecules in the Structure Manager
-    
-        row = 0
-        rows = 0
-        self.ui.bondsTable.setRowCount(0)
-        displayedMols=list()
-        self.ui.bondsTable.blockSignals(True)
-        for molName in self.history.currentState().mixture:
-            bonds = dict()
-            molecule = self.history.currentState().mixture.getMolecule(molName)
-            #print "insertAllBondTable", molecule.molname(),molecule.atomTypes()
-            if not molecule.molname() in displayedMols:
-				displayedMols.append(molecule.molname())
-				
-				ff = molecule.getForceField()
-				bondTypes = molecule.bondTypes()
-				rows += len(bondTypes)+1
-				self.ui.bondsTable.setRowCount(rows)
-				
-				# display molecule name
-				nameW = QtGui.QTableWidgetItem(molecule.molname())
-				nameW.setTextAlignment(4)
-				self.ui.bondsTable.setItem(row, 0, nameW)
-				self.ui.bondsTable.setSpan(row, 0, 1, 3)
-				self.ui.bondsTable.item(row,0).setBackgroundColor (self._selectedColor(molecule.molname()))
-				row += 1
-				
-				#print "insertAllToBondTable bonds", [(t1, t2) for [t1,t2] in bondTypes]
-				for (t1,t2) in bondTypes:
-					atomType = QtGui.QTableWidgetItem(t1+"-"+t2)
-					atomType.setFlags(QtCore.Qt.ItemIsEnabled)
-					self.ui.bondsTable.setItem(row, 0, atomType)
-					
-					Kb = ForceSpinBox([000.000, 9999.99], 3, parent=self, fl=ff, type=(t1,t2),\
-										method= ff.setBond, pos=0)
-					self.ui.bondsTable.setCellWidget(row, 1, Kb)
-					Kb.setValue(ff.bond(t1,t2)[0])
-					#print "insertAllToBondTable K", t1, t2, ff.bond(t1,t2)[0],ff.__dict__
-					
-					b0 = ForceSpinBox([0.0000, 5], 4, parent=self, fl=ff, type=(t1,t2),\
-										method= ff.setBond, pos=1)
-					self.ui.bondsTable.setCellWidget(row, 2, b0)
-					b0.setValue(ff.bond(t1,t2)[1])
-					#print "insertAllToBondTable b0", t1, t2, ff.bond(t1,t2)[1]
-					 
-					bonds[t1,t2] = [Kb, b0] 
-					
-					for otherMolecule in self.equivalences[molecule.molname()]:
-					        Kb.addForceField(otherMolecule.getForceField())
-					        b0.addForceField(otherMolecule.getForceField())
-					
-					row += 1
-				#self.allForceField[molName]["Bonds"]=bonds
-        #---------------------------------------------------------------
-        #list all molecules in the Structure Manager
-        self.ui.bondsTable.blockSignals(False)
-        print "insertAllBondTable fin"
-
-    
-    def insertAllAngleTable(self):
-    
-        row = 0
-        rows = 0
-        self.ui.anglesTable.setRowCount(0)
-        displayedMols=list()
-        self.ui.anglesTable.blockSignals(True)
-        for molName in self.history.currentState().mixture:
-            angles = dict()
-            molecule = self.history.currentState().mixture.getMolecule(molName)
-            if not molecule.molname() in displayedMols:
-                displayedMols.append(molecule.molname())
-                
-                ff = molecule.getForceField()
-                angleTypes = molecule.angleTypes()
-                rows += len(angleTypes)+1
-                self.ui.anglesTable.setRowCount(rows)
-                
-                # display molecule name
-                nameW = QtGui.QTableWidgetItem(molecule.molname())
-                nameW.setTextAlignment(4)
-                self.ui.anglesTable.setItem(row, 0, nameW)
-                self.ui.anglesTable.setSpan(row, 0, 1, 3)
-                self.ui.anglesTable.item(row,0).setBackgroundColor (self._selectedColor(molecule.molname()))
-                row += 1
-               
-                for (t1,t2,t3) in angleTypes:
-                    atomType = QtGui.QTableWidgetItem(t1+"-"+t2+"-"+t3)
-                    atomType.setFlags(QtCore.Qt.ItemIsEnabled)
-                    self.ui.anglesTable.setItem(row, 0, atomType)
-                    
-                    Kth = ForceSpinBox([000.000, 999.999], 3,  parent=self, fl=ff, type=(t1,t2,t3),\
-										method= ff.setAngle, pos=0)
-                    self.ui.anglesTable.setCellWidget(row, 1, Kth)
-                    Kth.setValue(ff.angle(t1,t2,t3)[0])
-                    
-                    a0 = ForceSpinBox([0.0000, 180], 4,   parent=self, fl=ff, type=(t1,t2,t3),\
-										method= ff.setAngle, pos=1)
-                    self.ui.anglesTable.setCellWidget(row, 2, a0)
-                    a0.setValue(ff.angle(t1,t2,t3)[1])
-            
-                    angles[t1,t2,t3] = [Kth, a0] 
-                    
-                    for otherMolecule in self.equivalences[molecule.molname()]:
-                            Kth.addForceField(otherMolecule.getForceField())
-                            a0.addForceField(otherMolecule.getForceField())
-            
-                    row += 1
-        
-                #self.allForceField[molName]["Angles"]=angles
-        self.ui.anglesTable.blockSignals(False)
-
-    
-    def insertAllDihedralTable(self):
-        #list all molecules in the Structure Manager
-    
-        row = 0
-        rows = 0
-        self.ui.dihedralTable.setRowCount(0)
-        displayedMols=list()
-        self.ui.dihedralTable.blockSignals(True)
-        self.ui.dihedralTable.clearContents ()
-        for molName in self.history.currentState().mixture:
-            dihedrals = dict()
-            molecule = self.history.currentState().mixture.getMolecule(molName)
-            if not molecule.molname() in displayedMols:
-                displayedMols.append(molecule.molname())
-
-                ff = molecule.getForceField()
-                dihedralTypes = molecule.dihedralTypes()
-                rows += len(dihedralTypes)+1
-                self.ui.dihedralTable.setRowCount(rows)
-                
-                # display molecule name
-                nameW = QtGui.QTableWidgetItem(molecule.molname())
-                nameW.setTextAlignment(4)
-                self.ui.dihedralTable.setItem(row, 0, nameW)
-                self.ui.dihedralTable.setSpan(row, 0, 1, 4)
-                self.ui.dihedralTable.item(row,0).setBackgroundColor (self._selectedColor(molecule.molname()))
-                row += 1
-               
-                for [t1,t2,t3,t4] in dihedralTypes:
-                    atomType = QtGui.QTableWidgetItem(t1+"-"+t2+"-"+t3+"-"+t4)
-                    atomType.setFlags(QtCore.Qt.ItemIsEnabled)
-                    self.ui.dihedralTable.setItem(row, 0, atomType)
-                    
-                    Kchi = ForceSpinBox([0.0000, 99.9999], 4, parent=self, fl=ff, type=(t1,t2,t3,t4),\
-										method= ff.setDihedral, pos=0)
-                    self.ui.dihedralTable.setCellWidget(row, 1, Kchi)
-                    Kchi.setValue(ff.dihedral(t1,t2,t3,t4)[0])
-                    
-                    
-                    n = ForceSpinBox([0, 9], 0, parent=self, fl=ff, type=(t1,t2,t3,t4),\
-										method= ff.setDihedral, pos=1)
-                    self.ui.dihedralTable.setCellWidget(row, 2, n)
-                    n.setValue(ff.dihedral(t1,t2,t3,t4)[1])
-                        
-                    Delta = ForceSpinBox([000.00, 999.99], 2, parent=self, fl=ff, type=(t1,t2,t3,t4),\
-										method= ff.setDihedral, pos=2)
-                    self.ui.dihedralTable.setCellWidget(row, 3, Delta)
-                    Delta.setValue(ff.dihedral(t1,t2,t3,t4)[2])
-            
-                    dihedrals[t1,t2,t3,t4] = [Kchi,Delta,n] 
-            
-                    for otherMolecule in self.equivalences[molecule.molname()]:
-                            n.addForceField(otherMolecule.getForceField())
-                            Delta.addForceField(otherMolecule.getForceField())
-                            Kchi.addForceField(otherMolecule.getForceField())
-                        
-                    row += 1
-                #self.allForceField[molName]["Dihedrals"]=dihedrals
-        self.ui.dihedralTable.blockSignals(False)
-
-    def insertAllToNonBondTable(self):
-		#list all molecules in the Structure Manager
-		# count nonb in all molecules
-		#print "insertAllToNonBondTable start"
-		row = 0
-		rows = 0
-		self.ui.nonBondTable.setRowCount(0)
-		displayedMols=list()
-
-		self.ui.nonBondTable.blockSignals(True)
-		self.ui.nonBondTable.clearContents ()
-		for molName in self.history.currentState().mixture:
-			#nombVals = dict()
-			molecule = self.history.currentState().mixture.getMolecule(molName)
-			if not molecule.molname() in displayedMols:
-				print "insertAllToNonBondTable ", molecule.molname(),molecule.atomTypes(),molecule.getForceField().getTypes()
-				self.allForceField[molName] = {"nonBonded" : [], "Bonds" : [] , "Angles": [], "Dihedrals": []}
-				displayedMols.append(molecule.molname() )
-				
-				ff = molecule.getForceField()
-				types = molecule.atomTypes()
-				types.sort()  # to search for changed types in on_nonBondTable_itemChanged
-				rows += len(types)+1
-				self.ui.nonBondTable.setRowCount(rows)
-				  
-				# display molecule name
-				nameW = QtGui.QTableWidgetItem(molecule.molname())
-				nameW.setTextAlignment(4)
-				nameW.setFlags(QtCore.Qt.ItemIsEnabled)
-				nameW.setToolTip("Click to select.")
-				self.ui.nonBondTable.setItem(row, 0, nameW)
-				self.ui.nonBondTable.setSpan(row, 0, 1, 4)
-				self.ui.nonBondTable.item(row,0).setBackgroundColor (self._selectedColor(molecule.molname()))
-				
-				row += 1
-				
-				for aType in types:
-					#print "insertAllToNonBondTable", aType, ff.nonBond(aType),ff.charge(aType)
-					atomType = QtGui.QTableWidgetItem(aType)
-					atomType.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
-					atomType.setToolTip("Double click to edit the name type.")
-					self.ui.nonBondTable.setItem(row, 0, atomType)
-					#atomType = QtGui.QLineEdit(aType)
-					#self.ui.nonBondTable.setCellWidget(row, 0, atomType)
-					
-					#print "insertAllToNonBondTable A"
-					epsilon = ForceSpinBox([-5, 0], 6, parent=self, fl=ff, type=aType, \
-										method= ff.setNonBond, pos=0)
-					self.ui.nonBondTable.setCellWidget(row, 1, epsilon)
-					epsilon.setValue(ff.nonBond(aType)[NonBond._EPSILON])
-					#print "insertAllToNonBondTable epsilon", aType, ff.nonBond(aType)[NonBond._EPSILON]
-					
-					rmin = ForceSpinBox([0.000000, 20], 6, parent=self, fl=ff, type=aType, \
-									method= ff.setNonBond, pos=1)
-					self.ui.nonBondTable.setCellWidget(row, 2, rmin)
-					rmin.setValue(ff.nonBond(aType)[NonBond._SIGMA])
-					#print "insertAllToNonBondTable sigma", aType, ff.nonBond(aType)[NonBond._SIGMA]
-					
-					
-					'''
-					for otherMolName in self.history.currentState().mixture:
-						otherMolecule = self.history.currentState().mixture.getMolecule(otherMolName)
-						#print "insertAllToNonBondTable ", otherMolecule.molname(), molecule.molname(),otherMolecule.molname() == molecule.molname()
-						if otherMolecule.molname() == molecule.molname():
-							otherMolecule = self.history.currentState().mixture.getMolecule(otherMolName)
-							epsilon.addForceField(otherMolecule.getForceField())
-							rmin.addForceField(otherMolecule.getForceField())
-							charge.addForceField(otherMolecule.getForceField())
-					'''
-					for otherMolecule in self.equivalences[molecule.molname()]:
-							epsilon.addForceField(otherMolecule.getForceField())
-							rmin.addForceField(otherMolecule.getForceField())
-						
-					row += 1
-				
-		self.ui.nonBondTable.blockSignals(False)
-			
-
-    def updateCharges(self):
-		#list all molecules in the Structure Manager
-		# count nonb in all molecules
-		#print "updateCharges start"
-		rows = 0
-		displayedMols=list()
-
-		self.ui.chargesTable.blockSignals(True)
-		for molName in self.history.currentState().mixture:
-			molecule = self.history.currentState().mixture.getMolecule(molName)
-			if not molecule.molname() in displayedMols:
-				displayedMols.append(molecule.molname() )
-				rows += len(molecule.atoms())+2
-				chrow = rows - 1
-				charge = molecule.charge()
-				
-				totalCharge = QtGui.QTableWidgetItem("{:f}".format(charge))
-				totalCharge.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
-				print "updateCharges ",rows,molecule.molname(),molecule.charge()
-				self.ui.chargesTable.setItem(chrow, 2, totalCharge)
-				
-				if charge > 0:
-					self.ui.chargesTable.item(chrow, 2).setBackground(QtGui.QBrush(QtGui.QColor(200,200,255)))
-				elif charge < 0:
-					self.ui.chargesTable.item(chrow, 2).setBackground(QtGui.QBrush(QtGui.QColor(255,200,200)))
-				else:
-					self.ui.chargesTable.item(chrow, 2).setBackground(QtGui.QBrush(QtGui.QColor(200,255,200)))
-		self.ui.chargesTable.blockSignals(False)
-		#print "updateCharges end"
-			
-
-    def insertChargesTable(self):
-        '''
-        list all molecules in the Structure Manager
-        '''
-        # count nonb in all molecules
-        print "insertChargesTable start"
-        #timer = WTimer("ForceTab.insertChargesTable")
-        row = 0
-        rows = 0
-        self.ui.chargesTable.setRowCount(0)
-        displayedMols=list()
-        charges = dict()
-        
-        self.ui.chargesTable.blockSignals(True)
-        for molName in self.history.currentState().mixture:
-            charVals = dict()
-            molecule = self.history.currentState().mixture.getMolecule(molName)
-            if not molecule.molname() in displayedMols:
-                print "insertChargesTable ", molecule.molname()
-                self.allForceField[molName] = {"nonBonded" : [], "Bonds" : [] , "Angles": [], "Dihedrals": []}
-                displayedMols.append(molecule.molname() )
-                
-                #ff = molecule.getForceField()
-                ff = molecule.forceField
-                #print "insertChargesTable ", ff._NONBONDED
-                types = molecule.atomTypes()
-                #print "insertChargesTable types", types
-                rows += len(molecule.atoms())+2
-                self.ui.chargesTable.setRowCount(rows)
-                  
-                # display molecule name
-                nameW = QtGui.QTableWidgetItem(molecule.molname())
-                nameW.setTextAlignment(4)
-                nameW.setFlags(QtCore.Qt.ItemIsEnabled)
-                nameW.setToolTip("Click to select.")
-                self.ui.chargesTable.setItem(row, 0, nameW)
-                self.ui.chargesTable.setSpan(row, 0, 1, 3)
-                self.ui.chargesTable.item(row,0).setBackgroundColor (self._selectedColor(molecule.molname()))
-                row += 1
-                
-                for atom in molecule.atoms():
-                    aType = molecule.getAtomAttributes(atom).getInfo().getType()
-                #    charges[molecule.getAttributes(atom).getType()] = molecule.getAttributes(atom).getCharge()
-                
-                #for aType in types:
-                    charType = QtGui.QTableWidgetItem(aType)
-                    charType.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
-                    self.ui.chargesTable.setItem(row, 0, QtGui.QTableWidgetItem(str(atom)))
-                    self.ui.chargesTable.setItem(row, 1, charType)
-                    
-                    #charge = ForceSpinBox([-20, 20], 6, parent=self, fl=self, \
-                                          #method= "setChargesInMolecule(\"" + molecule.molname() + "\",\"" + aType + "\", self.value())")
-                    charge = ChargeSpinBox([-10, 10], 6, parent=self, molecule=molecule, atom=atom)
-
-                    self.ui.chargesTable.setCellWidget(row, 2, charge)
-                    #print "start",
-                    #timer.report()
-                    #charge.setValue(charges[aType])
-                    #charge.setValue(molecule.getAtomAttributes(atom).getInfo().getCharge())
-                    #timer.report()
-                    
-                    charVals[aType] = [charge] 
-                    
-                    row += 1
-                    
-                    for otherMolecule in self.equivalences[molecule.molname()]:
-							charge.addMolecule(otherMolecule)
-
-                #self.allForceField[molName]["charges"]=charVals
-                totalCharge = QtGui.QTableWidgetItem("{:f}".format(molecule.charge()))
-                totalCharge.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
-                self.ui.chargesTable.setItem(row, 1, QtGui.QTableWidgetItem("net q:"))
-                self.ui.chargesTable.setItem(row, 2, totalCharge)
-
-                row += 1
-        self.updateCharges()
-        #timer.report()
-        self.ui.chargesTable.blockSignals(False)
+    def on_anglesTable_showEvent(self,e):
+        print "ForceTab on_anglesTable_showEvent"
 
 
     def setChargesInMolecule(self, molname, aType, charge):
@@ -725,21 +926,24 @@ class ForceTab(QtGui.QFrame):
     def reset(self):
         self.forcePreview.reset()
 
+    def _updateEquivalences(self):
+        self.equivalences =  self.history.currentState().getMixture().equivalenceClasses()
+
     def update(self):
         print "ForceTab.update "
         timer = WTimer("ForceTab")
-        self.equivalences =  self.history.currentState().getMixture().equivalenceClasses()
+        self._updateEquivalences()
 
-        self.insertChargesTable() 
-        timer.report()
-        self.insertAllToNonBondTable()
-        timer.report()
-        self.insertAllBondTable()
-        timer.report()
-        self.insertAllAngleTable()
-        timer.report()
-        self.insertAllDihedralTable()
-        timer.report()
+        if self.ui.chargesTable.isVisible(): self.ui.chargesTable.update()
+
+        if self.ui.nonBondTable.isVisible(): self.ui.nonBondTable.update()
+
+        if self.ui.bondsTable.isVisible(): self.ui.bondsTable.update()
+
+        if self.ui.anglesTable.isVisible(): self.ui.anglesTable.update()
+
+        if self.ui.dihedralTable.isVisible(): self.ui.dihedralTable.update()
+
 
         self.generated = time.clock()
         

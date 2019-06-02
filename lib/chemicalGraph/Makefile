@@ -35,6 +35,8 @@ WATER.py: Molecule.py ForceField.py NanoCAD_conf.py
 
 
 clean:
+	cd io ; make clean
+	cd molecule ; make clean
 	rm -f *.pyc *.py~ ui_*.py
 
 
