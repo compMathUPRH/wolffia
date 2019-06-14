@@ -92,7 +92,7 @@ class PSF(object):
 
               # print [atom[23:26] for atom in self.atoms]
               self._elements = [atom[24:29].strip() for atom in self.atoms]
-              self._charges = [float(atom[36:48]) for atom in self.atoms]
+              self._charges = [float(atom[35:48]) for atom in self.atoms]
               self._masses = [float(atom[50:58]) for atom in self.atoms]
               self._types = [atom[29:34].strip() for atom in self.atoms]
 

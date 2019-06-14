@@ -1006,7 +1006,10 @@ class SimTab(QtGui.QFrame):
 	
 	
 	def cancelSim(self):
-	    if self.simRun != None: self.simRun.cancel()
+	    if self.simRun != None:
+	    	try: self.simRun.cancel()
+	    	except:
+				print "SimTab.cancelSim: Problem cancelling simulation. Communications lost?"
 	    self.simTimer.stop()
 	    self.simCoordTimer.stop()
 	    self.wolffia.simRunning = False

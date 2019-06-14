@@ -93,7 +93,8 @@ class ChargesTable(QtGui.QTableWidget):
 			if not molecule.molname() in displayedMols:
 				displayedMols.append(molecule.molname() )
 				rows += len(molecule.atoms())+2
-				chrow = rows - 1
+				#chrow = rows - 1   ELIMINADO TEMPORERAMENTE
+				chrow = 1 # SUSTITUIDO TEMPORERAMENTE
 				charge = molecule.charge()
 				
 				totalCharge = QtGui.QTableWidgetItem("{:f}".format(charge))
@@ -125,12 +126,12 @@ class ChargesTable(QtGui.QTableWidget):
         self.setRowCount(0)
         displayedMols=list()
         charges = dict()
-        progress	  = QtGui.QProgressDialog("Updating charges...", QtCore.QString(), 0, len(self.history.currentState().mixture), self,QtCore.Qt.Dialog|QtCore.Qt.WindowTitleHint)
-        progress.setWindowModality(QtCore.Qt.WindowModal)
+        #progress	  = QtGui.QProgressDialog("Updating charges...", QtCore.QString(), 0, len(self.history.currentState().mixture), self,QtCore.Qt.Dialog|QtCore.Qt.WindowTitleHint)
+        #progress.setWindowModality(QtCore.Qt.WindowModal)
 
         self.blockSignals(True)
         for molName in self.history.currentState().mixture:
-            progress.setValue(molCount)
+            #progress.setValue(molCount)
             molCount +=  1
             charVals = dict()
             molecule = self.history.currentState().mixture.getMolecule(molName)
@@ -144,8 +145,9 @@ class ChargesTable(QtGui.QTableWidget):
                 #print "insertChargesTable ", ff._NONBONDED
                 types = molecule.atomTypes()
                 #print "insertChargesTable types", types
-                rows += len(molecule.atoms())+2
-                self.setRowCount(rows)
+                #rows += len(molecule.atoms())+2        ELIMINADO TEMPORERAMENTE
+                rows += 2         # SUSTITUIDO TEMPORERAMENTE
+                self.setRowCount(rows) 
                   
                 # display molecule name
                 nameW = QtGui.QTableWidgetItem(molecule.molname())
@@ -157,26 +159,21 @@ class ChargesTable(QtGui.QTableWidget):
                 self.item(row,0).setBackgroundColor (self.forceTab._selectedColor(molecule.molname()))
                 row += 1
                 
+                '''
+                ELIMINADO TEMPORERAMENTE: Debe estar en diálogo popup para que no retrase todo
                 for atom in molecule.atoms():
                     aType = molecule.getAtomAttributes(atom).getInfo().getType()
-                #    charges[molecule.getAttributes(atom).getType()] = molecule.getAttributes(atom).getCharge()
-                
-                #for aType in types:
+
+
                     charType = QtGui.QTableWidgetItem(aType)
                     charType.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
                     self.setItem(row, 0, QtGui.QTableWidgetItem(str(atom)))
                     self.setItem(row, 1, charType)
                     
-                    #charge = ForceSpinBox([-20, 20], 6, parent=self, fl=self, \
-                                          #method= "setChargesInMolecule(\"" + molecule.molname() + "\",\"" + aType + "\", self.value())")
+
                     charge = ChargeSpinBox([-10, 10], 6, parent=self.forceTab, molecule=molecule, atom=atom)
 
                     self.setCellWidget(row, 2, charge)
-                    #print "start",
-                    #timer.report()
-                    #charge.setValue(charges[aType])
-                    #charge.setValue(molecule.getAtomAttributes(atom).getInfo().getCharge())
-                    #timer.report()
                     
                     charVals[aType] = [charge] 
                     
@@ -184,6 +181,7 @@ class ChargesTable(QtGui.QTableWidget):
                     
                     for otherMolecule in self.forceTab.equivalences[molecule.molname()]:
 							charge.addMolecule(otherMolecule)
+                '''
 
                 #self.allForceField[molName]["charges"]=charVals
                 totalCharge = QtGui.QTableWidgetItem("{:f}".format(molecule.charge()))
@@ -193,7 +191,7 @@ class ChargesTable(QtGui.QTableWidget):
 
                 row += 1
         self.updateCharges()
-        progress.hide()
+        #progress.setValue(len(self.history.currentState().mixture))
         #timer.report()
         self.blockSignals(False)
 
@@ -201,7 +199,7 @@ class ChargesTable(QtGui.QTableWidget):
 class NonBondTable(QtGui.QTableWidget):
     def __init__(self, hist, forceTab, parent=None):
         super(NonBondTable, self).__init__(parent=parent)
-        print "ChargesTable init"
+        print "NonBondTable init"
         self.history = hist
         self.forceTab = forceTab
 
@@ -227,7 +225,7 @@ class NonBondTable(QtGui.QTableWidget):
         self.insertAllToNonBondTable()
 
     def showEvent(self,e):
-        print "BondsTable showEvent"
+        print "NonBondTable showEvent"
         self.insertAllToNonBondTable()
 
     def insertAllToNonBondTable(self):
@@ -632,18 +630,23 @@ class ForceTab(QtGui.QFrame):
         #TABLES
         self.ui.bondsTable = BondsTable(hist, self, self.ui.bondBox)
         self.ui.gridLayout_2.addWidget(self.ui.bondsTable, 0, 0, 1, 1)
+        self.ui.bondsTable.itemClicked.connect(self.on_bondsTable_itemClicked)
 
         self.ui.chargesTable = ChargesTable(hist, self, self.ui.chargesBox)
         self.ui.gridLayout_33.addWidget(self.ui.chargesTable, 0, 0, 1, 1)
+        self.ui.chargesTable.itemClicked.connect(self.on_chargesTable_itemClicked)
 
         self.ui.nonBondTable = NonBondTable(hist, self, self.ui.nonbondedBox)
         self.ui.gridLayout_3.addWidget(self.ui.nonBondTable, 0, 0, 1, 1)
+        self.ui.nonBondTable.itemClicked.connect(self.on_nonBondTable_itemClicked)
 
         self.ui.anglesTable = AnglesTable(hist, self, self.ui.anglesBox)
         self.ui.gridLayout_4.addWidget(self.ui.anglesTable, 0, 0, 1, 1)
+        self.ui.anglesTable.itemClicked.connect(self.on_anglesTable_itemClicked)
 
         self.ui.dihedralTable = AnglesTable(hist, self, self.ui.dihedralsBox)
         self.ui.gridLayout_5.addWidget(self.ui.dihedralTable, 0, 0, 1, 1)
+        self.ui.dihedralTable.itemClicked.connect(self.on_dihedralTable_itemClicked)
 
 
         self._updateEquivalences()

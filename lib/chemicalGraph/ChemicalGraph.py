@@ -73,6 +73,7 @@ class ChemicalGraph(Graph):
         # add nodes
         elements = psf.get_elements()
         charges = psf.get_charges()
+        print "ChemicalGraph loadFiles charges", charges[:30]
         masses = psf.get_masses()
         for n in range(len(atoms)):
             atom=atoms[n]

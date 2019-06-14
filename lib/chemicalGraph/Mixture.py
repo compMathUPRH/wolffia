@@ -144,7 +144,7 @@ def diccionarioOld(box, listaCoordenadas, cantidad):
 		dy  = (box[1][1]-box[0][1])/cantidad
 		dz  = (box[1][2]-box[0][2])/cantidad
 		for Atomo in listaCoordenadas:
-			print Atomo
+			#print Atomo
 			pos = posicion(Atomo,box,cantidad)
 			x = math.fabs  (Atomo[0]  -(pos[0]+1*dx))
 			y = math.fabs  (Atomo[1]  -(pos[1]+1*dy))

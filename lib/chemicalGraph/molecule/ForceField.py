@@ -108,8 +108,9 @@ class ForceField(object):
 	    if isinstance(other, self.__class__):
 	        #print "ForceField __eq__", self._NONBONDED, other._NONBONDED, self._NONBONDED == other._NONBONDED
 	        if not self._NONBONDED == other._NONBONDED:
-	        	print self._NONBONDED
-	        	print other._NONBONDED
+	        	#print self._NONBONDED
+	        	#print other._NONBONDED
+	            pass
 	        return  self._NONBONDED == other._NONBONDED \
 	            and self._BONDS     == other._BONDS \
 	            and self._MASS      == other._MASS \

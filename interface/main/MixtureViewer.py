@@ -447,6 +447,10 @@ class MixtureViewer(QtOpenGL.QGLWidget):
     def paintAll(self, selectedMolecules=[]):
 		import inspect
 		print "paintAll, caller=",inspect.stack()[1][3]
+		#if not self.isVisible(): 
+		#	print "paintAll: not visible .... skipping"
+		#	return
+
 		#self.mixture = self.history.currentState().getMixture()
 		if self.history != None:
 			shownMolecules = self.history.currentState().shownMolecules

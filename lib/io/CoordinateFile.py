@@ -90,13 +90,14 @@ class CoordinateFile:
 			name	 = etable.GetName(atom.atomicnum) 
 			residue = atom.OBAtom.GetResidue().GetName()
 			psfType = atom.OBAtom.GetResidue().GetAtomID(atom.OBAtom).strip()
-			print "_processFirstFrame: '" + psfType + "'"
+			#print "_processFirstFrame: '" + psfType + "'"
 			charge = atom.partialcharge
 			mass	 = atom.atomicmass	
 			if self.psf <> None:
 				psfType = self.psf.getType(n)
 				charge = self.psf.getCharge(n)
 				mass	 = self.psf.getMass(n)
+				print "CoordinateFile _processFirstFrame charge  ", charge
 		
 		
 			ai  = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
