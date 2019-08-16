@@ -30,7 +30,7 @@
 
 import os, sys, platform
 
-WOLFFIA_VERSION = "1.31"
+WOLFFIA_VERSION = "1.4"
 
 NANOCAD_BASE            = os.path.realpath(os.path.dirname(os.path.realpath(__file__))+"/..").replace("\\","/")
 NANOCAD_PDB_DIR         = NANOCAD_BASE		   +"/data/coordinates/"

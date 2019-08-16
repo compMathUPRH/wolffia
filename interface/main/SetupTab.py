@@ -565,9 +565,13 @@ class SetupTab(QtGui.QFrame):
 			if not (self.ui.ratioPCheckBox.isChecked() or self.ui.equalCheckBox.isChecked()):
 				self.ui.widthSlider.setEnabled  (True)
 				self.ui.heightSlider.setEnabled (True)
-			self.ui.lengthSlider.setValue   (dimension[0][0])
-			self.ui.widthSlider.setValue    (dimension[1][1])
-			self.ui.heightSlider.setValue   (dimension[2][2])
+			try:
+				self.ui.lengthSlider.setValue   (dimension[0][0])
+				self.ui.widthSlider.setValue    (dimension[1][1])
+				self.ui.heightSlider.setValue   (dimension[2][2])
+			except TypeError as e: # recovers from NaNs
+				print "SetupTab.setAllSliders() recovering from: ", e
+				self._history.currentState().getDrawer().clear()
 		else:
 			#print "setAllSliders no Cell"
 			self.ui.lengthSlider.setValue   (0.)

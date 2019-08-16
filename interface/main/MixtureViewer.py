@@ -68,12 +68,12 @@ class DCDLoader(QtCore.QThread):
 		super(DCDLoader, self).__init__()
 		self.coordinatesGenerator = DCDTrajectoryReader(None,fileName)
 		self.parent = parent
-		self.mixture = mixture
+		mixture = mixture
 		self.box =  box
 	def run(self):
 		for X,Y,Z,pbc in self.coordinatesGenerator:
 			print "DCDLoader updating frame"
-			self.mixture.updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
+			mixture.updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
 			if pbc != None:
 				self.box.setCellBasisVectors([[pbc[0], 0.0, 0.0],
 									[0.0, pbc[2], 0.0],
@@ -100,7 +100,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
     atomRadius = 0.6
 
     
-    def __init__(self, history=None, parent=None, mixture=Mixture(), sharedGL=None):
+    def __init__(self, history=None, parent=None, sharedGL=None):
         """
         MixtureViewer constructor.
         
@@ -124,16 +124,16 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         else:
             self.history = history
 
-        #self.mixture = self.history.currentState().getMixture()
-        #self.mixture = mixture
-
-        self.parent = parent
         self.reset()
+
+        #mixture = self.getCurrentMixture()
+        #mixture = mixture
+        self.parent = parent
         
         #MixtureViewer.genList = GL.glGenLists(1)
         #global _GlLIST
         self.genList = sharedGL
-        #self.setMixture(self.history.currentState().getMixture())
+        #self.setMixture(self.getCurrentMixture())
         #self.makeGenList()
         self.highResolution = False
         self.solventHighResolution  = False
@@ -146,7 +146,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         self.setAutoFillBackground(False)
         self.moleculeEditor = None
         
-        self.setMixture(mixture)
+        self.setMixture()
 		
         self.setAcceptDrops(True)
         
@@ -174,7 +174,8 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         #self.moleculeEditor = None
         
 		#self.setBoundingSphere([[0.,0.,0.], 2.])
-        self.buildTables(Mixture())
+        mixture = Mixture()
+        self.buildTables()
         self.setBoundingSphere()
         
         self.lastPos = QtCore.QPoint()
@@ -194,47 +195,21 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         
         self.jointAtoms = None
 
-	def setMixtureBAK(self, mixture, adjustViewingVolume=False):
-		"""
-		Sets mixture to be displayed.
-		
-		@type  mixture: Mixture
-		@param mixture: Mixture to be displayed.
-		"""
-		#print "actualizando MixtureViewer con ", mixture, adjustViewingVolume
-		#self.history.currentState().updateMixture(mixture)
-		self.mixture = mixture
-		self.changeTracker = 0
-		#self.makeGenList()
-		if mixture != None:
-			if adjustViewingVolume:
-				self.setBoundingSphere(self.mixture.boundingSphere())
-				#print "enclosingBox", mixture.enclosingBox()
-				#print "boundingSphere", mixture.boundingSphere()
-				#print "viewBox", self.viewBox
-				self.resizeGL(self.size().width(), self.size().height())
-			#if mixture.changed(self.changeTracker): self.makeGenList()
-			self.makeGenList()
-			self.updateRequest.emit(self)	 #self.updateGL() 
-		else:
-			self.setBoundingSphere([[0.,0.,0.], 2.])
-		#print "MixtureViewer setMixture fin ", mixture, adjustViewingVolume
 
-    def setMixture(self, mixture, selectedMolecules=None, shownMolecules=None, adjustViewingVolume=False):
+    def setMixture(self, selectedMolecules=None, shownMolecules=None, adjustViewingVolume=False):
 		"""
-		Sets mixture to be displayed.
+		Sets which molecules of the mixture will be displayed.
 		
-		@type  mixture: Mixture
-		@param mixture: Mixture to be displayed.
 		"""
-		#print "actualizando MixtureViewer con ", mixture, adjustViewingVolume
+		mixture = self.getCurrentMixture()
+		
+		print "actualizando MixtureViewer con ", mixture, adjustViewingVolume
 		#self.history.currentState().updateMixture(mixture)
-		#self.mixture = None         # para forzar errores en los lugares que los usen
+		#mixture = None         # para forzar errores en los lugares que los usen
 		self.changeTracker = None   # para forzar errores en los lugares que los usen
 
-		
 		if mixture != None:
-			self.buildTables(mixture)
+			self.buildTables()
 			if adjustViewingVolume:
 				self.setBoundingSphere()
 				#print "enclosingBox", mixture.enclosingBox()
@@ -248,20 +223,32 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 			selectedMolecules = mixture.moleculeNames()  if selectedMolecules != None else selectedMolecules
 			shownMolecules    = set(mixture.molecules()) if shownMolecules    != None else shownMolecules
 			
-			self.buildTables(Mixture())
+			self.buildTables()
 			self.setBoundingSphere()
-		#print "MixtureViewer setMixture fin ", mixture, adjustViewingVolume
+		print "MixtureViewer setMixture fin ", mixture, adjustViewingVolume
 
-    def buildTables(self, mixture):
-		self.atomCoordinates = []
+    def getCurrentMixture(self): return self.history.currentState().getMixture()
+
+    def buildTables(self):
+		mixture = self.getCurrentMixture()
+		print "buildTables ", mixture.getMixtureName(),len(mixture)
+		#self.atomCoordinates = numpy.array([])
+		atomCoordinates = []
 		self.atomElements	 = []
 		self.bondsTable	     = []
 		for mol in mixture:
+			#print "buildTables anadiendo molecula ", mol
 			for a in mixture.getMolecule(mol).atomsGenerator():
-				self.atomCoordinates.append(a.getCoord())
+				#self.atomCoordinates.append(a.getCoord())
+				#self.atomCoordinates = numpy.append(self.atomCoordinates, a.getCoord())
+				atomCoordinates.append(a.getCoord())
 				self.atomElements.append(a.getInfo().getElement())
 			for b in mixture.getMolecule(mol).bondsGenerator():
 				self.bondsTable.append((b[0].getCoord(),b[1].getCoord()))
+		self.atomCoordinates = numpy.array(atomCoordinates)
+		del(atomCoordinates)
+		print "buildTables fin"
+
 
     def setBox(self, box):
         #print "setBox"
@@ -271,18 +258,22 @@ class MixtureViewer(QtOpenGL.QGLWidget):
             self.updateRequest.emit(self)     #self.updateGL() 
 
     def update(self, adjustViewingVolume=True):
-        #start = time.clock()
+        start = time.clock()
         #print "MitueViewer.update"
         import inspect
         print "MitueViewer.update, caller=",inspect.stack()[1][3]
 
         if self.isVisible():
+            print "MitueViewer.update visible"
             #print "MitueViewer.update", self.size().width(), self.size().height()
+            print "MitueViewer.update self.setBoundingSphere()"
             if adjustViewingVolume: self.setBoundingSphere()
             #print "MitueViewer.update", self.size().width(), self.size().height()
             #print "MitueViewer.update self.setBoundingSphere", self.boundingSphere
+            print "MitueViewer.update resizeGL()"
             self.resizeGL(self.size().width(), self.size().height())
-    
+            print "MitueViewer.update self.makeGenList()"
+
             if self.moleculeEditor == None: self.makeGenList()
             else: 
                 #print "MixtureViewer update", self.parent,self.moleculeEditor.editor.selectedMolecules()
@@ -295,7 +286,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         else:
             self.genList = None # forces call to makeGenList() at the next paint
             
-        #print "MitueViewer.update time=", time.clock() - start
+        print "MitueViewer.update time=", time.clock() - start
 
 
     def setMode(self, mode):
@@ -376,11 +367,11 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 			self.history.push()
 			
 			folder = self.history.currentState().getBuildDirectory()  # remember current folder
-			mName = self.history.currentState().getMixture().getMixtureName()
+			mName = self.getCurrentMixture().getMixtureName()
 			self.history.currentState().load(fileName)
-			#print "dropEvent ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
+			#print "dropEvent ",self.getCurrentMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
 			self.history.currentState().setBuildDirectory(folder)
-			self.history.currentState().getMixture().setMixtureName(mName)
+			self.getCurrentMixture().setMixtureName(mName)
 			self.history.currentState().save()
 			
 			self.update()
@@ -389,10 +380,10 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 		    
 		elif extension == '.wfm':
 		    #print "LoadWFM filename",fileName
-		    #origMols = set(self.history.currentState().getMixture().moleculeNames())
-		    self.history.currentState().getMixture().loadWFM(fileName)
-		    #newMols = set(self.history.currentState().getMixture().moleculeNames()).difference(origMols)
-		    #print "dropEvent ", origMols, newMols,set(self.history.currentState().getMixture().moleculeNames())0
+		    #origMols = set(self.getCurrentMixture().moleculeNames())
+		    self.getCurrentMixture().loadWFM(fileName)
+		    #newMols = set(self.getCurrentMixture().moleculeNames()).difference(origMols)
+		    #print "dropEvent ", origMols, newMols,set(self.getCurrentMixture().moleculeNames())0
 		    self.history.currentState().shownMolecules.showAll()
 		    #Adding mixture
 		    self.update()
@@ -402,12 +393,12 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 			#from lib.io.dcd import DCDTrajectoryReader
 			self.history.push()
 			#tReader = DCDTrajectoryReader(None,fileName)
-			self.dcdLoader = DCDLoader(self,self.history.currentState().getMixture(),self.history.currentState().getDrawer(),fileName)
+			self.dcdLoader = DCDLoader(self,self.getCurrentMixture(),self.history.currentState().getDrawer(),fileName)
 			self.connect(self.dcdLoader, QtCore.SIGNAL('update'), self.parent.update)
 			self.dcdLoader.start()
 			#for X,Y,Z in tReader:
 				#print "DCDLoader loading frame"
-				#self.history.currentState().getMixture().updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
+				#self.getCurrentMixture().updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
             
 
     def makeBallGenList(self):
@@ -422,24 +413,25 @@ class MixtureViewer(QtOpenGL.QGLWidget):
     def makeGenList(self, selectedMolecules=[]):
         import time
         #start = time.clock()
-        self.mixture = self.history.currentState().getMixture()
+        mixture = self.getCurrentMixture()
         
         import inspect
         print "MitueViewer.makeGenList, caller=",inspect.stack()[1][3]
         
-        #print "makeGenList mixture",self, self.mixture
+        #print "makeGenList mixture",self, mixture
         self.makeBallGenList()
         
         if self.genList == None or self.genList == 0:
             self.genList = GL.glGenLists(_MIXTURE_GENLIST_)
             #print "makeGenList genList created ", self.genList 
             
-        if self.mixture != None and self.genList != 0 and self.genList !=None:
+        if mixture != None and self.genList != 0 and self.genList !=None:
+			print "makeGenList genList ", type(self.genList) 
 			GL.glNewList(self.genList, GL.GL_COMPILE)
 			self.paintAll(selectedMolecules)
 			GL.glEndList()
         else: 
-        	#print "genList didn't make a list, mixture=",self.mixture
+        	#print "genList didn't make a list, mixture=",mixture
         	pass
         #stop = time.clock()
         #print "genList",self.parent, self.genList, " time",stop-start
@@ -451,26 +443,33 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 		#	print "paintAll: not visible .... skipping"
 		#	return
 
-		#self.mixture = self.history.currentState().getMixture()
+		mixture = self.getCurrentMixture()
+
+		print "paintAll shownMolecules"
+		#mixture = self.getCurrentMixture()
 		if self.history != None:
 			shownMolecules = self.history.currentState().shownMolecules
-			#shownMolecules = ShownMoleculesSet(self.mixture)
+			#shownMolecules = ShownMoleculesSet(mixture)
 		else:
-			shownMolecules = set(self.mixture.molecules())
+			shownMolecules = set(mixture.molecules())
 			
-		shownSolute = shownMolecules.difference(self.mixture.getSolvent())
-		shownSolvent = shownMolecules.intersection(self.mixture.getSolvent())
+		print "paintAll difference"
+		shownSolute = shownMolecules.difference(mixture.getSolvent())
+		shownSolvent = shownMolecules.intersection(mixture.getSolvent())
+		print "paintAll paintBonds"
 		if self.drawAs3DCriterion():
 		    self.paintBonds(selectedMolecules, shownSolute)
 		    self.paintAtoms(selectedMolecules, shownSolute)
 		else:
 		    self.paintBondsAsLines(selectedMolecules, shownSolute)
 		    
+		print "paintAll solvent"
 		if self.solventHighResolution:
 		    self.paintBonds(selectedMolecules, shownSolvent)
 		    self.paintAtoms(selectedMolecules, shownSolvent)
 		else:
 		    self.paintAtomsAsPoints(selectedMolecules, shownSolvent)
+		print "paintAll, caller=",inspect.stack()[1][3], " --> fin"
         
         
     def minimumSizeHint(self):
@@ -695,9 +694,10 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 
         # search for the closest atom
         minDist = float("inf")
-        shownMolecules = self.history.currentState().shownMolecules.shownList(self.mixture)
+        mixture = self.getCurrentMixture()
+        shownMolecules = self.history.currentState().shownMolecules.shownList(mixture)
         for molecule in shownMolecules:
-            #molecule = self.mixture.getMolecule(molName)
+            #molecule = mixture.getMolecule(molName)
             for atoms in molecule.atoms():
                 attr = molecule.getAtomAttributes(atoms)
                 x2,y2,z2 = gluProject(attr.getCoord()[0], attr.getCoord()[1], attr.getCoord()[2], self.modelMatrix, self.projMatrix, self.viewport)
@@ -708,7 +708,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
                     minDist = d
                     closestAtom = atoms
                     closestCoords = attr.getCoord()
-                    closestMolecule = self.mixture.getMoleculeID(molecule)
+                    closestMolecule = mixture.getMoleculeID(molecule)
         return closestMolecule, closestAtom, closestCoords
 
     def getClickedAtomCoordinates2(self, pos):
@@ -735,9 +735,9 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         #print "getClickedAtomCoordinates2  gluUnProject1", p1
         # search for the closest atom
         minDist = float("inf")
-        shownMolecules = self.history.currentState().shownMolecules.shownList(self.mixture)
+        shownMolecules = self.history.currentState().shownMolecules.shownList(mixture)
         for molName in shownMolecules:
-            molecule = self.mixture.getMolecule(molName)
+            molecule = mixture.getMolecule(molName)
             for atoms in molecule.atoms():
                 attr = molecule.getAtomAttributes(atoms)
                 d = attr.distanceToLine([p0,p1])
@@ -760,20 +760,21 @@ class MixtureViewer(QtOpenGL.QGLWidget):
                 #print "mousePressEvent ", self.format().depth()
                 closest = self.getClickedAtomCoordinates(event.pos())
                 #print "Mixture Viewer closestAtom", closest
-                #print "Mixture Viewer closestAtom", self.mixture.getMolecule(closest[0]).getAtomAttributes(closest[1])
+                #print "Mixture Viewer closestAtom", mixture.getMolecule(closest[0]).getAtomAttributes(closest[1])
                 self.jointAtoms = [closest,closest]
             elif self.previewerMode == "pore":
                 #print "mousePressEvent ", self.format().depth()
                 closest = self.getClickedAtomCoordinates(event.pos())
                 #print "Mixture Viewer closestAtom", closest
-                #print "Mixture Viewer closestAtom", self.mixture.getMolecule(closest[0]).getAtomAttributes(closest[1])
+                #print "Mixture Viewer closestAtom", mixture.getMolecule(closest[0]).getAtomAttributes(closest[1])
                 self.jointAtoms = [closest,closest]
             elif self.previewerMode == "select":
                 if self.moleculeEditor != None:
                     self.selected = self.getClickedAtomCoordinates(event.pos())
-                    self.moleculeEditor.editor.setMolecule(self.mixture.getMolecule(self.selected[0]), self.selected[0],removeIfPresent=True)
+                    mixture = self.getCurrentMixture()
+                    self.moleculeEditor.editor.setMolecule(mixture.getMolecule(self.selected[0]), self.selected[0],removeIfPresent=True)
                     self.moleculeEditor.insertAllToManager()
-                    #print "Mixture Viewer select", self.selected[0], self.mixture.getMolecule(self.selected[0]).getAtomAttributes(self.selected[1])
+                    #print "Mixture Viewer select", self.selected[0], mixture.getMolecule(self.selected[0]).getAtomAttributes(self.selected[1])
                 self.update()
             
             elif self.previewerMode  == "zoom":
@@ -801,13 +802,13 @@ class MixtureViewer(QtOpenGL.QGLWidget):
             elif self.previewerMode == "makeBonds":
                 self.jointAtoms[1] = self.getClickedAtomCoordinates(event.pos())
                 #print "mouseMoveEvent line", self.jointAtoms
-                #print "mouseMoveEvent line", self.mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), self.mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
+                #print "mouseMoveEvent line", mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
                 self.updateRequest.emit(self)     #self.updateGL() 
             
             elif self.previewerMode == "pore":
                 self.jointAtoms[1] = self.getClickedAtomCoordinates(event.pos())
                 #print "mouseMoveEvent line", self.jointAtoms
-                #print "mouseMoveEvent line", self.mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), self.mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
+                #print "mouseMoveEvent line", mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
                 self.updateRequest.emit(self)     #self.updateGL() 
 
             elif self.previewerMode == "zoom":
@@ -818,13 +819,13 @@ class MixtureViewer(QtOpenGL.QGLWidget):
             elif self.previewerMode == "select":
                 if self.moleculeEditor != None:
                     try:
-                        self.moleculeEditor.editor.setMolecule(self.mixture.getMolecule(self.selected[0]), self.selected[0],removeIfPresent=True)
+                        self.moleculeEditor.editor.setMolecule(mixture.getMolecule(self.selected[0]), self.selected[0],removeIfPresent=True)
                         self.selected = self.getClickedAtomCoordinates(event.pos())
-                        self.moleculeEditor.editor.setMolecule(self.mixture.getMolecule(self.selected[0]), self.selected[0],removeIfPresent=True)
+                        self.moleculeEditor.editor.setMolecule(mixture.getMolecule(self.selected[0]), self.selected[0],removeIfPresent=True)
                         self.moleculeEditor.insertAllToManager()
                     except UnboundLocalError:
                         pass
-                    #print "Mixture Viewer select", self.selected[0], self.mixture.getMolecule(self.selected[0]).getAtomAttributes(self.selected[1])
+                    #print "Mixture Viewer select", self.selected[0], mixture.getMolecule(self.selected[0]).getAtomAttributes(self.selected[1])
                 self.update()
                     
         self.lastPos = event.pos()
@@ -842,11 +843,11 @@ class MixtureViewer(QtOpenGL.QGLWidget):
                 self.history.push()
                 self.jointAtoms[1] = self.getClickedAtomCoordinates(event.pos())
                 #print "mouseReleaseEvent pore", self.jointAtoms
-                print "mouseReleaseEvent pore", self.mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), self.mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
-                self.history.currentState().getMixture().removeAtomsFromSphere(self.jointAtoms, self.history.currentState().shownMolecules)            
+                print "mouseReleaseEvent pore", mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
+                self.getCurrentMixture().removeAtomsFromSphere(self.jointAtoms, self.history.currentState().shownMolecules)            
                 print "mouseReleaseEvent pore ... regrese"
                 self.jointAtoms = None
-                self.history.getCurrentState().shownMolecules.addMolecules(self.history.currentState().getMixture())
+                self.history.getCurrentState().shownMolecules.addMolecules(self.getCurrentMixture())
                 self.parent.update()
                 self.updateRequest.emit(self)     #self.updateGL()         
         elif self.previewerMode == "makeBonds":
@@ -854,7 +855,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
                 self.history.push()
                 self.jointAtoms[1] = self.getClickedAtomCoordinates(event.pos())
                 #print "mouseReleaseEvent makeBonds", self.jointAtoms
-                #print "mouseReleaseEvent line", self.mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), self.mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
+                #print "mouseReleaseEvent line", mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
                 try:
                     (newMol, delMol) = self.history.getCurrentState().getMixture().addBond([self.jointAtoms[0][0], self.jointAtoms[0][1]], [self.jointAtoms[1][0], self.jointAtoms[1][1]])
                     if delMol != None: self.history.currentState().shownMolecules.remove(delMol)
@@ -871,7 +872,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
     def paintGL(self):
         import inspect
         #print "paintGL, caller=",inspect.stack()[1][3]
-        #self.setBoundingSphere(self.mixture.boundingSphere())
+        #self.setBoundingSphere(mixture.boundingSphere())
         #self.resizeGL(self.size().width(), self.size().height())
         
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
@@ -886,7 +887,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 
         # translate center of the mixture at the origin
         GL.glTranslated(-self.boundingSphere[0][0], -self.boundingSphere[0][1], -self.boundingSphere[0][2])
-        #print "paintGLglTranslated ", self.mixture.boundingSphere(), self.drawer.getBoundingSphere(), self.boundingSphere
+        #print "paintGLglTranslated ", mixture.boundingSphere(), self.drawer.getBoundingSphere(), self.boundingSphere
 
         # set colors and material reflections
         RED = [1.0,0.,0.,1.]
@@ -898,23 +899,32 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         #self.setLigth()
         
         # draw
+        #print "paintGL, paintBox()"
         self.paintBox()
+        #print "paintGL, paintAxes()"
         if self.axes: self.paintAxes()
+        #print "paintGL, paintJointAtoms()"
         self.paintJointAtoms()
  
+        #print "paintGL, update()"
         if self.genList == None or self.genList == 0:
             self.update()
+        #print "paintGL, glCallList()"
         if self.genList != None:
             GL.glCallList(self.genList)
 
+        #print "paintGL, paintLabels()"
         if self.labeling: self.paintLabels()
         
+        #print "paintGL, paintHelp()"
         if self.help: self.paintHelp()
                 
         #---------------------------
+        #print "paintGL, glGetDoublev()"
         self.modelMatrix = glGetDoublev(GL_MODELVIEW_MATRIX)
         self.projMatrix  = glGetDoublev(GL_PROJECTION_MATRIX)
         self.viewport    = glGetIntegerv(GL_VIEWPORT)
+        #print "paintGL, fin"
 
 
     def setLigth(self):
@@ -937,7 +947,8 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         #print "paintBonds"
         #selectedMoleculesNames = [m.name() for m in selectedMolecules]
         start = time.clock()
-        if self.mixture != None:
+        mixture = self.getCurrentMixture()
+        if mixture != None:
             
             #print "paintBonds selectedMolecules", selectedMolecules
             for molecule in shownMolecules:
@@ -971,7 +982,8 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         #print "paintBonds time",time.clock()-start
        
     def paintBondsAsLines(self, selectedMolecules=[], shownMolecules=set()):
-        if self.mixture != None:
+        mixture = self.getCurrentMixture()
+        if mixture != None:
 
             #GL.glMaterialfv(GL_FRONT, GL_EMISSION, self.lightZeroColor)
             #GL.glMaterialfv(GL.GL_BACK,GL.GL_DIFFUSE,[0.,0.,0.,1.])
@@ -980,7 +992,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         
             for molecule in shownMolecules:
             #for molName in shownMolecules:
-                #molecule = self.mixture.getMolecule(molName)
+                #molecule = mixture.getMolecule(molName)
                 #print "paintBondsAsLines", molecule
                 
                 if molecule in selectedMolecules: GL.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, [1.0,0.0,0.0,1.])
@@ -998,7 +1010,7 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 		#pass
 		import time
 		start = time.clock()
-		if self.mixture != None:
+		if mixture != None:
 				
 			#print "paintAtoms shownMolecules",shownMolecules
 			#for molecule in shownMolecules:
@@ -1020,12 +1032,12 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 
 
     def paintAtoms(self, selectedMolecules, shownMolecules):
-		#import inspect
-		#print "paintAtoms, caller=",inspect.stack()[1][3]
+		import inspect
+		print "paintAtoms, caller=",inspect.stack()[1][3]
 		#print "paintAtoms"
 		#pass
-		#import time
-		#start = time.clock()
+		import time
+		start = time.clock()
 
 		#print "paintAtoms ",selectedMolecules,shownMolecules
 		for molecule in shownMolecules:
@@ -1043,34 +1055,46 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 				GLU.gluSphere(self.quadric,MixtureViewer.atomRadius,7,7)
 				GL.glPopMatrix()
 
-		#print "paintAtoms time",time.clock()-start
+		print "paintAtoms time",time.clock()-start
 
 
     def paintAtomsAsPoints(self, selectedMolecules=[], shownMolecules=set()):
-		#print "paintAtomsAsPoints"
-		#pass
-		#import time
+		print "paintAtomsAsPoints"
+		import time
 		start = time.clock()
-		if self.mixture != None:
-				
+		mixture = self.getCurrentMixture()
+		if mixture != None:
+			#self.buildTables(self.getCurrentMixture())
 			#print "paintAtomsAsPoints shownMolecules",shownMolecules
-			for molecule in shownMolecules:
-				selectedMolecule = molecule in selectedMolecules
-				glBegin(GL_POINTS)
-				for attr in molecule.atomsGenerator():
-					if selectedMolecule: GL.glColor3fv([1.,0.,0.])
+			glBegin(GL_POINTS)
+			GL.glColor3fv([1.,0.,0.])
+			coordPos = 0 
+			for molname in mixture:
+				molecule = mixture.getMolecule(molname)
+				#print "paintAtomsAsPoints molecule",molname,len(molecule)
+				if molecule in shownMolecules:
+					selectedMolecule = molecule in selectedMolecules
+					if selectedMolecule:
+						GL.glColor3fv([1.,0.,0.])
+						for coords in self.atomCoordinates[coordPos:coordPos+len(molecule)]:
+							glVertex3dv(coords)
+						coordPos += len(molecule)
 					else: 
-						GL.glColor3fv(_ELEMENT_TABLE_.GetRGB(_ELEMENT_TABLE_.GetAtomicNum(attr.getInfo().getElement())))
-					glVertex3dv(attr.getCoord())
-				glEnd()
+						for i in range(len(molecule)):
+							GL.glColor3fv(_ELEMENT_TABLE_.GetRGB(_ELEMENT_TABLE_.GetAtomicNum(self.atomElements[coordPos])))
+							glVertex3dv(self.atomCoordinates[coordPos])
+							coordPos += 1
+				else:
+					coordPos += len(molecule)
+			glEnd()
 				   
-		#print "paintAtomsAsPoints time",time.clock()-start
+		print "paintAtomsAsPoints time",time.clock()-start
 
 
     def paintLabels(self):
         #print "paintLabels"
         #pass
-        if self.mixture != None:
+        if mixture != None:
             font = QtGui.QFont()
             font.setPointSizeF(200./self.boundingSphere[1]*self.zoom)
             
@@ -1079,12 +1103,12 @@ class MixtureViewer(QtOpenGL.QGLWidget):
             self.qglColor (QtGui.QColor("mintcream"))
                            
             if self.history != None:
-                shownMolecules = self.history.currentState().shownMolecules.shownList(self.mixture)
+                shownMolecules = self.history.currentState().shownMolecules.shownList(mixture)
             else:
-                shownMolecules = self.mixture.molecules()
+                shownMolecules = mixture.molecules()
             for molecule in shownMolecules:
             #for molName in shownMolecules:
-                #molecule = self.mixture.getMolecule(molName)
+                #molecule = mixture.getMolecule(molName)
                 GL.glPushMatrix()
 
                 for atoms in molecule.atoms():
@@ -1288,19 +1312,30 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 
 	#-------------------------------------------------------------------
     def setBoundingSphere(self):
-		self.buildTables(self.history.currentState().getMixture())
-		#print "setBoundingSphere for ", len(self.atomCoordinates), " atoms."
+		#self.buildTables(self.getCurrentMixture())
+		print "setBoundingSphere for ", len(self.atomCoordinates), " atoms."
 		self.boundingSphere = [[0.,0.,0.], 1.]
+		if len(self.atomCoordinates) == 0 and len(self.getCurrentMixture()) > 0:
+			self.buildTables()
 		if self.atomCoordinates != []:
-			Xs = [x for x,y,z in self.atomCoordinates]
-			Ys = [y for x,y,z in self.atomCoordinates]
-			Zs = [z for x,y,z in self.atomCoordinates]
+			#Xs = [x for x,y,z in self.atomCoordinates]
+			#Ys = [y for x,y,z in self.atomCoordinates]
+			#Zs = [z for x,y,z in self.atomCoordinates]
+			'''
+			Xs, Ys, Zs = list(zip(*self.atomCoordinates))
 			maxXs = max(Xs)
 			minXs = min(Xs)
 			maxYs = max(Ys)
 			minYs = min(Ys)
 			maxZs = max(Zs)
 			minZs = min(Zs)
+			'''
+			#maxXs, maxYs, maxZs = self.atomCoordinates.max(axis=0)
+			#minXs, minYs, minZs = self.atomCoordinates.min(axis=0)
+			maxXs, maxYs, maxZs = numpy.nanmax(self.atomCoordinates, axis=0)
+			minXs, minYs, minZs = numpy.nanmin(self.atomCoordinates, axis=0)
+			#print "setBoundingSphere shape ", self.atomCoordinates.shape
+			print "setBoundingSphere maxXs ", maxXs
 			self.boundingSphere[0][0] = (maxXs+minXs)/2
 			self.boundingSphere[0][1] = (maxYs+minYs)/2
 			self.boundingSphere[0][2] = (maxZs+minZs)/2
@@ -1343,18 +1378,19 @@ class MixtureViewer(QtOpenGL.QGLWidget):
         
     #-------------------------------------------------------------------
     def setProjection(self):
-        #print "setProjection"
+        print "setProjection"
         #print "setProjection",self.viewBox 
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
         
         # set box centered at the origin
         if self.boundingSphere == None or self.boundingSphere[1] <= 0:
+            print "setProjection glOrtho  self.boundingSphere == None"
             GL.glOrtho(-2, 2, -2, 2, -2, 2)
         else:
             self.setBoundingSphere()
             width = self.boundingSphere[1]
-            #print "setProjection glOrtho", -width, width, -width, width, -width, width 
+            print "setProjection glOrtho", -width, width, -width, width, -width, width 
             GL.glOrtho(-width, width,
                     -width, width,
                     -width, width)

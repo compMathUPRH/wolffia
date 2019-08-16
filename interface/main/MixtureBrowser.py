@@ -70,7 +70,7 @@ class MixtureBrowser(QtGui.QDialog):
         self.uiMixtureBrowser.deleteMixtureButton.setIcon(QtGui.QIcon().fromTheme("list-remove"))    
 
         #Viewer
-        self.previewArea    = MixtureViewer(self.history, self, Mixture())
+        self.previewArea    = MixtureViewer(self.history)#, self, Mixture())
         #self.previewArea.setHighResolution(False)
         self.uiMixtureBrowser.moleculeViewerLayout.addWidget(self.previewArea)
         

@@ -215,7 +215,7 @@ class PropertyEditor(QtGui.QWidget):
     def hasSelections(self): return len(self.registry) > 0
 
     def selectedMolecules(self):
-    	print "selectedMolecules ", self.registry
+    	#print "selectedMolecules ", self.registry
         return self.registry.values()
 
     def selectedNames(self):

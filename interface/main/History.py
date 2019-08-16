@@ -429,6 +429,9 @@ class NanoCADState(object):
 	def fillBox(self, solv, molNum, checkCollisions=False, replaceCollisions=False, applyPCBs=True, progress=None):
 		import math, random
 		import numpy as np
+		from lib.chemicalGraph.molecule.solvent.Solvent import Solvent
+
+		solventMolecules = Solvent(solv.__class__)
 
 		remaining = -1   # to track removng collissions
 		
@@ -459,18 +462,9 @@ class NanoCADState(object):
 		newPos = solv.massCenter()
 		refCoor = boxmin
 		
-		boxmax[0] -= solvDiameter/2.
-		boxmax[1] -= solvDiameter/2.
-		boxmax[2] -= solvDiameter/2.
-		
-		# add first molecule and rename solvent with the given name
-		mol = solv.copy()
-		mol.moveBy([random.uniform(boxmin[0], boxmax[0]), random.uniform(boxmin[1], boxmax[1]), random.uniform(boxmin[2], boxmax[2])])
-		nodeName = self.addMolecule(mol, checkForInconsistentNames=True)
-		self.shownMolecules.show(nodeName)
-		#print "fillBox ", mol.molname(),progressMax
-		solv.rename(mol.molname())
-		progressMax -= 1
+		#boxmax[0] -= solvDiameter/2.
+		#boxmax[1] -= solvDiameter/2.
+		#boxmax[2] -= solvDiameter/2.
 		
 		if progress != None:	
 			progress.setLabelText("Adding solvent")
@@ -504,16 +498,25 @@ class NanoCADState(object):
 				if np.min(atomDistances) > solvRadius:
 					#print 'fillBox: añadiendo', progressCount, np.min(atomDistances), newPos
 					mol.moveBy(list(newPos)[0])
-					nodeName = self.addMolecule(mol, checkForInconsistentNames=False)
-					self.shownMolecules.show(nodeName)
+					#nodeName = self.addMolecule(mol, checkForInconsistentNames=False)
+					#self.shownMolecules.show(nodeName)
+					solventMolecules.addCoordinates(mol)
 				else:
 					#print 'fillBox: colision'
 					if replaceCollisions: progressCount -= 1
 
 			progressCount += 1
 			if progress != None:	progress.setValue(progressCount)
+			del mol
 		
 				
+		# add solvent and rename with the given name
+		nodeName = self.addMolecule(solventMolecules, checkForInconsistentNames=True)
+		self.shownMolecules.show(nodeName)
+		#print "fillBox ", mol.molname(),progressMax
+		solv.rename(solventMolecules.molname())
+		progressMax -= 1
+		
 		#print "tiempo ", time.clock() - start
 		#print "Molecules after cleaning: ",mix.order()
 
@@ -707,7 +710,7 @@ class NanoCADState(object):
 import inspect
 class ShownMoleculesSet(set):
     def __init__(self, mixture):
-        #print "ShownMoleculesSet,__init__ caller=",inspect.stack()[1][3], mixture, type(mixture)
+        print "ShownMoleculesSet,__init__ caller=",inspect.stack()[1]#[3], mixture, type(mixture)
         if isinstance(mixture,list):
                 self.mixture = Mixture()
                 for m in mixture: self.mixture.add(m)

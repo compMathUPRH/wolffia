@@ -207,8 +207,8 @@ class PRM(dict):
 	#-----------------------------------------------------------------------------------------
 	def writeCHARMM(self,filename, mode="w", trad=None):
 		#print "TRAD",trad
-		#print " WRITEPRM ====", self
-		if trad == None:
+		#print "PRM writeCHARMM ====", self
+		if trad == None  or trad == {}:
 			self.trad = None
 		else:
 			self.trad = trad

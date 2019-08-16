@@ -62,11 +62,11 @@ class WATER(Molecule):
 		if WATER._FORCE_FIELD == None: 
 			print "WATER generating FF"
 			WATER._FORCE_FIELD = ForceField(self, NANOCAD_FORCE_FIELDS + "/WATER.prm")
-		print "WATER1", WATER._FORCE_FIELD._BONDS
+		#print "WATER1", WATER._FORCE_FIELD._BONDS
 		self.setForceField(WATER._FORCE_FIELD )
-		print "WATER2", self.getForceField()._BONDS
+		#print "WATER2", self.getForceField()._BONDS
 		self.copyChargesToForceField()
-		print "WATER3", self.getForceField()._BONDS
+		#print "WATER3", self.getForceField()._BONDS
 
 
 #==========================================================================

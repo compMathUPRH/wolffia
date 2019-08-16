@@ -1081,7 +1081,6 @@ class SimTab(QtGui.QFrame):
 		            self.wolffia.setupTab.update()
 	
 	        #print "updateCoordinates simRun.updateCoordinates"
-	        #self.preview.setMixture(self.history.currentState().getMixture(), adjustViewingVolume=False)
 	        self.preview.update(adjustViewingVolume=False)
 	        self.wolffia.analysis.update()
 	        #print "updateCoordinates out true"

@@ -72,7 +72,7 @@ class  Tube(Molecule):
 
 		atoms = sheet.atoms()
 		for atom in atoms:
-			attr = sheet.atom_attributes(atom)
+			attr = sheet.getAtomAttributes(atom)
 			coords = attr.getCoord()
 			angle = coords[0] * xToAngleFactor
 			attr.setCoord([radius * math.cos(angle), radius * math.sin(angle), coords[2]])

@@ -158,7 +158,7 @@ class PSF(object):
 			mol = mixture.getMolecule(molecule)
 			#print "PSF write " , molecule, mixture.trad[molecule]
 			for atom in mol:
-				atr     = mol.atom_attributes(atom)
+				atr     = mol.getAtomAttributes(atom)
 				#charge = mol.getForceField().charge(atr.getInfo().getType())
 				charge  = atr.getInfo().getCharge()
 				#print "PSF.write", atr.getInfo().getType(),charge

@@ -174,7 +174,7 @@ class  Hexagonal2D(Molecule):
 		atoms = list(self.atoms())
 		toRemove = list()
 		for atom in atoms:
-			[x,y,z] = self.getAttributes(atom).getCoord()
+			[x,y,z] = self.getAtomAttributes(atom).getCoord()
 			if x < 0 or x > self._ribbonWidth or z < 0 or z > self._length:
 				toRemove.append(atom)
 		self.remove_nodes_from(toRemove)

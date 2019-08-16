@@ -115,7 +115,7 @@ class ChemicalGraph(Graph):
             result_graph.add_nodes(comp)
 
             for atom in result_graph.nodes():
-                result_graph.add_node_attribute(atom, self.node_attributes(atom)[0])
+                result_graph.add_node_attribute(atom, self.getAtomAttributes(atom))
         
             for index in edges:
                 if (index[0] in pre_ordering) and (index[1] in pre_ordering) and not(index in result_graph.edges()) :     
@@ -165,7 +165,7 @@ class ChemicalGraph(Graph):
             result_graph.add_nodes(pre_ordering)
 
             for atom in result_graph.nodes():
-                result_graph.add_node_attribute(atom, self.node_attributes(atom)[0])
+                result_graph.add_node_attribute(atom, self.getAtomAttributes(atom))
         
             for index in edges:
                 if (index[0] in pre_ordering) and (index[1] in pre_ordering) and not(index in result_graph.edges()) :     
@@ -313,7 +313,7 @@ class ChemicalGraph(Graph):
             return False
     '''
     #-------------------------------------------------------------
-    def getAttributes(self, node):
+    def getAtomAttributes(self, node):
         """
         """
         return self.node[node]['attrs'][0]
@@ -324,7 +324,8 @@ class ChemicalGraph(Graph):
         """
         result = ""
         for atom in self.nodes():
-            result += str(atom) + ": " + str(self.node[atom]['attrs'][0]) + "\n"
+            #result += str(atom) + ": " + str(self.node[atom]['attrs'][0]) + "\n"
+            result += str(atom) + ": " + str(self.getAttributes(atom)) + "\n"
         return result
 
     #-------------------------------------------------------------
@@ -357,7 +358,7 @@ class ChemicalGraph(Graph):
             base = 0  # merging into an empty graph
 
         for atom in chGr.atoms():
-            self.add_node(atom+base, attrs=chGr.node_attributes(atom))
+            self.add_node(atom+base, attrs=[chGr.getAtomAttributes(atom)])
         for edge in chGr.edges():
             try:  # avoids adding an edge twice
                 self.add_edge([edge[0]+base, edge[1] + base])
@@ -395,7 +396,7 @@ class ChemicalGraph(Graph):
         if len(displ) != 3:
             raise self.MoleculeError("Argument \"displ\" in Molecule.moveby(self, displ) should a list of 3 numbers.")
         for atom in self.nodes():
-            self.node_attributes(atom)[0].moveby(displ)
+            self.getAtomAttributes(atom).moveby(displ)
         
         
         #=======================================================================
@@ -426,7 +427,7 @@ class ChemicalGraph(Graph):
         #=======================================================================
 
         for atom in self.nodes():
-            self.node_attributes(atom)[0].rotate(matr)
+            self.getAtomAttributes(atom).rotate(matr)
 
 
     #-------------------------------------------------------------

@@ -229,10 +229,10 @@ class AtomAttributes(object):
 		tObj = self.getInfo()
 		if fixedAtom:
 			#return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%1.4f" % ("ATOM  ",ser_num,self._name,' ',self._residue,self._chain,1,' ',self._coordinates[0],self._coordinates[1],self._coordinates[2],1              ,0.0,self._element,self._charge)
-			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self._coordinates[0],self._coordinates[1],self._coordinates[2],1              ,0.0,tObj._element)
+			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self.getCoord()[0],self.getCoord()[1],self.getCoord()[2],1              ,0.0,tObj._element)
 		else:
 			#return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%1.4f" % ("ATOM  ",ser_num,self._name,' ',self._residue,self._chain,1,' ',self._coordinates[0],self._coordinates[1],self._coordinates[2],0,0.0,self._element,self._charge)
-			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self._coordinates[0],self._coordinates[1],self._coordinates[2],0,0.0,tObj._element)
+			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self.getCoord()[0],self.getCoord()[1],self.getCoord()[2],0,0.0,tObj._element)
 
 	def getType(self):
 		print "WARNING: Deprecated call to AtomAttributes.getType() from ", inspect.stack()[1]
@@ -340,10 +340,10 @@ class AtomAttributes(object):
 			print "Minimum Distance:", dmin
 			return dmin
 		else:
-			#print "distanceTo ", self._coordinates, attr2._coordinates
-			dx = self._coordinates[0]-attr2._coordinates[0]
-			dy = self._coordinates[1]-attr2._coordinates[1]
-			dz = self._coordinates[2]-attr2._coordinates[2]
+			#print "distanceTo ", self.getCoord(), attr2._coordinates
+			dx = self.getCoord()[0]-attr2.getCoord()[0]
+			dy = self.getCoord()[1]-attr2.getCoord()[1]
+			dz = self.getCoord()[2]-attr2.getCoord()[2]
 
 		return math.sqrt(dx*dx+dy*dy+dz*dz)
 
@@ -354,7 +354,7 @@ class AtomAttributes(object):
 		"""
 		P0 = numpy.array(pts[0])
 		P1 = numpy.array(pts[1])
-		P  = numpy.array(self._coordinates)
+		P  = numpy.array(self.getCoord())
 		#print "distanceToLine", P0,P1,P
 
 		v = P1 - P0
@@ -385,7 +385,7 @@ class AtomAttributes(object):
 		self._coordinates[1] += displ[1]
 		self._coordinates[2] += displ[2]
 		"""
-		self._coordinates += displ
+		self.setCoord(self.getCoord() + displ)
 	#-------------------------------------------------------------
 	def rotate(self, matr):
 		"""Rotate the atom (self).
@@ -396,14 +396,13 @@ class AtomAttributes(object):
 		#self.setCoord([sum([matr[i][j] * self._coordinates[j] for j in range(3)]) for i in range(3)])
 		#m = numpy.matrix(matr)
 		#print "rotate", m,self._coordinates, numpy.asarray(m.dot(self._coordinates))[0]
-		self._coordinates = numpy.asarray(matr.dot(self._coordinates))[0]
+		self.setCoord(numpy.asarray(matr.dot(self.getCoord()))[0])
 
 	#-------------------------------------------------------------
 	def setCoord(self, newCoords):
 		"""Coordinates of the atom.
 
 		@rtype:  list of 3 floats
-		@return: Coordinates of the atom.
 		"""
 		self._coordinates = numpy.array(newCoords)
 
@@ -439,14 +438,14 @@ class AtomAttributes(object):
 		@rtype:  string
 		@return: String representation of attributes.
 		"""
-		#return "AtomAttributes{" + self._element + ", " + str(self._coordinates) + ", " + str(self._mass) + ", " + str(self._charge) + ", " + str(self._attributes) + "}"
+		#return "AtomAttributes{" + self._element + ", " + str(self.getCoord()) + ", " + str(self._mass) + ", " + str(self._charge) + ", " + str(self._attributes) + "}"
 		try:
 			return "AtomAttributes(\"" \
-				+ str(self._info)       + "\", "    + str(self._coordinates) + ", "    \
+				+ str(self._info)       + "\", "    + str(self.getCoord()) + ", "    \
 				+ str(self._attributes) + ")"
 		except:
 			return "AtomAttributes(\"" \
-				+ str(self._info._type)       + "\", "    + str(self._coordinates) + ", "    \
+				+ str(self._info._type)       + "\", "    + str(self.getCoord()) + ", "    \
 				+ str(self._attributes) + ")"
 			
 

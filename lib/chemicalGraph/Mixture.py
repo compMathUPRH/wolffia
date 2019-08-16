@@ -293,17 +293,7 @@ class Mixture(Graph):
         #print "Mixture __buildTranslatorTable__ self.trad", self.trad
         #print "Mixture __buildTranslatorTable__ finished", time.clock() - start
 
-        """
-        for molecule in self:
-            mol = self.getMolecule(molecule)
-            molname = mol.molname()
-            #if not self.trad.has_key(molname):
-            moltrad=dict()
-            for atom in mol:
-                atr = mol.atom_attributes(atom)
-                moltrad[atr.getType()] = atr.getType() + Mixture._CHARACTERS[len(self.trad)]
-            self.trad[molname]=moltrad
-        """
+
     
         #print self.trad
     
@@ -314,7 +304,7 @@ class Mixture(Graph):
             
 
     #-------------------------------- CUSTOM METHODS --------------------------------
-    def add(self, mol, checkForInconsistentNames=True):
+    def add(self, mol, checkForInconsistentNames=False):
         """
         Merges mol into self.
 
@@ -322,19 +312,20 @@ class Mixture(Graph):
         @param mol: Molecule to be added to the mixture.
         """
         #import inspect
-        #print "Mixture.add, caller=",inspect.stack()[1][3]
+        #print "Mixture.add, caller=",inspect.stack()[1]#[3]
         self.setChanged()
         #print "add ", mol.__class__
 
         assert(isinstance(mol, Molecule))
 
-        #print "add mol.molname()", mol.molname()
+        #print "Mixture.add mol.molname()", mol.molname(), checkForInconsistentNames
         nodeName = self.newMolName(mol.molname())
         self.add_node(nodeName, attrs=[mol])
         
         if checkForInconsistentNames and mol.molname()[:8] != "SOLVENT(":
         	self.checkExistingMoleculeNames(mol)
         
+        #print "Mixture.add mol.molname() ============> added", mol.molname()
         return nodeName
 
 
@@ -425,6 +416,9 @@ class Mixture(Graph):
 
         returns True if molecule was renamed AND it is a new species
         '''
+        #import inspect
+        #print "Mixture.checkExistingMoleculeNames, caller=",inspect.stack()[1]
+
         molecules = [m for m in self.moleculeGenerator() if m != mol]
         oldName = mol.molname()
         while molecules:  # find conflict
@@ -597,7 +591,7 @@ class Mixture(Graph):
         f = open(filename, "r")
         mix = Mixture()
         mix.__dict__ = pickle.load(f)
-        self.merge(mix)
+        self.merge(mix, checkForInconsistentNames=False)
         f.close()
         self.setChanged()
             
@@ -801,13 +795,13 @@ class Mixture(Graph):
             count += 1
 
 
-    def merge(self, mix):
+    def merge(self, mix, checkForInconsistentNames=True):
         '''
         Merge two mixtures.
         '''
         self.setChanged()
         for mol in mix:
-            self.add(mix.getMolecule(mol))
+            self.add(mix.getMolecule(mol), checkForInconsistentNames)
 
     
     def moleculeNames(self):
@@ -1334,7 +1328,7 @@ class Mixture(Graph):
         for molecule in self:
             mol = self.getMolecule(molecule)
             for atom in mol:
-                atr = mol.atom_attributes(atom)
+                atr = mol.getAtomAttributes(atom)
                 #print 'getAtomsCoordinatesAsArray: ', i
                 coordArray[:i,:] = atr.getCoord()
                 i += 1
@@ -1377,6 +1371,7 @@ class Mixture(Graph):
     def writeFiles(self,baseFilename, fixedMolecules=[]):
     	from chemicalGraph.io.PRM import PRMError
         #start = time.clock()
+        print "Mixture writeFiles"
         self.writePDB(baseFilename+".pdb",fixedMolecules)
         #print "Mixture writeFiles writePDB", time.clock() - start
         self.writePSF(baseFilename+".psf")
@@ -1394,7 +1389,7 @@ class Mixture(Graph):
         @type  pdbFile: string
         @param pdbFile: PDB filename.  If None it will write to sys.stdout.
         """
-        #start = time.clock()
+        start = time.clock()
         #print "Mixture writePDB __buildTranslatorTable__", time.clock() - start
         self.__buildTranslatorTable__()
         if pdbFile==None:
@@ -1413,7 +1408,7 @@ class Mixture(Graph):
             mol = self.getMolecule(molecule)
             renumbering[mol] = dict()
             for atom in mol:
-                atr = mol.atom_attributes(atom)
+                atr = mol.getAtomAttributes(atom)
                 fd.write(atr.PDBline(count, self.trad[molecule], molecule in fixedMolecules)+"\n")
                 self.atomOrder.append(atr)
                 renumbering[mol][atom] = count
@@ -1425,6 +1420,7 @@ class Mixture(Graph):
         for molecule in mixture:
             mol = mixture.getMolecule(molecule)
             for atom in mol:
+                #print "Mixture writePDB writing neighbors", mol, atom
                 neighbors = mol.neighbors(atom)
                 if len(neighbors) > 0:
                     fd.write("CONECT%5i" % (renumbering[mol][atom]))
@@ -1461,6 +1457,7 @@ class Mixture(Graph):
         writtenForceFields = []
         for molecule in self.trad:
             mol = self.getMolecule(molecule)
+            #print "ForceField writePRM: ", mol.molname()
             ff = mol.getForceField()
             ff.addZeroAngles( mol.angleTypes())
             #if not ff in writtenForceFields:
@@ -1506,7 +1503,7 @@ class Mixture(Graph):
         for molecule in self:
             mol = self.getMolecule(molecule)
             for atom in mol:
-                atr = mol.atom_attributes(atom)
+                atr = mol.getAtomAttributes(atom)
                 fd.write(atr.PSFline(count, self.trad[molecule])+"\n")
                 count += 1
             

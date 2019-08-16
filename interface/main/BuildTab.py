@@ -706,6 +706,7 @@ class BuildTab(QtGui.QFrame):
 		self.update()
 				
 	def insertAllToManager(self):
+		from lib.chemicalGraph.molecule.solvent.Solvent import Solvent
 		start = time.clock()
 		#print "insertAllToManager ",self.history.currentState().getMixture().molecules()
 		
@@ -750,8 +751,12 @@ class BuildTab(QtGui.QFrame):
 				#print "insertAllToManager",str(self.history.currentState().mixture.getMolecule(molName)._name) , molecules
 				
 				#insert molname on column 2
-				#print "insertAllToManager  creando item para ",str(self.history.currentState().mixture.getMolecule(molName)._name)
-				newitem = QtGui.QTableWidgetItem(str(self.history.currentState().mixture.getMolecule(molName)._name))
+				baseMolName = str(self.history.currentState().mixture.getMolecule(molName).molname())
+				#print "insertAllToManager  creando item para ", baseMolName
+
+				#if isinstance(self.history.currentState().mixture.getMolecule(molName), Solvent):
+				#	baseMolName += "(solvent)"
+				newitem = QtGui.QTableWidgetItem(baseMolName)
 				newitem.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
 				newitem.setToolTip("Click to select or double click to edit the name.")
 				self.ui.structManager.setItem(row, 2, newitem)

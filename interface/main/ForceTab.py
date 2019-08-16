@@ -52,7 +52,7 @@ from lib.chemicalGraph.molecule.ForceField import ForceField, NonBond
 class ChargesTable(QtGui.QTableWidget):
     def __init__(self, hist, forceTab, parent=None):
         super(ChargesTable, self).__init__(parent=parent)
-        print "ChargesTable init"
+        #print "ChargesTable init"
         self.history = hist
         self.forceTab = forceTab
 
@@ -73,11 +73,11 @@ class ChargesTable(QtGui.QTableWidget):
         item.setText("Charge")
 
     def update(self):
-        print "ChargesTable update"
+        #print "ChargesTable update"
         self.insertChargesTable()
 
     def showEvent(self,e):
-        print "ChargesTable showEvent"
+        #print "ChargesTable showEvent"
         self.insertChargesTable()
 
     def updateCharges(self):
@@ -199,7 +199,7 @@ class ChargesTable(QtGui.QTableWidget):
 class NonBondTable(QtGui.QTableWidget):
     def __init__(self, hist, forceTab, parent=None):
         super(NonBondTable, self).__init__(parent=parent)
-        print "NonBondTable init"
+        #print "NonBondTable init"
         self.history = hist
         self.forceTab = forceTab
 
@@ -220,12 +220,18 @@ class NonBondTable(QtGui.QTableWidget):
         item = self.horizontalHeaderItem(2)
         item.setText("Rmin/2")
 
+        # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
+        header = self.horizontalHeader()
+        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+
     def update(self):
-        print "NonBondTable update"
+        #print "NonBondTable update"
         self.insertAllToNonBondTable()
 
     def showEvent(self,e):
-        print "NonBondTable showEvent"
+        #print "NonBondTable showEvent"
         self.insertAllToNonBondTable()
 
     def insertAllToNonBondTable(self):
@@ -311,7 +317,7 @@ class NonBondTable(QtGui.QTableWidget):
 class BondsTable(QtGui.QTableWidget):
     def __init__(self, hist, forceTab, parent=None):
         super(BondsTable, self).__init__(parent=parent)
-        print "BondsTable init"
+        #print "BondsTable init"
         self.history = hist
         self.forceTab = forceTab
 
@@ -331,12 +337,19 @@ class BondsTable(QtGui.QTableWidget):
         item = self.horizontalHeaderItem(2)
         item.setText("b0")
 
+        # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
+        header = self.horizontalHeader()
+        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+		
+
     def update(self):
-        print "BondsTable update"
+        #print "BondsTable update"
         self.insertAllBondTable()
 
     def showEvent(self,e):
-        print "BondsTable showEvent"
+        #print "BondsTable showEvent"
         self.insertAllBondTable()
 
     def insertAllBondTable(self):
@@ -396,14 +409,14 @@ class BondsTable(QtGui.QTableWidget):
         #---------------------------------------------------------------
         #list all molecules in the Structure Manager
         self.blockSignals(False)
-        print "insertAllBondTable fin"
+        #print "insertAllBondTable fin"
 
     
 #====================================================================
 class AnglesTable(QtGui.QTableWidget):
     def __init__(self, hist, forceTab, parent=None):
         super(AnglesTable, self).__init__(parent=parent)
-        print "AnglesTable init"
+        #print "AnglesTable init"
         self.history = hist
         self.forceTab = forceTab
 
@@ -424,12 +437,18 @@ class AnglesTable(QtGui.QTableWidget):
         item = self.horizontalHeaderItem(2)
         item.setText(u"Ⲑ0")
 
+        # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
+        header = self.horizontalHeader()
+        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+
     def update(self):
-        print "AnglesTable update"
+        #print "AnglesTable update"
         self.insertAllAngleTable()
 
     def showEvent(self,e):
-        print "AnglesTable showEvent"
+        #print "AnglesTable showEvent"
         self.insertAllAngleTable()
 
     def insertAllAngleTable(self):
@@ -490,7 +509,7 @@ class AnglesTable(QtGui.QTableWidget):
 class DihedralsTable(QtGui.QTableWidget):
     def __init__(self, hist, forceTab, parent=None):
         super(DihedralsTable, self).__init__(parent=parent)
-        print "DihedralsTable init"
+        #print "DihedralsTable init"
         self.history = hist
         self.forceTab = forceTab
 
@@ -515,12 +534,18 @@ class DihedralsTable(QtGui.QTableWidget):
         item = self.horizontalHeaderItem(3)
         item.setText("Delta")
 
+        # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
+        header = self.horizontalHeader()
+        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+
     def update(self):
-        print "DihedralsTable update"
+        #print "DihedralsTable update"
         self.insertAllAngleTable()
 
     def showEvent(self,e):
-        print "DihedralsTable showEvent"
+        #print "DihedralsTable showEvent"
         self.insertAllAngleTable()
 
     def insertAllDihedralTable(self):

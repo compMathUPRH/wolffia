@@ -109,9 +109,9 @@ class  Molecule(ChemicalGraph):
 		ff = self.getForceField()
 		ff.__addChargeFieldToNonBond__()
 		#for atom in self:
-			#t = self.atom_attributes(atom).getInfo().getType()
+			#t = self.getAtomAttributes(atom).getInfo().getType()
 			#print "copyChargesToForceField ", t
-			#charge = self.atom_attributes(atom).getInfo().getCharge()
+			#charge = self.getAtomAttributes(atom).getInfo().getCharge()
 			#if ff.hasType(t) and ff.charge(t) != 0 and not ff.charge(t) == charge:
 			#	warnings.warn("Atoms with same types but different charges have been found in molecule \'" + self.molname() + ".  The charge for type " + t + "has been set to " + str(charge) + ".", SyntaxWarning)
 				#print "Atoms with same types but different charges have been found in molecule \'" + self.molname() + ".  The charge for type " + t + "has been set to " + str(charge) + ".", SyntaxWarning
@@ -120,10 +120,10 @@ class  Molecule(ChemicalGraph):
 	def charge(self):
 		totalCharge = 0
 		for atom in self:
-			t = self.atom_attributes(atom).getInfo().getType()
+			t = self.getAtomAttributes(atom).getInfo().getType()
 			#print "copyChargesToForceField ", t
-			#charge = self.atom_attributes(atom).getInfo().getCharge()
-			totalCharge += self.atom_attributes(atom).getInfo().getCharge()
+			#charge = self.getAtomAttributes(atom).getInfo().getCharge()
+			totalCharge += self.getAtomAttributes(atom).getInfo().getCharge()
 			#totalCharge += self.getForceField().charge(t)
 		return totalCharge
 	
@@ -173,9 +173,10 @@ class  Molecule(ChemicalGraph):
 	def crc32(self, val=0):
 		prev = val
 		for atom in self.atoms():
-			prev = self.atom_attributes(atom).crc32(prev)
+			prev = self.getAtomAttributes(atom).crc32(prev)
 		return prev
 	#-------------------------------------------------------------
+	''' Eliminado por redundnte
 	def node_attributes(self, atom):
 		"""
 		"""
@@ -184,7 +185,7 @@ class  Molecule(ChemicalGraph):
 		except KeyError:
 			print "ERROR: Molecule.node_attributes() failed to obtain attributes for atom ", atom, "."
 			raise KeyError
-			
+	'''
 
 	#-------------------------------------------------------------
 	def molname(self):
@@ -331,17 +332,19 @@ class  Molecule(ChemicalGraph):
 			ff.setAngle(at,sum(angleMeasures)/len(angleMeasures), 1)
 	
 	#-------------------------------------------------------------
+	''' Ahora heredado de ChemicalGraph
 	def getAtomAttributes(self, atom):
 		"""
 		"""
 		return self.node_attributes(atom)[0]
-
+	'''
 	#-------------------------------------------------------------
+	'''
 	def atom_attributes(self, atom):
 		"""
 		"""
 		return self.node_attributes(atom)[0]
-
+	'''
 	#-------------------------------------------------------------
 	def setAtomAttributes(self, atom, attr):
 		"""
@@ -663,7 +666,7 @@ class  Molecule(ChemicalGraph):
 				fd = open(pdbFile, 'w')
 
 		for atom in self.atoms():
-			atr = self.atom_attributes(atom)
+			atr = self.getAtomAttributes(atom)
 			fd.write(atr.PDBline(count)+"\n")
 			count += 1
 
@@ -725,7 +728,7 @@ class  Molecule(ChemicalGraph):
 		"""
 		if len(self) == 1: # return 2 * L-J diameter
 			return -4 * self.getForceField().nonBond(
-						self.atom_attributes(self.atom(0)).getType()
+						self.getAtomAttributes(self.atom(0)).getType()
 				   )[NonBond._EPSILON]
 		else:
 			import math
@@ -788,20 +791,20 @@ class  Molecule(ChemicalGraph):
 		#from chemicalGraph import Mixture
 		#print "Molecule atomTypes molecula: '", self.molname(), "'"
 		
-		return sorted(set([ self.getAttributes(atom).getInfo().getType() for atom in self.atoms()]))
+		return sorted(set([ self.getAtomAttributes(atom).getInfo().getType() for atom in self.atoms()]))
 	
 	#-------------------------------------------------------------
 	def bondTypes(self):
 		#from chemicalGraph import Mixture
-		#print "molecula: '", molecule, "'"
+		#print "bondTypes molecula: '", self.molname(), "'"
 		
 		allBonds = list()
 		for atom in self:
-			ta = self.getAttributes(atom).getInfo().getType()
+			ta = self.getAtomAttributes(atom).getInfo().getType()
 			neigh = self.neighbors(atom)
 			#print "Neighbours: ", atom, ", ", neigh
 			for n1 in neigh:
-				tn1 = self.getAttributes(n1).getInfo().getType()
+				tn1 = self.getAtomAttributes(n1).getInfo().getType()
 				if tn1 < ta:
 					allBonds.append((tn1, ta))
 				else:
@@ -820,14 +823,14 @@ class  Molecule(ChemicalGraph):
 		
 		allAngles = list()
 		for atom in self:
-			ta = self.getAttributes(atom).getInfo().getType()
+			ta = self.getAtomAttributes(atom).getInfo().getType()
 			neigh = self.neighbors(atom)
 			#print "Neighbours: ", atom, ", ", neigh
 			for n1 in neigh:
-				tn1 = self.getAttributes(n1).getInfo().getType()
+				tn1 = self.getAtomAttributes(n1).getInfo().getType()
 				for n2 in neigh:
 					if n1 < n2:
-						tn2 = self.getAttributes(n2).getInfo().getType()
+						tn2 = self.getAtomAttributes(n2).getInfo().getType()
 						self.getForceField()
 						if tn1 < tn2:
 							allAngles.append((tn1, ta, tn2))
@@ -849,18 +852,18 @@ class  Molecule(ChemicalGraph):
 		
 		allDihedrals = list()
 		for atom in self:
-			ta = self.getAttributes(atom).getInfo().getType()
+			ta = self.getAtomAttributes(atom).getInfo().getType()
 			neigh = self.neighbors(atom)
 			#print "Neighbours: ", atom, ", ", neigh
 			for n1 in neigh:
-				tn1 = self.getAttributes(n1).getInfo().getType()
+				tn1 = self.getAtomAttributes(n1).getInfo().getType()
 				for n2 in neigh:
 					if n1 < n2:
-						tn2 = self.getAttributes(n2).getInfo().getType()
+						tn2 = self.getAtomAttributes(n2).getInfo().getType()
 						neigh1 = self.neighbors(n1)
 						for n3 in neigh1:
 							if n3 != atom:
-								tn3 = self.getAttributes(n3).getInfo().getType()
+								tn3 = self.getAtomAttributes(n3).getInfo().getType()
 								self.getForceField()
 								if tn2 < tn3:
 									allDihedrals.append([tn2, ta, tn1, tn3])
@@ -933,7 +936,7 @@ class  Molecule(ChemicalGraph):
 	def ripElement(self, elt="H"):
 		atoms = self.atoms()
 		for atom in atoms:
-			if self.atom_attributes(atom).getType().startswith(elt):
+			if self.getAtomAttributes(atom).getType().startswith(elt):
 				self.removeAtom(atom)
 
 	def guessForceField(self, timeLimit=float("inf"), options=None, includeHydrogens=True):

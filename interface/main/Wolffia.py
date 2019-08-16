@@ -140,7 +140,7 @@ class Wolffia(QtGui.QMainWindow):
 	    self.setTitle()
 	    
 	    #initialize viewer
-	    self.previewer = MixtureViewer(self.history, parent=self, mixture=self.history.currentState().getMixture(), sharedGL=None)
+	    self.previewer = MixtureViewer(self.history, parent=self)#, mixture=self.history.currentState().getMixture(), sharedGL=None)
 	    self.previewerToolbar = PreviewerToolbar(self.previewer, self, self.settings)
 	    self.ui.previewLayout.addWidget(self.previewer)
 	    self.ui.previewLayout.addWidget(self.previewerToolbar)
