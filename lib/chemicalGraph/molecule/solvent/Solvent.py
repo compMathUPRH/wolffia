@@ -66,8 +66,11 @@ class Solvent(Molecule):
 	def atomsGenerator(self):
 		#attributes = list(super(Solvent, self).atomsGenerator())
 		print "Solvent.atomsGenerator: "
-		#attributes = list(self.solventClass().atomsGenerator())
-		attributes = list(self.molecule.atomsGenerator())
+		try: # back compatibility
+			attributes = list(self.solventClass().atomsGenerator())
+		except:
+			attributes = list(self.molecule.atomsGenerator())
+
 		atom = 0
 		for molCoords in self.coordinates:
 			for coords in molCoords:
