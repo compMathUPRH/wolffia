@@ -146,7 +146,7 @@ class  Molecule(ChemicalGraph):
 		mol = mix.getMolecule(mix.nodes()[0])
 		#print "Molecule load ", mol.getForceField()._NONBONDED
 		for atom in mol.nodes():
-			self.add_node(atom,attrs=mol.node_attributes(atom))
+			self.add_node(atom,attrs=mol.getAtomAttributes(atom))
 
 		for edge in mol.edges():
 			self.add_edge(edge)
