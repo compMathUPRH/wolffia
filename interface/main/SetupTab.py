@@ -737,6 +737,7 @@ class SetupTab(QtGui.QFrame):
 		progress.setWindowModality(QtCore.Qt.WindowModal)
 		progress.setAutoClose(False)
 		self._history.currentState().fillBox(solv, molNum, self.ui.collisionsBox.isChecked(), True, self.ui.pcbBox.isChecked(), progress)
+		self.preview.setMixture(self._history.currentState().getMixture(),True)
 		progress.hide()
 		self.preview.update()
 
