@@ -431,7 +431,7 @@ class NanoCADState(object):
 		import numpy as np
 		from lib.chemicalGraph.molecule.solvent.Solvent import Solvent
 
-		solventMolecules = Solvent(solv.__class__)
+		solventMolecules = Solvent(solv)#.__class__)
 
 		remaining = -1   # to track removng collissions
 		

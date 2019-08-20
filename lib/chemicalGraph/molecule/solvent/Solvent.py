@@ -36,9 +36,15 @@ from lib.chemicalGraph.molecule.Molecule import Molecule
 from lib.chemicalGraph.molecule.AtomAttributes import AtomAttributes
 
 class Solvent(Molecule):
-	def __init__(self, moleculeClass, ident="Unknown"):
-		super(Solvent, self).__init__(molecule=moleculeClass())
-		self.solventClass = moleculeClass
+	#def __init__(self, moleculeClass, ident="Unknown"):
+	def __init__(self, molecule, ident="Unknown"):
+		print "Solvent.__init__(): ", molecule.__class__
+		#super(Solvent, self).__init__(molecule=moleculeClass())
+		#self.solventClass = moleculeClass
+		super(Solvent, self).__init__(molecule=molecule)
+		self.solventClass = molecule.__class__
+		self.molecule = molecule.copy()
+
 		self.coordinates = []  #list of matrices of coordinates
 
 	def __len__(self):
@@ -59,7 +65,9 @@ class Solvent(Molecule):
 
 	def atomsGenerator(self):
 		#attributes = list(super(Solvent, self).atomsGenerator())
-		attributes = list(self.solventClass().atomsGenerator())
+		print "Solvent.atomsGenerator: "
+		#attributes = list(self.solventClass().atomsGenerator())
+		attributes = list(self.molecule.atomsGenerator())
 		atom = 0
 		for molCoords in self.coordinates:
 			for coords in molCoords:
