@@ -203,7 +203,8 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 		"""
 		mixture = self.getCurrentMixture()
 		
-		print "actualizando MixtureViewer con ", mixture, adjustViewingVolume
+		import inspect
+		print "MixtureViewer setMixture: actualizando MixtureViewer con ", mixture, adjustViewingVolume,inspect.stack()[1][1:4]
 		#self.history.currentState().updateMixture(mixture)
 		#mixture = None         # para forzar errores en los lugares que los usen
 		self.changeTracker = None   # para forzar errores en los lugares que los usen
@@ -231,7 +232,8 @@ class MixtureViewer(QtOpenGL.QGLWidget):
 
     def buildTables(self):
 		mixture = self.getCurrentMixture()
-		print "buildTables ", mixture.getMixtureName(),len(mixture)
+		import inspect
+		print "MixtureViewer buildTables ", mixture.getMixtureName(),len(mixture),inspect.stack()[1][3]
 		#self.atomCoordinates = numpy.array([])
 		atomCoordinates = []
 		self.atomElements	 = []

@@ -664,7 +664,7 @@ class NanoCADState(object):
 	        self.addMolecule(mix.getMolecule(mol))
 	
 	def addMolecule(self,mol, checkForInconsistentNames=True):
-	    #print "History addMolecule",mol
+	    print "NanoCADState addMolecule",mol
 	    molname = self.mixture.add(mol, checkForInconsistentNames)
 	    self.shownMolecules.show(molname)
 	    return molname
