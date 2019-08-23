@@ -36,7 +36,7 @@
 """
 
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 import sys, os, shutil
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
 from conf.Wolffia_conf import *

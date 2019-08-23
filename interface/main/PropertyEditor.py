@@ -35,7 +35,7 @@
 """
 
 from sets import Set
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 from ui_PropertyEditor import Ui_propertyEditor
 from lib.chemicalGraph.Mixture import Mixture
 

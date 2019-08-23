@@ -31,7 +31,7 @@ Created on Mar 13, 2012
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 
 class WDirectoryDialog(QtGui.QFileDialog):

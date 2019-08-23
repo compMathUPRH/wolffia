@@ -35,7 +35,7 @@
 """
 
 import sys,  time, random, numpy
-from PyQt4 import QtCore, QtGui, QtOpenGL,Qt
+from PyQt5 import QtCore, QtGui, QtOpenGL,Qt
 from OpenGL import GL, GLU, GLUT
 from OpenGL.GL import *
 from OpenGL.GLU import *

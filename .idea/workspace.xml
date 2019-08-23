@@ -2,88 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="908db065-deda-4aae-ae65-6e6f6151e939" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/celluloseEditor/CelluloseEditor.py" afterPath="$PROJECT_DIR$/interface/celluloseEditor/CelluloseEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/celluloseEditor/celluloseEditor.py" afterPath="$PROJECT_DIR$/interface/celluloseEditor/celluloseEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/classifier/ImportMolecules.py" afterPath="$PROJECT_DIR$/interface/classifier/ImportMolecules.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/classifier/Load.py" afterPath="$PROJECT_DIR$/interface/classifier/Load.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/diamondEditor/diamondEditor.py" afterPath="$PROJECT_DIR$/interface/diamondEditor/diamondEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/grapheneEditor/grapheneEditor.py" afterPath="$PROJECT_DIR$/interface/grapheneEditor/grapheneEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/homopolyEditor/HomopolyEditor.py" afterPath="$PROJECT_DIR$/interface/homopolyEditor/HomopolyEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/homopolyEditor/HomopolyEditor2.py" afterPath="$PROJECT_DIR$/interface/homopolyEditor/HomopolyEditor2.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/Analysis.py" afterPath="$PROJECT_DIR$/interface/main/Analysis.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/BuildTab.py" afterPath="$PROJECT_DIR$/interface/main/BuildTab.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/CHARMMParameterFinderDialog.py" afterPath="$PROJECT_DIR$/interface/main/CHARMMParameterFinderDialog.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/ConnectionDialog.py" afterPath="$PROJECT_DIR$/interface/main/ConnectionDialog.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/Drawer.py" afterPath="$PROJECT_DIR$/interface/main/Drawer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/EnergyPlot.py" afterPath="$PROJECT_DIR$/interface/main/EnergyPlot.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/ForceTab.py" afterPath="$PROJECT_DIR$/interface/main/ForceTab.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/History.py" afterPath="$PROJECT_DIR$/interface/main/History.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/LogWindow.py" afterPath="$PROJECT_DIR$/interface/main/LogWindow.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/MinTab.py" afterPath="$PROJECT_DIR$/interface/main/MinTab.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/MixtureBrowser.py" afterPath="$PROJECT_DIR$/interface/main/MixtureBrowser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/MixtureViewer.py" afterPath="$PROJECT_DIR$/interface/main/MixtureViewer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/PreviewerToolbar.py" afterPath="$PROJECT_DIR$/interface/main/PreviewerToolbar.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/PropertyEditor.py" afterPath="$PROJECT_DIR$/interface/main/PropertyEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/Settings.py" afterPath="$PROJECT_DIR$/interface/main/Settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/SettingsDialog.py" afterPath="$PROJECT_DIR$/interface/main/SettingsDialog.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/SetupTab.py" afterPath="$PROJECT_DIR$/interface/main/SetupTab.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/SimTab.py" afterPath="$PROJECT_DIR$/interface/main/SimTab.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/SolventDialog.py" afterPath="$PROJECT_DIR$/interface/main/SolventDialog.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/StructureManagerWidget.py" afterPath="$PROJECT_DIR$/interface/main/StructureManagerWidget.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/WTimer.py" afterPath="$PROJECT_DIR$/interface/main/WTimer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/WWidgets.py" afterPath="$PROJECT_DIR$/interface/main/WWidgets.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/Wolffia.py" afterPath="$PROJECT_DIR$/interface/main/Wolffia.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/main/setDialMixture.py" afterPath="$PROJECT_DIR$/interface/main/setDialMixture.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interface/nanotubeEditor/nanotubeEditor.py" afterPath="$PROJECT_DIR$/interface/nanotubeEditor/nanotubeEditor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/analysis/Nucleation.py" afterPath="$PROJECT_DIR$/lib/analysis/Nucleation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/analysis/Trajectory.py" afterPath="$PROJECT_DIR$/lib/analysis/Trajectory.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/ChemicalGraph.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/ChemicalGraph.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/Mixture.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/Mixture.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/io/PRM.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/io/PRM.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/io/PSF.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/io/PSF.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/AtomAttributes.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/AtomAttributes.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/ForceField.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/ForceField.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/Molecule.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/Molecule.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/allotrope/Diamond.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/allotrope/Diamond.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/allotrope/Hexagonal2D.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/allotrope/Hexagonal2D.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/allotrope/Tube.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/allotrope/Tube.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/element/Element.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/element/Element.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/molecules_conf.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/molecules_conf.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Cellulose.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Cellulose.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Chitosan.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Chitosan.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PANI.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PANI.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PEDOT.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PEDOT.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PMMA.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PMMA.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PSS.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/PSS.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Polymer.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Polymer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Polystyrene.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/Polystyrene.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/SDS.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/polymer/SDS.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/AcetoneAllH.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/AcetoneAllH.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/AcetoneNoH.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/AcetoneNoH.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/DMF.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/DMF.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/H2O2.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/H2O2.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/Na.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/Na.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/PABA.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/PABA.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/SDBS.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/SDBS.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/SDS.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/SDS.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/SDSplusNA.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/SDSplusNA.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/Solvent.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/Solvent.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/THF.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/THF.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/WATER.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/WATER.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/Xylene.py" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/solvent/Xylene.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/communication/RemoteHost.py" afterPath="$PROJECT_DIR$/lib/communication/RemoteHost.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/communication/imd/imd.py" afterPath="$PROJECT_DIR$/lib/communication/imd/imd.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/communication/namd/Configuration.py" afterPath="$PROJECT_DIR$/lib/communication/namd/Configuration.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/communication/namd/SimThread.py" afterPath="$PROJECT_DIR$/lib/communication/namd/SimThread.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/fbp/Network.py" afterPath="$PROJECT_DIR$/lib/fbp/Network.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/fbp/libraryComponents.py" afterPath="$PROJECT_DIR$/lib/fbp/libraryComponents.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/io/CoordinateFile.py" afterPath="$PROJECT_DIR$/lib/io/CoordinateFile.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/io/cc1.py" afterPath="$PROJECT_DIR$/lib/io/cc1.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/io/dcd.py" afterPath="$PROJECT_DIR$/lib/io/dcd.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wolffia.py" afterPath="$PROJECT_DIR$/wolffia.py" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/wolffia.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/wolffia.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NotesFixing2to3" beforeDir="false" afterPath="$PROJECT_DIR$/NotesFixing2to3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/SettingsDialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/SettingsDialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/Wolffia.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/Wolffia.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/chemicalGraph/io/PRM.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/chemicalGraph/io/PRM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/chemicalGraph/io/PSF.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/chemicalGraph/io/PSF.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/ForceField.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/ForceField.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -91,73 +21,6 @@
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
-  </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="wolffia.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wolffia.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="449">
-              <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="wolffia.py.bak" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wolffia.py.bak">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-91">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Wolffia.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/interface/main/Wolffia.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="174">
-              <caret line="318" column="49" lean-forward="false" selection-start-line="318" selection-start-column="47" selection-end-line="318" selection-end-column="49" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="History.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/interface/main/History.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-671">
-              <caret line="30" column="12" lean-forward="false" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-              <folding>
-                <element signature="e#1467#1503#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Mixture.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/chemicalGraph/Mixture.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="174">
-              <caret line="32" column="23" lean-forward="false" selection-start-line="32" selection-start-column="23" selection-end-line="32" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NotesFixing2to3" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/NotesFixing2to3">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -168,136 +31,25 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
+  <component name="ProjectId" id="1Ppz8GsNy00xXufSqwYW9a6hBsS" />
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/wolffia.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
       <list>
-        <option value="$PROJECT_DIR$/wolffia.py" />
-        <option value="$PROJECT_DIR$/interface/main/Wolffia.py" />
-        <option value="$PROJECT_DIR$/interface/main/History.py" />
-        <option value="$PROJECT_DIR$/lib/chemicalGraph/Mixture.py" />
-        <option value="$PROJECT_DIR$/NotesFixing2to3" />
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="2021" />
-    <option name="y" value="59" />
-    <option name="width" value="1738" />
-    <option name="height" value="999" />
-  </component>
-  <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-      <flattenPackages />
-      <showMembers />
-      <showModules />
-      <showLibraryContents />
-      <hideEmptyPackages />
-      <abbreviatePackageNames />
-      <autoscrollToSource />
-      <autoscrollFromSource />
-      <sortByType />
-      <manualOrder />
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scratches" />
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="chemicalGraph" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wolffia" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="interface" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
-  </component>
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.completion" />
-  </component>
-  <component name="RunManager" selected="Python.wolffia">
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="wolffia" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="wolffia" />
-      <method />
-    </configuration>
+  <component name="RunManager">
     <configuration default="true" type="tests" factoryName="Attests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -317,115 +69,51 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="wolffia" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Nosetests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="wolffia" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Unittests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="wolffia" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="py.test">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="wolffia" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="testToRun" value="" />
-      <option name="keywords" value="" />
-      <option name="params" value="" />
-      <option name="USE_PARAM" value="false" />
-      <option name="USE_KEYWORD" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="wolffia" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$USER_HOME$/wolffia_env/bin/python" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="SDK_HOME" value="/opt/anaconda3/envs/wolffia/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="wolffia" />
-      <option name="SCRIPT_NAME" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wolffia.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
+      <option name="EMULATE_TERMINAL" value="true" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="Python.wolffia" />
-    </list>
+    <configuration name="wolffia" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="wolffia" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/opt/anaconda3/envs/wolffia/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/wolffia.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
   </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -437,86 +125,15 @@
     </task>
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="2021" y="59" width="1738" height="999" extended-state="0" />
-    <editor active="false" />
-    <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33869115" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.62112516" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-    </layout>
-  </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager />
-    <watches-manager />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/wolffia.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wolffia.py.bak">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-91">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/interface/main/Wolffia.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="318" column="49" lean-forward="false" selection-start-line="318" selection-start-column="47" selection-end-line="318" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/interface/main/History.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-671">
-          <caret line="30" column="12" lean-forward="false" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-          <folding>
-            <element signature="e#1467#1503#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/chemicalGraph/Mixture.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="32" column="23" lean-forward="false" selection-start-line="32" selection-start-column="23" selection-end-line="32" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NotesFixing2to3">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

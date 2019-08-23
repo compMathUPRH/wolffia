@@ -38,7 +38,7 @@
 import sys, os
 import math
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from ui_homopolyEditor import Ui_HomopolyEditor
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')

@@ -3,7 +3,9 @@ pip install PyQt5
 pip install networkx
 pip install numpy
 pip install pybel
-
+conda install -c openbabel openbabel
+conda install pyqt numpy scipy networkx
+scikit-learn
 
 
 # Notes after compilation
@@ -13,3 +15,4 @@ Sets included in Python3
 
 openbabel hard to install at first
 sudo apt install libopenbabel-dev
+from anaconda terminal, conda init bash, conda activate wolffia, conda install -c openbabel openbabel

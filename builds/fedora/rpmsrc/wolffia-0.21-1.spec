@@ -6,7 +6,7 @@ Group:		Applications/Education
 License:	Yuyo
 URL:		http://wolffia.uprh.edu/
 
-Requires: python >= 2.7, PyQt4 >= 4.8.6, PyQwt >= 5.2.0, python-openbabel >= 2.3.1, PyOpenGL >= 3.0.1
+Requires: python >= 2.7, PyQt5 >= 4.8.6, PyQwt >= 5.2.0, python-openbabel >= 2.3.1, PyOpenGL >= 3.0.1
 
 %description
  Wolffia is a graphical user interface to setup, execute,

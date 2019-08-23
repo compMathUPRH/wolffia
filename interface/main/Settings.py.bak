@@ -200,7 +200,7 @@ class Settings(object):
 	        f.close()
 	        #print "Settings.load self.wolffiaVerion ", self.wolffiaVersion
 	    except:
-	        from PyQt4 import QtGui
+	        from PyQt5 import QtGui
 	        gui = QtGui.QErrorMessage.qtHandler()
 	        QtGui.QErrorMessage.showMessage( gui, "Error: could not open configuration file " 
 	            + filename + "." )

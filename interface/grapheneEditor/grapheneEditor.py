@@ -37,7 +37,7 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from ui_grapheneEditor import Ui_GrapheneEditor
 
 import sys, os

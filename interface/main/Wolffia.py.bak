@@ -34,7 +34,7 @@
 import sys,os
 import logging
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 #from ui_Wolffia import Ui_Wolffia
 #from NanoCADState import NanoCADState
 # load configuration info

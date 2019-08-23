@@ -31,8 +31,8 @@ Created on Feb 26, 2012
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt4 import Qt, QtGui
-import PyQt4.Qwt5 as Qwt
+from PyQt5 import Qt, QtGui
+import PyQt5.Qwt5 as Qwt
 from numpy import array,ones,linalg,mean,std
 import datetime
 

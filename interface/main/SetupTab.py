@@ -34,7 +34,7 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt4 import Qt, QtCore, QtGui
+from PyQt5 import Qt, QtCore, QtGui
 from ui_SetupTab import Ui_setupTab
 
 import sys,os,math,time

@@ -35,7 +35,7 @@
 """
 import os, sys
 import math
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from ui_SolventDialog import Ui_solventDialog
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')

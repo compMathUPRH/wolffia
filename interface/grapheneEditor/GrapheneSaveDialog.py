@@ -34,7 +34,7 @@
 """
 
 import os, sys
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from ui_grapheneSaveDialog import Ui_GrapheneSaveDialog
 
 # find CNT class and import

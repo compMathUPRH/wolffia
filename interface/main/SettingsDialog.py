@@ -35,7 +35,7 @@
 """
 
 import os, sys
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from ui_SettingsDialog import Ui_settingsDialog
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
@@ -221,12 +221,12 @@ class SettingsDialog(QtGui.QDialog):
             self.MDPackage = "GROMACS"
 
         if self.settings.workingFolder != self.ui.defDirLine.text():
-			#self.wolffia.reset()
-			self.settings.setWorkingDirectory(str(self.ui.defDirLine.text()))
-			self.wolffia.mixtureDialog()
-			#self.settings.setCurrentMixture(WOLFFIA_DEFAULT_MIXTURE_NAME)
-			print(self.settings.workingFolder)
-			print(self.settings.currentMixtureLocation())
-			self.close()
-			        
+            #self.wolffia.reset()
+            self.settings.setWorkingDirectory(str(self.ui.defDirLine.text()))
+            self.wolffia.mixtureDialog()
+            #self.settings.setCurrentMixture(WOLFFIA_DEFAULT_MIXTURE_NAME)
+            print(self.settings.workingFolder)
+            print(self.settings.currentMixtureLocation())
+            self.close()
+
         self.close()

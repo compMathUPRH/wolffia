@@ -33,7 +33,7 @@
 import sys,os
 import logging
 
-from PyQt4			import QtCore, QtGui, uic, Qt
+from PyQt5			import QtCore, QtGui, uic, Qt
 #from pyf.manager.network	import Network
 wolfiadir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(wolfiadir+'/../../')

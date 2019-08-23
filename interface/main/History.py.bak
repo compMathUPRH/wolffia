@@ -338,7 +338,7 @@ class NanoCADState(object):
 				import traceback
 				traceback.print_exc()
 				#print "NanoCADState.load_ Exeption ", e, " when unpickling file."
-				from PyQt4 import QtGui
+				from PyQt5 import QtGui
 				gui = QtGui.QErrorMessage.qtHandler()
 				QtGui.QErrorMessage.showMessage( gui, "Error: could not open configuration file " 
 				    + filename + "." )
@@ -411,7 +411,7 @@ class NanoCADState(object):
 		if self.wolffiaVerion < "1.31": 
 			self.getMixture().upgrade(self.wolffiaVerion)
 			
-		#from PyQt4 import QtGui
+		#from PyQt5 import QtGui
 		if self.wolffiaVerion < WOLFFIA_VERSION: 
 			#QtGui.QMessageBox.information(self.parent,"Wolffia", "Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION))
 			print "NANOCADState.load: Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION)

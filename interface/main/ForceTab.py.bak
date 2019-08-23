@@ -35,10 +35,10 @@
 """
 #---------------------------------------------------------------------------
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 from ui_ForceTab import Ui_forceTab
-#from PyQt4.QtCore import *
-#from PyQt4.QtGui import QFileDialog
+#from PyQt5.QtCore import *
+#from PyQt5.QtGui import QFileDialog
 
 import sys,os, time
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')

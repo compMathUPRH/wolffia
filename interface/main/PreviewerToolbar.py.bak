@@ -30,7 +30,7 @@ Created on Jun 29, 2012
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from collections import OrderedDict
 from conf.Wolffia_conf import WOLFFIA_GRAPHICS
 

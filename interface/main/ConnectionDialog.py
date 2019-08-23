@@ -34,7 +34,7 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 from interface.main.ui_ConnectionDialog import Ui_ConnectionDialog
 from lib.communication.RemoteHost import *
 import time

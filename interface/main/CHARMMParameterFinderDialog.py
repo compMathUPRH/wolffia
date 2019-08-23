@@ -32,7 +32,7 @@ Created on Jul 15, 2012
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from ui_CHARMMParameterFinderDialog import Ui_CHARMMParameterFinderDialog
 from lib.chemicalGraph.molecule.Molecule import Molecule
 import threading, time

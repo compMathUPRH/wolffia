@@ -35,7 +35,7 @@
 """
 
 import os, sys
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from ui_nanotubeSaveDialog import Ui_NanotubeSaveDialog
 
 # find CNT class and import

@@ -22,7 +22,7 @@
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt4 import QtGui, QtCore, uic
+from PyQt5 import QtGui, QtCore, uic
 from ui_nucleation import Ui_nucleation
 
 import sys, os
@@ -148,7 +148,7 @@ class Nucleation():
 						mix.add(liquid)
 		return mix
 
-import PyQt4.Qwt5 as Qwt
+import PyQt5.Qwt5 as Qwt
 
 class NucleationDialog(QtGui.QDialog):
 	def __init__(self):

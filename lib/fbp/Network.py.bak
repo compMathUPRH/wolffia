@@ -1,6 +1,6 @@
 
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 import libraryComponents
 import sys
 from lib.fbp.libraryComponents import FBP_NO_WRAP_FUNCTIONS
