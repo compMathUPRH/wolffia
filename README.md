@@ -8,6 +8,8 @@ Wolffia is a graphical user interface that works as a simulation environment for
 
 Wolffia's latest release is available at http://wolffia.uprh.edu/.
 
+[![Alt text](https://img.youtube.com/vi/16naAAW-ncQ/0.jpg)](https://www.youtube.com/watch?v=16naAAW-ncQ)
+
 ## Prerequisites
 
 Wolffia has been mainly tested in Debian based operating systems. Additional operating systems may be supported.
