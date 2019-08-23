@@ -47,6 +47,7 @@ from .Drawer import Drawer
 from conf.Wolffia_conf import WOLFFIA_DEFAULT_MIXTURE_LOCATION, WOLFFIA_DEFAULT_MIXTURE_NAME, WOLFFIA_VERSION #@UnresolvedImport
 from lib.chemicalGraph.molecule.Molecule import Molecule
 import pickle as pickle #Tremenda aportación por carlos cortés.
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
 
@@ -339,8 +340,8 @@ class NanoCADState(object):
                 traceback.print_exc()
                 #print "NanoCADState.load_ Exeption ", e, " when unpickling file."
                 from PyQt5 import QtGui
-                gui = QtGui.QErrorMessage.qtHandler()
-                QtGui.QErrorMessage.showMessage( gui, "Error: could not open configuration file "
+                gui = QtWidgets.QErrorMessage.qtHandler()
+                QtWidgets.QErrorMessage.showMessage( gui, "Error: could not open configuration file "
                     + filename + "." )
                 logger.warning("Error: could not open configuration file " + filename + "." )
 

@@ -16,3 +16,30 @@ Sets included in Python3
 openbabel hard to install at first
 sudo apt install libopenbabel-dev
 from anaconda terminal, conda init bash, conda activate wolffia, conda install -c openbabel openbabel
+
+find PycharmProjects/wolffia/ -type f -exec sed -i 's/PyQt4/PyQt5/g' {} +
+find PycharmProjects/wolffia/ -type f -exec sed -i 's/pyuic4/pyuic5/g' {} +
+
+AttributeError: module 'PyQt5.QtGui' has no attribute 'QFileDialog'
+https://www.programcreek.com/python/example/108089/PyQt5.QtWidgets.QFileDialog
+Import QtWidgets and replace QtGui with QtWidgets
+
+TypeError: qRegisterResourceData(int, bytes, bytes, bytes): argument 2 has unexpected type 'str'
+locate *.qrc
+find /home/jacaraba/PycharmProjects/wolffia/ -type f -exec sed -i 's/pyrcc4/pyrcc5/g' {} +
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+ModuleNotFoundError: No module named 'PyQt5.Qwt5'
+Qwt is no longer supported, tried a temporary fix.
+Adding this package in the meantime
+conda install pythonqwt
+import qwt as Qwt
+
+
+AttributeError: 'QAction' object has no attribute 'setSoftKeyRole'
+Deprecated - had to comment it out
+
+
+Use QHeaderView.setSectionResizeMode instead of QHeaderView.setSectionResizeMode:
+setSectionResizeMode

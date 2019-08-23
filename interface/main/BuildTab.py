@@ -33,7 +33,7 @@
 	by the UPR-Penn Partnership for Research and Education in Materials program, 
 	USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from ui_BuildTab import Ui_buildTab
 
 import sys,os, platform, time, random
@@ -52,7 +52,7 @@ from .WWidgets import PreviewButton,FixedButton
 
 from .WFileDialogs import WFileNameDialog
 
-class BuildTab(QtGui.QFrame):   
+class BuildTab(QtWidgets.QFrame):
 	def __init__(self, hist, parent=None, previewer=None, settings=None):
 		super(BuildTab, self).__init__(parent)
 

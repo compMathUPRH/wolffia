@@ -31,13 +31,13 @@ Created on Mar 16, 2012
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from lib.chemicalGraph.Mixture import Mixture
 import platform
 from conf.Wolffia_conf import *
 
 #=====================================================================
-class PreviewButton(QtGui.QPushButton):
+class PreviewButton(QtWidgets.QPushButton):
     def __init__(self, state, viewer, parent=None, molname="", initState=True, editor=None):
         super(PreviewButton, self).__init__(parent)
         self.state = state     
@@ -65,40 +65,40 @@ class PreviewButton(QtGui.QPushButton):
 
     
     def mousePressEvent (self, QMouseEvent):
-        from .BuildTab import ShownSolvent
+        from BuildTab import ShownSolvent
         self.show = not self.show
         print("mousePressEvent:self.show**************************************",self.show)
-		
-	'''
-		if self.objectName()[:8] == "SOLVENT(":
-			for solv in self.mixture.molecules():
-				if solv[:8] == "SOLVENT(":
-					if self.show:
-						self.shownMolecules.show(solv)
-					else:
-						self.shownMolecules.hide(solv)
-		'''
-	if ShownSolvent.isSolvent(self.objectName()):
-			objectSolventType = ShownSolvent.solventType(str(self.objectName()))
-			for solv in self.mixture.molecules():
-				if ShownSolvent.isSolvent(solv) and ShownSolvent.solventType(solv) == objectSolventType:
-					if self.show:
-						self.shownMolecules.show(solv)
-					else:
-						self.shownMolecules.hide(solv)
-	elif self.show: 
-		    self.shownMolecules.show(str(self.objectName()))
-		    #print "mousePressEvent:show",str(self.objectName())
-	else:         
-		    self.shownMolecules.hide(str(self.objectName()))
-		    #print "mousePressEvent:hide",str(self.objectName())
-		
-	if hasattr(self.parent,'_checkShowShiftModifier_'):
-		    self.parent._checkShowShiftModifier_(self,self.show)
-		
-	self.setIcon()
-	if self.moleculeEditor == None: self.viewer.update()
-	else: self.viewer.update()
+
+        '''
+        if self.objectName()[:8] == "SOLVENT(":
+            for solv in self.mixture.molecules():
+                if solv[:8] == "SOLVENT(":
+                    if self.show:
+                        self.shownMolecules.show(solv)
+                    else:
+                        self.shownMolecules.hide(solv)
+        '''
+        if ShownSolvent.isSolvent(self.objectName()):
+            objectSolventType = ShownSolvent.solventType(str(self.objectName()))
+            for solv in self.mixture.molecules():
+                if ShownSolvent.isSolvent(solv) and ShownSolvent.solventType(solv) == objectSolventType:
+                    if self.show:
+                        self.shownMolecules.show(solv)
+                    else:
+                        self.shownMolecules.hide(solv)
+        elif self.show:
+            self.shownMolecules.show(str(self.objectName()))
+            #print "mousePressEvent:show",str(self.objectName())
+        else:
+            self.shownMolecules.hide(str(self.objectName()))
+            #print "mousePressEvent:hide",str(self.objectName())
+
+        if hasattr(self.parent,'_checkShowShiftModifier_'):
+            self.parent._checkShowShiftModifier_(self,self.show)
+
+        self.setIcon()
+        if self.moleculeEditor == None: self.viewer.update()
+        else: self.viewer.update()
 
 #    def paintEvent(self, e):
 #        super(PreviewButton, self).paintEvent(e)
@@ -128,7 +128,7 @@ class PreviewButton(QtGui.QPushButton):
         #self.viewer.update()
 
 #=====================================================================
-class FixedButton(QtGui.QPushButton):
+class FixedButton(QtWidgets.QPushButton):
     def __init__(self, state, viewer, parent=None, molname="", initState=True):
         super(FixedButton, self).__init__(parent)
         self.state = state     
@@ -152,35 +152,35 @@ class FixedButton(QtGui.QPushButton):
    
     def mousePressEvent (self, QMouseEvent):
         from .BuildTab import ShownSolvent
-	self.fixed = not self.fixed
-		#print "FixedButton mousePressEvent:self.fixed",self.fixed
-	'''
-		if self.objectName()[:8] == "SOLVENT(":
-			for solv in self.mixture.molecules():
-				if solv[:8] == "SOLVENT(":
-					if self.fixed:
-						self.fixedMolecules.fix(solv)
-					else:
-						self.fixedMolecules.loose(solv)
-		'''
-	if ShownSolvent.isSolvent(self.objectName()):
-			objectSolventType = ShownSolvent.solventType(str(self.objectName()))
-			for solv in self.mixture.molecules():
-				if ShownSolvent.isSolvent(solv) and ShownSolvent.solventType(solv) == objectSolventType:
-					if self.fixed:
-						self.fixedMolecules.fix(solv)
-					else:
-						self.fixedMolecules.loose(solv)
-	elif self.fixed: 
-		    self.fixedMolecules.fix(str(self.objectName()))
-		    #print "mousePressEvent:show",str(self.objectName())
-	else:         
-		    self.fixedMolecules.loose(str(self.objectName()))
-		    #print "mousePressEvent:hide",str(self.objectName())
-		    
-	self.parent._checkFixedShiftModifier_(self,self.fixed)
-	self.setIcon()
-		#self.viewer.update()
+        self.fixed = not self.fixed
+        #print "FixedButton mousePressEvent:self.fixed",self.fixed
+        '''
+        if self.objectName()[:8] == "SOLVENT(":
+            for solv in self.mixture.molecules():
+                if solv[:8] == "SOLVENT(":
+                    if self.fixed:
+                        self.fixedMolecules.fix(solv)
+                    else:
+                        self.fixedMolecules.loose(solv)
+        '''
+        if ShownSolvent.isSolvent(self.objectName()):
+            objectSolventType = ShownSolvent.solventType(str(self.objectName()))
+            for solv in self.mixture.molecules():
+                if ShownSolvent.isSolvent(solv) and ShownSolvent.solventType(solv) == objectSolventType:
+                    if self.fixed:
+                        self.fixedMolecules.fix(solv)
+                    else:
+                        self.fixedMolecules.loose(solv)
+        elif self.fixed:
+            self.fixedMolecules.fix(str(self.objectName()))
+            #print "mousePressEvent:show",str(self.objectName())
+        else:
+            self.fixedMolecules.loose(str(self.objectName()))
+            #print "mousePressEvent:hide",str(self.objectName())
+
+        self.parent._checkFixedShiftModifier_(self,self.fixed)
+        self.setIcon()
+        #self.viewer.update()
 
 #    def paintEvent(self, e):
 #        super(FixedButton, self).paintEvent(e)

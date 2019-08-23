@@ -222,9 +222,9 @@ class NonBondTable(QtGui.QTableWidget):
 
         # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
         header = self.horizontalHeader()
-        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtGui.QHeaderView.ResizeToContents)
 
     def update(self):
         #print "NonBondTable update"
@@ -339,9 +339,9 @@ class BondsTable(QtGui.QTableWidget):
 
         # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
         header = self.horizontalHeader()
-        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtGui.QHeaderView.ResizeToContents)
 		
 
     def update(self):
@@ -439,9 +439,9 @@ class AnglesTable(QtGui.QTableWidget):
 
         # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
         header = self.horizontalHeader()
-        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtGui.QHeaderView.ResizeToContents)
 
     def update(self):
         #print "AnglesTable update"
@@ -536,9 +536,9 @@ class DihedralsTable(QtGui.QTableWidget):
 
         # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
         header = self.horizontalHeader()
-        header.setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        header.setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtGui.QHeaderView.ResizeToContents)
 
     def update(self):
         #print "DihedralsTable update"

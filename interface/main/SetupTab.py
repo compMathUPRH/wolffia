@@ -34,7 +34,7 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt5 import Qt, QtCore, QtGui
+from PyQt5 import Qt, QtCore, QtGui, QtWidgets
 from ui_SetupTab import Ui_setupTab
 
 import sys,os,math,time
@@ -50,7 +50,7 @@ _BOX_INCREASE_FACTOR = 1.2
 #_SEPARATION_BETWEEN_SOLVENTS_ = 8 #0.0334 molecules/A**-3.
 _AVOGRADRO_CONSTANT_ = 6.02214129e+23
 
-class SetupTab(QtGui.QFrame):  
+class SetupTab(QtWidgets.QFrame):
 
 	"""
 	Class fields: 

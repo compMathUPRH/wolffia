@@ -33,7 +33,7 @@
 import sys,os
 import logging
 
-from PyQt5			import QtCore, QtGui, uic, Qt
+from PyQt5			import QtCore, QtGui, uic, Qt, QtWidgets
 #from pyf.manager.network	import Network
 wolfiadir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(wolfiadir+'/../../')
@@ -41,7 +41,7 @@ from ui_Analysis import Ui_Analysis
 from lib.fbp.Network import Network, NetworkThread
 from multiprocessing import Queue
 
-class TextField(QtGui.QTextEdit):
+class TextField(QtWidgets.QTextEdit):
 
 	def __init__(self, title, parent):
 
@@ -91,7 +91,7 @@ class RunScriptThread(QtCore.QThread):
 		exec( str(self.script.toPlainText()))
 
 
-class Analysis(QtGui.QFrame):
+class Analysis(QtWidgets.QFrame):
 
 	def __init__(self, hist, parent=None, previewer=None, settings=None ):
 		super(Analysis, self).__init__(parent)

@@ -35,7 +35,7 @@
 """
 
 import os, sys
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtWidgets
 from ui_SettingsDialog import Ui_settingsDialog
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
@@ -44,7 +44,7 @@ from .WFileDialogs import WDirectoryDialog, WFileDialog
 from Wolffia_conf import WOLFFIA_DIR, _WOLFFIA_OS, WOLFFIA_VERSION, WOLFFIA_DEFAULT_MIXTURE_NAME #@UnresolvedImport
 from subprocess import check_output
 
-class SettingsDialog(QtGui.QDialog):
+class SettingsDialog(QtWidgets.QDialog):
     '''
     Class Fields:
     _projectName

@@ -2,16 +2,35 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="908db065-deda-4aae-ae65-6e6f6151e939" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/wolffia.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/wolffia.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NotesFixing2to3" beforeDir="false" afterPath="$PROJECT_DIR$/NotesFixing2to3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/celluloseEditor/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/interface/celluloseEditor/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/homopolyEditor/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/interface/homopolyEditor/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/Analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/Analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/BuildTab.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/BuildTab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/EnergyPlot.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/EnergyPlot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/ForceTab.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/ForceTab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/ForceTab.py.bak" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/ForceTab.py.bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/GeometricObjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/GeometricObjects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/History.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/History.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/LogWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/LogWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/MinTab.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/MinTab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/MixtureBrowser.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/MixtureBrowser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/MixtureViewer.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/MixtureViewer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/PreviewerToolbar.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/PreviewerToolbar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/PropertyEditor.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/PropertyEditor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/QClasses.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/QClasses.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/Settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/Settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/main/SettingsDialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/SettingsDialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/SetupTab.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/SetupTab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/SimTab.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/SimTab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/WFileDialogs.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/WFileDialogs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/WWidgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/WWidgets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/main/Wolffia.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/Wolffia.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/chemicalGraph/io/PRM.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/chemicalGraph/io/PRM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/chemicalGraph/io/PSF.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/chemicalGraph/io/PSF.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/chemicalGraph/molecule/ForceField.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/chemicalGraph/molecule/ForceField.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/main/Wolffia_icons_rc.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/main/Wolffia_icons_rc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/communication/imd/imd.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/communication/imd/imd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/communication/namd/SimThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/communication/namd/SimThread.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,12 +40,6 @@
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>Qt</find>
-      <find>sets</find>
-    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

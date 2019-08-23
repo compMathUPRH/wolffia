@@ -46,7 +46,7 @@ import logging
 from chemicalGraph.io.PRM import PRMError
 
 
-class MinTab(QtGui.QFrame):   
+class MinTab(QtWidgets.QFrame):
     '''
     Wolffia's tab for energy minimization.
     '''
@@ -55,135 +55,135 @@ class MinTab(QtGui.QFrame):
     checkState            =    {True:"On", False:"Off"}
 
     def __init__(self, hist, settings, sim, parent, preview):
-		'''
-		Constructor for MinTab
-		
-		:param hist: History
-		:param settings: Settings
-		:param sim: SimTab
-		:param parent: Wolffia, Main Window
-		:param preview: MixtureViewer
-		'''
-		super(MinTab, self).__init__(parent)
-		
-		self.parent         =   parent
-		self.simTab         =   sim
-		self._WOLFFIA_OS    =   platform.system()
-		self.history        =   hist
-		self.wolffia        =   parent
-		self.allowUpdate    =   True
-		self.preview        =   preview
-		self.settings       =   settings
-		self.log			=   parent.logWindow
-		self.simRun         =   None
-		#timers
-		self.minTimer       =   QtCore.QTimer()
-		self.minCoordTimer  =   QtCore.QTimer()
-		self.modTime        =   0
-		self.connect(self.minTimer, QtCore.SIGNAL('timeout()'), self.on_minTimer)
-		self.connect(self.minCoordTimer, QtCore.SIGNAL('timeout()'), self.on_minCoordTimer)
-		
-		
-		self.ui            =    Ui_minTab()
-		self.ui.setupUi(self)
-		self.minTree       =    self.ui.minTree
-		
-		
-		self.energyPlot1   =    parent.energyPlot1
-		self.energyPlot2   =    parent.energyPlot2
-		
-		# Dummy fields
-		self.energySteps        =    QtGui.QSpinBox(None)
-		self.trajectorySteps    =    QtGui.QSpinBox(None)
-		self.restartSteps       =    QtGui.QSpinBox(None)
-		self.energySteps.    setMaximum (9999999)
-		self.trajectorySteps.setMaximum (9999999)
-		self.restartSteps.   setMaximum (9999999)
-		self.energySteps.    setValue (100)
-		self.trajectorySteps.setValue (100)
-		self.restartSteps.   setValue (100)
-		
-		#Different variables that define the positions of the objects
-		#in simulation part of the TreeWidget
-		minBabyStepAt        =    self.minTree.topLevelItem(0).child(2)
-		minTinyStepAt        =    self.minTree.topLevelItem(0).child(1)
-		minLineGoalAt        =    self.minTree.topLevelItem(0).child(3)
-		minStepsAt           =    self.minTree.topLevelItem(0).child(0)
-		
-		#Different variables that define the positions of the objects
-		#in simulation part of the TreeWidget
-		exclusionAt         =    self.minTree.topLevelItem(1).child(0) #@UnusedVariable
-		cutoffAt            =    self.minTree.topLevelItem(1).child(2) #@UnusedVariable
-		useSwitchAt         =    self.minTree.topLevelItem(1).child(3) #@UnusedVariable
-		switchDistAt        =    self.minTree.topLevelItem(1).child(4) #@UnusedVariable
-		scalingAt           =    self.minTree.topLevelItem(1).child(1) #@UnusedVariable
-		pairListDistAt      =    self.minTree.topLevelItem(1).child(5) #@UnusedVariable
-		
-		
-		#Uses the parmDict dictionary to initialize all the objects, 
-		#give them values and add them on the widgetTree
-		for defaults in  parmDict.keys():
-		    if parmDict[defaults][1] == "InputFile":
-		        vars(self)[defaults] = InputFile(self.minTree)
-		        vars(self)[defaults].setEnabled(parmDict[defaults][2])
-		    elif parmDict[defaults][1] == "CheckBox":
-		        vars(self)[defaults] = CheckBox(self.minTree)
-		        vars(self)[defaults].setChecked(parmDict[defaults][2])
-		        vars(self)[defaults].setEnabled(parmDict[defaults][3])
-		    elif parmDict[defaults][1] == "SpinBox":
-		        vars(self)[defaults] = SpinBox(self.minTree)
-		        vars(self)[defaults].setSuffix(parmDict[defaults][2])
-		        vars(self)[defaults].setRange(parmDict[defaults][3], parmDict[defaults][4])
-		        vars(self)[defaults].setEnabled(parmDict[defaults][5])
-		        vars(self)[defaults].setSingleStep(parmDict[defaults][6])
-		        vars(self)[defaults].setValues(parmDict[defaults][0])
-		    elif parmDict[defaults][1] == "DoubleSpinBox":
-		        vars(self)[defaults] = DoubleSpinBox(self.minTree)
-		        vars(self)[defaults].setSuffix(parmDict[defaults][2])
-		        vars(self)[defaults].setDecimals(parmDict[defaults][3])
-		        vars(self)[defaults].setRange(parmDict[defaults][4], parmDict[defaults][5])
-		        vars(self)[defaults].setEnabled(parmDict[defaults][6])
-		        vars(self)[defaults].setSingleStep(parmDict[defaults][7])
-		        vars(self)[defaults].setValues(parmDict[defaults][0])
-		    elif parmDict[defaults][1] == "ComboBox":
-		        vars(self)[defaults] = ComboBox(self.minTree)
-		        cLen = len(parmDict[defaults])
-		        vars(self)[defaults].setEnabled(parmDict[defaults][cLen - 1])
-		        vars(self)[defaults].setCurrentIndex(parmDict[defaults][0])
-		        for y in range(2, cLen - 1):
-		            vars(self)[defaults].addItem(parmDict[defaults][y])
-		    self.minTree.setItemWidget(vars()[defaults + "At"], 0, vars(self)[defaults]) #adds them all to the tree
-		
-		#Handling signals for specific slots 
-		self.cutoff.editingFinished.connect(self.checkCutoff)
-		self.pairListDist.editingFinished.connect(self.checkCutoff)
-		self.switchDist.editingFinished.connect(self.checkCutoff)
-		self.useSwitch.stateChanged.connect(self.useSwitchChanged)
-		self.exclusion.currentIndexChanged.connect(self.checkScale)
-		self.scaling.editingFinished.connect(self.updateSimTab)
-		self.useSwitch.stateChanged.connect(self.updateSimTab)
-		self.cutoff.editingFinished.connect(self.updateSimTab)
-		self.pairListDist.editingFinished.connect(self.updateSimTab)
-		self.switchDist.editingFinished.connect(self.updateSimTab)
-		self.exclusion.currentIndexChanged.connect(self.updateSimTab)
-		
-		
-		#
-		size = QtCore.QSize(100,10)
-		minBabyStepAt.setSizeHint(0,size)
-		minTinyStepAt.setSizeHint(0,size)
-		minLineGoalAt.setSizeHint(0,size)
-		minStepsAt.setSizeHint(0,size)
-		
-		self.ui.minButton.setIcon(QtGui.QIcon().fromTheme("media-playback-start",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "media-playback-start.svg")    ))
-		self.ui.stopButton.setEnabled(False)
-		self.ui.stopButton.setIcon(QtGui.QIcon().fromTheme("media-playback-stop",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "media-playback-stop.svg")    ))
-		self.ui.resetButton.setIcon(QtGui.QIcon().fromTheme("emblem-default",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "emblem-default.png")    ))
-		
-		#Restores the values the tab had before being closed
-		self.initialize(self.history.currentState().minTabValues)
-		
-		self.exclude = self.exclusion  # backward compatibilitu < 0.24
+        '''
+        Constructor for MinTab
+
+        :param hist: History
+        :param settings: Settings
+        :param sim: SimTab
+        :param parent: Wolffia, Main Window
+        :param preview: MixtureViewer
+        '''
+        super(MinTab, self).__init__(parent)
+
+        self.parent         =   parent
+        self.simTab         =   sim
+        self._WOLFFIA_OS    =   platform.system()
+        self.history        =   hist
+        self.wolffia        =   parent
+        self.allowUpdate    =   True
+        self.preview        =   preview
+        self.settings       =   settings
+        self.log			=   parent.logWindow
+        self.simRun         =   None
+        #timers
+        self.minTimer       =   QtCore.QTimer()
+        self.minCoordTimer  =   QtCore.QTimer()
+        self.modTime        =   0
+        self.connect(self.minTimer, QtCore.SIGNAL('timeout()'), self.on_minTimer)
+        self.connect(self.minCoordTimer, QtCore.SIGNAL('timeout()'), self.on_minCoordTimer)
+
+
+        self.ui            =    Ui_minTab()
+        self.ui.setupUi(self)
+        self.minTree       =    self.ui.minTree
+
+
+        self.energyPlot1   =    parent.energyPlot1
+        self.energyPlot2   =    parent.energyPlot2
+
+        # Dummy fields
+        self.energySteps        =    QtGui.QSpinBox(None)
+        self.trajectorySteps    =    QtGui.QSpinBox(None)
+        self.restartSteps       =    QtGui.QSpinBox(None)
+        self.energySteps.    setMaximum (9999999)
+        self.trajectorySteps.setMaximum (9999999)
+        self.restartSteps.   setMaximum (9999999)
+        self.energySteps.    setValue (100)
+        self.trajectorySteps.setValue (100)
+        self.restartSteps.   setValue (100)
+
+        #Different variables that define the positions of the objects
+        #in simulation part of the TreeWidget
+        minBabyStepAt        =    self.minTree.topLevelItem(0).child(2)
+        minTinyStepAt        =    self.minTree.topLevelItem(0).child(1)
+        minLineGoalAt        =    self.minTree.topLevelItem(0).child(3)
+        minStepsAt           =    self.minTree.topLevelItem(0).child(0)
+
+        #Different variables that define the positions of the objects
+        #in simulation part of the TreeWidget
+        exclusionAt         =    self.minTree.topLevelItem(1).child(0) #@UnusedVariable
+        cutoffAt            =    self.minTree.topLevelItem(1).child(2) #@UnusedVariable
+        useSwitchAt         =    self.minTree.topLevelItem(1).child(3) #@UnusedVariable
+        switchDistAt        =    self.minTree.topLevelItem(1).child(4) #@UnusedVariable
+        scalingAt           =    self.minTree.topLevelItem(1).child(1) #@UnusedVariable
+        pairListDistAt      =    self.minTree.topLevelItem(1).child(5) #@UnusedVariable
+
+
+        #Uses the parmDict dictionary to initialize all the objects,
+        #give them values and add them on the widgetTree
+        for defaults in  parmDict.keys():
+            if parmDict[defaults][1] == "InputFile":
+                vars(self)[defaults] = InputFile(self.minTree)
+                vars(self)[defaults].setEnabled(parmDict[defaults][2])
+            elif parmDict[defaults][1] == "CheckBox":
+                vars(self)[defaults] = CheckBox(self.minTree)
+                vars(self)[defaults].setChecked(parmDict[defaults][2])
+                vars(self)[defaults].setEnabled(parmDict[defaults][3])
+            elif parmDict[defaults][1] == "SpinBox":
+                vars(self)[defaults] = SpinBox(self.minTree)
+                vars(self)[defaults].setSuffix(parmDict[defaults][2])
+                vars(self)[defaults].setRange(parmDict[defaults][3], parmDict[defaults][4])
+                vars(self)[defaults].setEnabled(parmDict[defaults][5])
+                vars(self)[defaults].setSingleStep(parmDict[defaults][6])
+                vars(self)[defaults].setValues(parmDict[defaults][0])
+            elif parmDict[defaults][1] == "DoubleSpinBox":
+                vars(self)[defaults] = DoubleSpinBox(self.minTree)
+                vars(self)[defaults].setSuffix(parmDict[defaults][2])
+                vars(self)[defaults].setDecimals(parmDict[defaults][3])
+                vars(self)[defaults].setRange(parmDict[defaults][4], parmDict[defaults][5])
+                vars(self)[defaults].setEnabled(parmDict[defaults][6])
+                vars(self)[defaults].setSingleStep(parmDict[defaults][7])
+                vars(self)[defaults].setValues(parmDict[defaults][0])
+            elif parmDict[defaults][1] == "ComboBox":
+                vars(self)[defaults] = ComboBox(self.minTree)
+                cLen = len(parmDict[defaults])
+                vars(self)[defaults].setEnabled(parmDict[defaults][cLen - 1])
+                vars(self)[defaults].setCurrentIndex(parmDict[defaults][0])
+                for y in range(2, cLen - 1):
+                    vars(self)[defaults].addItem(parmDict[defaults][y])
+            self.minTree.setItemWidget(vars()[defaults + "At"], 0, vars(self)[defaults]) #adds them all to the tree
+
+        #Handling signals for specific slots
+        self.cutoff.editingFinished.connect(self.checkCutoff)
+        self.pairListDist.editingFinished.connect(self.checkCutoff)
+        self.switchDist.editingFinished.connect(self.checkCutoff)
+        self.useSwitch.stateChanged.connect(self.useSwitchChanged)
+        self.exclusion.currentIndexChanged.connect(self.checkScale)
+        self.scaling.editingFinished.connect(self.updateSimTab)
+        self.useSwitch.stateChanged.connect(self.updateSimTab)
+        self.cutoff.editingFinished.connect(self.updateSimTab)
+        self.pairListDist.editingFinished.connect(self.updateSimTab)
+        self.switchDist.editingFinished.connect(self.updateSimTab)
+        self.exclusion.currentIndexChanged.connect(self.updateSimTab)
+
+
+        #
+        size = QtCore.QSize(100,10)
+        minBabyStepAt.setSizeHint(0,size)
+        minTinyStepAt.setSizeHint(0,size)
+        minLineGoalAt.setSizeHint(0,size)
+        minStepsAt.setSizeHint(0,size)
+
+        self.ui.minButton.setIcon(QtGui.QIcon().fromTheme("media-playback-start",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "media-playback-start.svg")    ))
+        self.ui.stopButton.setEnabled(False)
+        self.ui.stopButton.setIcon(QtGui.QIcon().fromTheme("media-playback-stop",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "media-playback-stop.svg")    ))
+        self.ui.resetButton.setIcon(QtGui.QIcon().fromTheme("emblem-default",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "emblem-default.png")    ))
+
+        #Restores the values the tab had before being closed
+        self.initialize(self.history.currentState().minTabValues)
+
+        self.exclude = self.exclusion  # backward compatibilitu < 0.24
 
     @QtCore.pyqtSlot()
     def on_stopButton_pressed(self):
@@ -306,42 +306,42 @@ class MinTab(QtGui.QFrame):
         #print "on_minCoordTimer ", time.clock() - start
 
     def on_minTimer(self):
-		'''
-		Gets the output from the MD package and sends it to
-		the instance of EnergyPlot class.
-		Also checks if the thread is still alive.  
-		'''
-		
-		self.minTimer.stop()
-		namdOutput = self.simRun.getOutput()
-		if namdOutput != None:
-			print("SimTab on_minTimer", namdOutput)
-			self.checkError(namdOutput)
-			if WOLFFIA_USES_IMD:
-			    self.energyPlot1.addValuesFromIMD(self.simRun.getEnergies())
-			    self.energyPlot2.addValuesFromIMD(self.simRun.getEnergies())
-			else:
-			    self.energyPlot1.addValuesFromNamd(namdOutput)
-			    self.energyPlot2.addValuesFromNamd(namdOutput)
-		
-		try:
-		    if not self.simRun.isAlive():
-		        self.minCoordTimer.stop()
-		        self.ui.minButton.setText("Run")
-		        self.ui.minButton.setIcon(QtGui.QIcon().fromTheme("media-playback-start"))
-		        self.wolffia.simRunning = False
-		        self.ui.stopButton.setEnabled(False)
-		        message = QtGui.QMessageBox(1, "Message", "Minimization has ended!")
-		        message.exec_()
-		        #self.minPipe.close()
-		        return
-		    
-		    else:   self.minTimer.start(self._PLOT_TIMER_TIMEOUT_)
-		               
-		
-		except:
-			print("SimTab on_minTimer exception occured", sys.exc_info()[0])
-			pass
+        '''
+        Gets the output from the MD package and sends it to
+        the instance of EnergyPlot class.
+        Also checks if the thread is still alive.
+        '''
+
+        self.minTimer.stop()
+        namdOutput = self.simRun.getOutput()
+        if namdOutput != None:
+            print("SimTab on_minTimer", namdOutput)
+            self.checkError(namdOutput)
+            if WOLFFIA_USES_IMD:
+                self.energyPlot1.addValuesFromIMD(self.simRun.getEnergies())
+                self.energyPlot2.addValuesFromIMD(self.simRun.getEnergies())
+            else:
+                self.energyPlot1.addValuesFromNamd(namdOutput)
+                self.energyPlot2.addValuesFromNamd(namdOutput)
+
+        try:
+            if not self.simRun.isAlive():
+                self.minCoordTimer.stop()
+                self.ui.minButton.setText("Run")
+                self.ui.minButton.setIcon(QtGui.QIcon().fromTheme("media-playback-start"))
+                self.wolffia.simRunning = False
+                self.ui.stopButton.setEnabled(False)
+                message = QtGui.QMessageBox(1, "Message", "Minimization has ended!")
+                message.exec_()
+                #self.minPipe.close()
+                return
+
+            else:   self.minTimer.start(self._PLOT_TIMER_TIMEOUT_)
+
+
+        except:
+            print("SimTab on_minTimer exception occured", sys.exc_info()[0])
+            pass
 
             
 
@@ -478,7 +478,7 @@ class MinTab(QtGui.QFrame):
         #print "runSim D", time.clock() - start
         progress.setLabelText("Configuring simulator...")
         try:
-			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.history.currentState().getMixture().getMixtureName()))
+            conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.history.currentState().getMixture().getMixtureName()))
             #conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.settings.currentMixtureName))
         except ConfigurationError as e:
             Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
@@ -493,12 +493,12 @@ class MinTab(QtGui.QFrame):
         try:
             self.history.currentState().writeFiles(self.settings.currentMixtureLocation() + str(self.history.currentState().getMixture().getMixtureName()))
         except Exception as  e:
-			Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
-			Error.exec_()
-			progress.cancel()
-			progress.hide()
-			return
-			
+            Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
+            Error.exec_()
+            progress.cancel()
+            progress.hide()
+            return
+
         
         #print "runSim F", time.clock() - start
         progress.setValue(4)

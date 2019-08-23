@@ -1,0 +1,91 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'MixtureBrowser.ui'
+#
+# Created by: PyQt5 UI code generator 5.9.2
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_MixtureBrowser(object):
+    def setupUi(self, MixtureBrowser):
+        MixtureBrowser.setObjectName("MixtureBrowser")
+        MixtureBrowser.resize(703, 469)
+        self.gridLayout = QtWidgets.QGridLayout(MixtureBrowser)
+        self.gridLayout.setObjectName("gridLayout")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.filesLayout = QtWidgets.QHBoxLayout()
+        self.filesLayout.setObjectName("filesLayout")
+        self.verticalLayout_3.addLayout(self.filesLayout)
+        self.tableWidget = QtWidgets.QTableWidget(MixtureBrowser)
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed|QtWidgets.QAbstractItemView.DoubleClicked|QtWidgets.QAbstractItemView.EditKeyPressed)
+        self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectItems)
+        self.tableWidget.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerItem)
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.verticalLayout_3.addWidget(self.tableWidget)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.addMixtureButton = QtWidgets.QPushButton(MixtureBrowser)
+        self.addMixtureButton.setObjectName("addMixtureButton")
+        self.horizontalLayout_2.addWidget(self.addMixtureButton)
+        self.deleteMixtureButton = QtWidgets.QPushButton(MixtureBrowser)
+        self.deleteMixtureButton.setObjectName("deleteMixtureButton")
+        self.horizontalLayout_2.addWidget(self.deleteMixtureButton)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_3.addLayout(self.verticalLayout_3)
+        self.moleculeViewerLayout = QtWidgets.QVBoxLayout()
+        self.moleculeViewerLayout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
+        self.moleculeViewerLayout.setSpacing(0)
+        self.moleculeViewerLayout.setObjectName("moleculeViewerLayout")
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.moleculeViewerLayout.addItem(spacerItem1)
+        self.horizontalLayout_3.addLayout(self.moleculeViewerLayout)
+        self.verticalLayout_4.addLayout(self.horizontalLayout_3)
+        self.selectAllLayout = QtWidgets.QVBoxLayout()
+        self.selectAllLayout.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.selectAllLayout.setObjectName("selectAllLayout")
+        self.verticalLayout_4.addLayout(self.selectAllLayout)
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.okButton = QtWidgets.QPushButton(MixtureBrowser)
+        self.okButton.setObjectName("okButton")
+        self.horizontalLayout_7.addWidget(self.okButton)
+        spacerItem2 = QtWidgets.QSpacerItem(25, 20, QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_7.addItem(spacerItem2)
+        self.cancelButton = QtWidgets.QPushButton(MixtureBrowser)
+        self.cancelButton.setObjectName("cancelButton")
+        self.horizontalLayout_7.addWidget(self.cancelButton)
+        spacerItem3 = QtWidgets.QSpacerItem(428, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_7.addItem(spacerItem3)
+        self.previewButton = QtWidgets.QPushButton(MixtureBrowser)
+        self.previewButton.setObjectName("previewButton")
+        self.horizontalLayout_7.addWidget(self.previewButton)
+        spacerItem4 = QtWidgets.QSpacerItem(135, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_7.addItem(spacerItem4)
+        self.verticalLayout_4.addLayout(self.horizontalLayout_7)
+        self.gridLayout.addLayout(self.verticalLayout_4, 0, 0, 1, 1)
+
+        self.retranslateUi(MixtureBrowser)
+        QtCore.QMetaObject.connectSlotsByName(MixtureBrowser)
+
+    def retranslateUi(self, MixtureBrowser):
+        _translate = QtCore.QCoreApplication.translate
+        MixtureBrowser.setWindowTitle(_translate("MixtureBrowser", "Simulation Browser"))
+        self.tableWidget.setToolTip(_translate("MixtureBrowser", "Shows all your mixtures"))
+        self.addMixtureButton.setToolTip(_translate("MixtureBrowser", "Add new mixture"))
+        self.deleteMixtureButton.setToolTip(_translate("MixtureBrowser", "Delete selected mixture"))
+        self.okButton.setText(_translate("MixtureBrowser", "OK"))
+        self.cancelButton.setText(_translate("MixtureBrowser", "Cancel"))
+        self.previewButton.setText(_translate("MixtureBrowser", "Preview"))
+

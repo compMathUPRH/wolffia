@@ -31,7 +31,7 @@
 """
 from conf.Wolffia_conf import WOLFFIA_GRAPHICS
 from .QClasses import *
-from PyQt5.QtGui import QToolTip
+from PyQt5.QtWidgets import QToolTip
 from PyQt5.QtCore import QPoint
 #from ui_LogWindow import Ui_LogWindow
 

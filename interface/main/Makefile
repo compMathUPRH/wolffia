@@ -103,7 +103,7 @@ ui_CHARMMParameterFinderDialog.py: CHARMMParameterFinderDialog.ui
 StructureManagerWidget.py: Wolffia_conf.py
 
 Wolffia_icons_rc.py: Wolffia_icons.qrc
-	pyrcc4 Wolffia_icons.qrc -o Wolffia_icons_rc.py
+	pyrcc5 Wolffia_icons.qrc -o Wolffia_icons_rc.py
 
 clean:
 	rm -f *.pyc *.py~ ui_*.py

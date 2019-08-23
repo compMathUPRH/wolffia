@@ -31,60 +31,67 @@ Created on Mar 13, 2012
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt5 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 
-class WDirectoryDialog(QtGui.QFileDialog):
+#class WDirectoryDialog(QtGui.QFileDialog):
+class WDirectoryDialog(QtWidgets.QFileDialog):
     def __init__(self, parent=None, caption ='Specify Directory', directory = None):
-        QtGui.QFileDialog.__init__(self,parent, caption, directory)
+        #QtGui.QFileDialog.__init__(self,parent, caption, directory)
+        QtWidgets.QFileDialog.__init__(self,parent, caption, directory)
         #print "WDirectoryDialog", directory
-        self.setFileMode(QtGui.QFileDialog.Directory)
-        self.setOption(QtGui.QFileDialog.ShowDirsOnly,True)
+        #self.setFileMode(QtGui.QFileDialog.Directory)
+        self.setFileMode(QtWidgets.QFileDialog.Directory)
+        #self.setOption(QtGui.QFileDialog.ShowDirsOnly,True)
+        self.setOption(QtWidgets.QFileDialog.ShowDirsOnly, True)
         self.setFilter(QtCore.QDir.Hidden | QtCore.QDir.AllDirs)
         self.show()
         self.response = self.exec_()
 
-    def accepted(self): return self.response == QtGui.QDialog.Accepted
+    def accepted(self): return self.response == QtWidgets.QDialog.Accepted
         
     def path(self):
         return self.directory().absolutePath()
 
 
-class WFileDialog(QtGui.QFileDialog):
+#class WFileDialog(QtGui.QFileDialog):
+class WFileDialog(QtWidgets.QFileDialog):
     def __init__(self, parent=None, caption ='Specify File', directory = None, filter = ""):
-        QtGui.QFileDialog.__init__(self,parent, caption, directory, filter)
-        self.setFileMode(QtGui.QFileDialog.ExistingFile)
+        QtWidgets.QFileDialog.__init__(self,parent, caption, directory, filter)
+        self.setFileMode(QtWidgets.QFileDialog.ExistingFile)
         self.show()
         self.response = self.exec_()
     
     def fullFilename(self):
         return self.selectedFiles()[0]
 
-    def accepted(self): return self.response == QtGui.QDialog.Accepted
+    def accepted(self): return self.response == QtWidgets.QDialog.Accepted
 
-class WFilesDialog(QtGui.QFileDialog):
+#class WFilesDialog(QtGui.QFileDialog):
+class WFilesDialog(QtWidgets.QFileDialog):
     def __init__(self, parent=None, caption ='Specify Files', directory = None, filter = ""):
-        QtGui.QFileDialog.__init__(self,parent, caption, directory, filter)
-        self.setFileMode(QtGui.QFileDialog.ExistingFiles)
+        QtWidgets.QFileDialog.__init__(self,parent, caption, directory, filter)
+        self.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
         self.show()
         self.response = self.exec_()
     
     def fullFilename(self):
         return self.selectedFiles()
     
-    def accepted(self): return self.response == QtGui.QDialog.Accepted
+    def accepted(self): return self.response == QtWidgets.QDialog.Accepted
 
-class WFileNameDialog(QtGui.QFileDialog):
+#class WFileNameDialog(QtGui.QFileDialog):
+class WFileNameDialog(QtWidgets.QFileDialog):
     def __init__(self, parent=None, caption ='Specify File', directory = None, filter = ""):
-        QtGui.QFileDialog.__init__(self,parent, caption, directory, filter)
+        QtWidgets.QFileDialog.__init__(self,parent, caption, directory, filter)
         self.setModal(True)
-        self.setFileMode(QtGui.QFileDialog.AnyFile)
-        self.setAcceptMode(QtGui.QFileDialog.AcceptSave)
+        self.setFileMode(QtWidgets.QFileDialog.AnyFile)
+        self.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
         self.show()
         self.exec_()
 
         self.ans = True
-        if self.result() == QtGui.QDialog.Rejected:
+        if self.result() == QtWidgets.QDialog.Rejected:
             self.setReady(False)			
     
     def fullFilename(self):

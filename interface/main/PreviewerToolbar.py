@@ -30,11 +30,11 @@ Created on Jun 29, 2012
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtWidgets
 from collections import OrderedDict
 from conf.Wolffia_conf import WOLFFIA_GRAPHICS
 
-class PreviewerToolbar(QtGui.QToolBar):
+class PreviewerToolbar(QtWidgets.QToolBar):
     '''
     classdocs
     '''
@@ -53,10 +53,10 @@ class PreviewerToolbar(QtGui.QToolBar):
         self.settingsButtons = OrderedDict([("resolution" , ""), ("labels", ""), ("axis", ""), ("helpToggle", "")])
         
         #Esta porqueria no acepta QSpacerItem, tuve que usar QLabel para que actue como spacer
-        stretchWidgetOne = QtGui.QLabel(self)
-        stretchWidgetTwo = QtGui.QLabel(self)
-        stretchWidgetOne.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
-        stretchWidgetTwo.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+        stretchWidgetOne = QtWidgets.QLabel(self)
+        stretchWidgetTwo = QtWidgets.QLabel(self)
+        stretchWidgetOne.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        stretchWidgetTwo.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         
         self.addWidget(stretchWidgetOne)
         #loop initiates the QPushButtons, adds it to the QToolbar and connects the signal triggered 
@@ -65,7 +65,7 @@ class PreviewerToolbar(QtGui.QToolBar):
             if actions == "separator":
                 self.addSeparator()
             else:
-                self.modeButtons[actions] = QtGui.QPushButton(self)
+                self.modeButtons[actions] = QtWidgets.QPushButton(self)
                 self.modeButtons[actions].setIcon(QtGui.QIcon(str(WOLFFIA_GRAPHICS) + actions + ".png"))
                 self.addWidget(self.modeButtons[actions])
                 self.modeButtons[actions].setCheckable(True)

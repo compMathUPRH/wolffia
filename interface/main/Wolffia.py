@@ -34,7 +34,7 @@
 import sys,os
 import logging
 
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 #from ui_Wolffia import Ui_Wolffia
 #from NanoCADState import NanoCADState
 # load configuration info
@@ -55,7 +55,7 @@ from .EnergyPlot import EnergyPlot, KineticsPlot
 from conf.Wolffia_conf import WOLFFIA_GRAPHICS, WOLFFIA_STYLESHEET, WOLFFIA_VERSION,C_MOLECULE_CATALOG
 
 
-class Wolffia(QtGui.QMainWindow):
+class Wolffia(QtWidgets.QMainWindow):
     __TITLE__ = "Wolffia " + WOLFFIA_VERSION
     def __init__(self, parent=None):
         super(Wolffia, self).__init__(parent)
@@ -65,7 +65,7 @@ class Wolffia(QtGui.QMainWindow):
 
         # Create and display the splash screen
         splash_pix = QtGui.QPixmap(WOLFFIA_GRAPHICS+'/Wolffialogo.png')
-        splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
+        splash = QtWidgets.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
         splash.setMask(splash_pix.mask())
         splash.show()
 
@@ -110,7 +110,7 @@ class Wolffia(QtGui.QMainWindow):
         self.ui = Ui_Wolffia()
         self.ui.setupUi(self)
         self.setWindowTitle(self.__TITLE__)
-        dockTittle = QtGui.QWidget(self)
+        dockTittle = QtWidgets.QWidget(self)
         self.ui.dockWidget.setTitleBarWidget(dockTittle)
 
         try:
@@ -452,7 +452,7 @@ class Wolffia(QtGui.QMainWindow):
 if __name__ == '__main__' or __name__ == 'interface.main.Wolffia':
     import time
     
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     app.processEvents()
 

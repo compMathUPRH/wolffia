@@ -33,11 +33,11 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 #=================================================================================================
 
-class ComboBox(QtGui.QComboBox):
+class ComboBox(QtWidgets.QComboBox):
     def __init__(self, parent=None):
         super(ComboBox, self).__init__()
         
@@ -48,7 +48,7 @@ class ComboBox(QtGui.QComboBox):
         return self.setCurrentIndex(int(val))
 #=================================================================================================
 
-class CheckBox(QtGui.QCheckBox):
+class CheckBox(QtWidgets.QCheckBox):
     def __init__(self, parent=None):
         super(CheckBox, self).__init__()
 
@@ -59,7 +59,7 @@ class CheckBox(QtGui.QCheckBox):
         self.setChecked(bool(val))
 #==============================================================================================
 
-class SpinBox(QtGui.QSpinBox):
+class SpinBox(QtWidgets.QSpinBox):
     def __init__(self, parent=None):
         super(SpinBox, self).__init__()
 
@@ -68,7 +68,7 @@ class SpinBox(QtGui.QSpinBox):
 
 #================================================================================================
 
-class DoubleSpinBox(QtGui.QDoubleSpinBox):
+class DoubleSpinBox(QtWidgets.QDoubleSpinBox):
     def __init__(self, parent=None):
         super(DoubleSpinBox, self).__init__()
 
@@ -76,7 +76,7 @@ class DoubleSpinBox(QtGui.QDoubleSpinBox):
         self.setValue(float(val))
 #===============================================================================================
 
-class OutputFileLabel(QtGui.QLabel):
+class OutputFileLabel(QtWidgets.QLabel):
     def __init__(self, parent=None):
         super(OutputFileLabel, self).__init__(parent)
 
@@ -85,13 +85,13 @@ class OutputFileLabel(QtGui.QLabel):
         
 #=====================================================================================================
 
-class InputFile(QtGui.QLabel):
+class InputFile(QtWidgets.QLabel):
     def __init__(self, parent=None):
         super(InputFile, self).__init__(parent)
         self.setText("default")
 
     def mousePressEvent (self, ev):
-        self.setText(str(QtGui.QFileDialog.getOpenFileName(self, 'Choose the file')))
+        self.setText(str(QtWidgets.QFileDialog.getOpenFileName(self, 'Choose the file')))
 
     def value(self):
         return self.text()

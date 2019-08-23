@@ -34,12 +34,12 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from sets import Set
-from PyQt5 import QtCore, QtGui
+#from sets import Set
+from PyQt5 import QtCore, QtGui, QtWidgets
 from ui_PropertyEditor import Ui_propertyEditor
 from lib.chemicalGraph.Mixture import Mixture
 
-class PropertyEditor(QtGui.QWidget):
+class PropertyEditor(QtWidgets.QWidget):
     def __init__(self, viewer, history):
         super(PropertyEditor, self).__init__()
 
@@ -56,32 +56,32 @@ class PropertyEditor(QtGui.QWidget):
         self.tree.  setColumnWidth(1, 140)        
 
         #initializes widgets on tree
-        self.xRotate = QtGui.QDoubleSpinBox(self.tree)
+        self.xRotate = QtWidgets.QDoubleSpinBox(self.tree)
         self.xRotate.  setSingleStep (10.)
         self.xRotate.  setRange (-360., 360.)
         xRotateAt    = self.tree.topLevelItem(1).child(0)
         
-        self.yRotate = QtGui.QDoubleSpinBox(self.tree)
+        self.yRotate = QtWidgets.QDoubleSpinBox(self.tree)
         self.yRotate.  setSingleStep (10.)
         self.yRotate.  setRange (-360., 360.)
         yRotateAt    = self.tree.topLevelItem(1).child(1)
         
-        self.zRotate = QtGui.QDoubleSpinBox(self.tree)
+        self.zRotate = QtWidgets.QDoubleSpinBox(self.tree)
         self.zRotate.  setSingleStep (10.)
         self.zRotate.  setRange (-360., 360.)
         zRotateAt    = self.tree.topLevelItem(1).child(2)
 
-        self.xMoveBy = QtGui.QDoubleSpinBox(self.tree)
+        self.xMoveBy = QtWidgets.QDoubleSpinBox(self.tree)
         self.xMoveBy.  setSingleStep (0.5)
         self.xMoveBy.  setRange (-1000., 1000.)
         xMoveByAt    = self.tree.topLevelItem(2).child(0)
         
-        self.yMoveBy = QtGui.QDoubleSpinBox(self.tree)
+        self.yMoveBy = QtWidgets.QDoubleSpinBox(self.tree)
         self.yMoveBy.  setSingleStep (0.5)
         self.yMoveBy.  setRange (-1000., 1000.)
         yMoveByAt    = self.tree.topLevelItem(2).child(1)
         
-        self.zMoveBy = QtGui.QDoubleSpinBox(self.tree)
+        self.zMoveBy = QtWidgets.QDoubleSpinBox(self.tree)
         self.zMoveBy.  setSingleStep (0.5)
         self.zMoveBy.  setRange (-1000., 1000.)
         zMoveByAt    = self.tree.topLevelItem(2).child(2)
@@ -132,7 +132,7 @@ class PropertyEditor(QtGui.QWidget):
                 self.registry.pop(regKey)
 
         self.resetBoxes()
-        QtGui.QWidget.update(self)
+        QtWidgets.QWidget.update(self)
 
     def resetBoxes(self):
         if len(self) == 0:
@@ -186,18 +186,18 @@ class PropertyEditor(QtGui.QWidget):
         else:
             #print "PropertyEditor setMolecule duplicate",ident,  self.registry
             if removeIfPresent:
-				if ShownSolvent.isSolvent(ident):
-					mixture = self.history.currentState().getMixture()
-					mixtureNames = mixture.molecules()
-					pos = ident.find(')')+1
-					for mol in mixtureNames:
-						#print "PropertyEditor removing ",ident[:pos], mol[:pos]
-						if mol[:pos] == ident[:pos]:
-							#print "PropertyEditor OK "
-							self.removeSelection(mixture.getMolecule(mol), mol)
-				else:
-					self.removeSelection(molecule, ident)
-				return True
+                if ShownSolvent.isSolvent(ident):
+                    mixture = self.history.currentState().getMixture()
+                    mixtureNames = mixture.molecules()
+                    pos = ident.find(')')+1
+                    for mol in mixtureNames:
+                        #print "PropertyEditor removing ",ident[:pos], mol[:pos]
+                        if mol[:pos] == ident[:pos]:
+                            #print "PropertyEditor OK "
+                            self.removeSelection(mixture.getMolecule(mol), mol)
+                else:
+                    self.removeSelection(molecule, ident)
+                return True
         #print "PropertyEditor setMolecule reseting"
         #print "PropertyEditor setMolecule finished"
 
@@ -215,11 +215,11 @@ class PropertyEditor(QtGui.QWidget):
     def hasSelections(self): return len(self.registry) > 0
 
     def selectedMolecules(self):
-    	#print "selectedMolecules ", self.registry
+        #print "selectedMolecules ", self.registry
         return list(self.registry.values())
 
     def selectedNames(self):
-    	#print "selectedMolecules ",self.registry
+        #print "selectedMolecules ",self.registry
         return list(self.registry.keys())
 
     def __str__(self):
@@ -230,23 +230,23 @@ class PropertyEditor(QtGui.QWidget):
     
     #show rotation values in the editor     
     def Rotate(self):        
-    	if self.mixture.order() > 0:
-	        x = self.xRotate.value()
-	        y = self.yRotate.value()
-	        z = self.zRotate.value()
-	        value = str(x) + " x " + str(y) + " x " + str(z)
-	        self.tree.topLevelItem(1).setText(1, value)
-	        center = self.mixture.center()
-	        self.mixture.moveBy([-xx for xx in center])
-	        #print "Rotate ", x-self.anglex,y-self.angley,z-self.anglez
-	        self.mixture.rotateDeg(x-self.anglex,y-self.angley,z-self.anglez)
-	        self.mixture.moveBy(center)
-	        self.anglex = x
-	        self.angley = y
-	        self.anglez = z
-	
-	        self.history.currentState().getMixture().setChanged()
-	        self.viewer.update()
+        if self.mixture.order() > 0:
+            x = self.xRotate.value()
+            y = self.yRotate.value()
+            z = self.zRotate.value()
+            value = str(x) + " x " + str(y) + " x " + str(z)
+            self.tree.topLevelItem(1).setText(1, value)
+            center = self.mixture.center()
+            self.mixture.moveBy([-xx for xx in center])
+            #print "Rotate ", x-self.anglex,y-self.angley,z-self.anglez
+            self.mixture.rotateDeg(x-self.anglex,y-self.angley,z-self.anglez)
+            self.mixture.moveBy(center)
+            self.anglex = x
+            self.angley = y
+            self.anglez = z
+
+            self.history.currentState().getMixture().setChanged()
+            self.viewer.update()
         else:
             self.tree.topLevelItem(1).setText(1, "0 x 0 x 0")
 

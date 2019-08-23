@@ -32,7 +32,8 @@ Created on Feb 26, 2012
     USA National Science Foundation grant number DMR-0934195. 
 """
 from PyQt5 import Qt, QtGui
-import PyQt5.Qwt5 as Qwt
+#import PyQt5.Qwt5 as Qwt
+import qwt as Qwt
 from numpy import array,ones,linalg,mean,std
 import datetime
 
@@ -69,7 +70,7 @@ class Plot(Qwt.QwtPlot):
         self.setType(plotType)
         
     def addValuePair(self, etype, x, y):
-    	#print "addValuePair ",etype, x, y
+        #print "addValuePair ",etype, x, y
         if len(self.charts[etype][self.xpos]) >= 0 and len(self.charts[etype][self.ypos]) >= 0:
             if (len(self.charts[etype][self.xpos]) == 0 and len(self.charts[etype][self.ypos]) == 0) or (self.charts[etype][self.xpos][-1] != x and self.charts[etype][self.ypos][-1] != y):
                 self.charts[etype][self.xpos].append(x)
@@ -87,55 +88,55 @@ class Plot(Qwt.QwtPlot):
         #print "addValuesFromNamd received ",namdOutput
         for linea in namdOutput:
             if linea[0:6] == "ENERGY":
-				chartLine = linea
-				
-				time = bond = angle = dih = impr = elec = vdw = bound = misc = kine = tot = temp = pot = tot3 = tempa = pres = gpres = vol = presa = gprea = None
-				try:
-				    #print "on_timer(", len(chartLine),")", chartLine
-				    time  = int  (chartLine[8:16]) 
-				    bond  = float(chartLine[16:31]) 
-				    angle = float(chartLine[31:46]) 
-				    dih   = float(chartLine[46:61]) 
-				    impr  = float(chartLine[61:76]) 
-				    elec  = float(chartLine[81:96])
-				    vdw   = float(chartLine[96:111])
-				    bound = float(chartLine[111:126])
-				    misc  = float(chartLine[126:141])
-				    kine  = float(chartLine[141:156])
-				    tot   = float(chartLine[161:176])
-				    temp  = float(chartLine[176:191])
-				    pot   = float(chartLine[191:206])
-				    tot3  = float(chartLine[206:221])
-				    tempa = float(chartLine[221:236])
-				    pres  = float(chartLine[241:256])
-				    gpres = float(chartLine[256:271])
-				    vol   = float(chartLine[271:286])
-				    presa = float(chartLine[286:301])
-				    gprea = float(chartLine[301:])
-				except:
-				    print("Plot.on_timer: energy line missed.")
-				    pass
-				
-				#try:
-				#print "addValuesFromNamd",time,self.prevEnergyStep,self.plotType
-				if time != None and time > self.prevEnergyStep:
-				    self.addValues(
-				        ["Bond", "Angle", "Dihedral", "Improper", "Electric", "Van der Waals", "Boundary", "Miscelaneous", "Kinetic", "tot", "Temperature", "Potential", "tot3", "Temperature Average", "Pressure", "G-Pressure", "Volume", "Pressure Average", "G-Pressure Average"],
-				        time,
-				        [bond, angle, dih, impr, elec, vdw, bound, misc, kine, tot, temp, pot, tot3, tempa, pres, gpres, vol, presa, gprea]
-				    )
-				self.prevEnergyStep = time
-				
-				#except:
-				#    print "simTab.on_timer: problems updating plots."
-				
+                chartLine = linea
+
+                time = bond = angle = dih = impr = elec = vdw = bound = misc = kine = tot = temp = pot = tot3 = tempa = pres = gpres = vol = presa = gprea = None
+                try:
+                    #print "on_timer(", len(chartLine),")", chartLine
+                    time  = int  (chartLine[8:16])
+                    bond  = float(chartLine[16:31])
+                    angle = float(chartLine[31:46])
+                    dih   = float(chartLine[46:61])
+                    impr  = float(chartLine[61:76])
+                    elec  = float(chartLine[81:96])
+                    vdw   = float(chartLine[96:111])
+                    bound = float(chartLine[111:126])
+                    misc  = float(chartLine[126:141])
+                    kine  = float(chartLine[141:156])
+                    tot   = float(chartLine[161:176])
+                    temp  = float(chartLine[176:191])
+                    pot   = float(chartLine[191:206])
+                    tot3  = float(chartLine[206:221])
+                    tempa = float(chartLine[221:236])
+                    pres  = float(chartLine[241:256])
+                    gpres = float(chartLine[256:271])
+                    vol   = float(chartLine[271:286])
+                    presa = float(chartLine[286:301])
+                    gprea = float(chartLine[301:])
+                except:
+                    print("Plot.on_timer: energy line missed.")
+                    pass
+
+                #try:
+                #print "addValuesFromNamd",time,self.prevEnergyStep,self.plotType
+                if time != None and time > self.prevEnergyStep:
+                    self.addValues(
+                        ["Bond", "Angle", "Dihedral", "Improper", "Electric", "Van der Waals", "Boundary", "Miscelaneous", "Kinetic", "tot", "Temperature", "Potential", "tot3", "Temperature Average", "Pressure", "G-Pressure", "Volume", "Pressure Average", "G-Pressure Average"],
+                        time,
+                        [bond, angle, dih, impr, elec, vdw, bound, misc, kine, tot, temp, pot, tot3, tempa, pres, gpres, vol, presa, gprea]
+                    )
+                self.prevEnergyStep = time
+
+                #except:
+                #    print "simTab.on_timer: problems updating plots."
+
             #elif linea[0:4] == "Info" or linea[0:3] == "LDB" or linea[0:7] == "Warning":
                 #print linea
             else:
                 pass
     
     def addValuesFromIMD(self, imdEnergies):
-    	#if imdEnergies != None:
+        #if imdEnergies != None:
         #	print "addValuesFromIMD ",imdEnergies.tstep,self.prevEnergyStep 
         #else: print "addValuesFromIMD None"
 
@@ -200,9 +201,9 @@ class Plot(Qwt.QwtPlot):
                 av = float(sum(self.y)) / len(self.y)
                 self.average.setData([], [])
             else:
-            	xrange = max(0,int(len(self.x)-self.xrange))
-            	xx = self.x[xrange:]
-            	yy = self.y[xrange:]
+                xrange = max(0,int(len(self.x)-self.xrange))
+                xx = self.x[xrange:]
+                yy = self.y[xrange:]
                 A = array([xx, ones(len(xx))])
                 slope, intercept = linalg.lstsq(A.T, yy)[0]
                 y0 = slope*xx[0] + intercept
@@ -241,32 +242,32 @@ class Plot(Qwt.QwtPlot):
 class EnergyPlot(Plot):
     
     def __init__(self, plotType="Total", parent=None):
-		self.energy = {
-			"Van der Waals":	[[], [], Qt.Qt.red			   ],
-			"Bond":			 [[], [], Qt.Qt.green			 ],
-			"Angle":			[[], [], Qt.Qt.blue			  ],
-			"Dihedral":		 [[], [], Qt.Qt.cyan			  ],
-			"Improper":		 [[], [], Qt.Qt.magenta		   ],
-			"Electric":		 [[], [], Qt.Qt.yellow			],
-			#"Boundary":		[[], [], QtGui.QColor(128,  0,   0, 255)],
-			#"Miscelaneous":	[[], [], QtGui.QColor(0,  128,   0, 255)],
-			"Kinetic":		  [[], [], QtGui.QColor(0,	0, 128, 255)],
-			"Potential":		[[], [], QtGui.QColor(128,128,   0, 255)],
-			"Total":			[[], [], QtGui.QColor(128,  0, 128, 255)]
-		}
-		self = Plot.__init__(self, "EnergyPlot", self.energy, plotType, parent)
+        self.energy = {
+            "Van der Waals":	[[], [], Qt.Qt.red			   ],
+            "Bond":			 [[], [], Qt.Qt.green			 ],
+            "Angle":			[[], [], Qt.Qt.blue			  ],
+            "Dihedral":		 [[], [], Qt.Qt.cyan			  ],
+            "Improper":		 [[], [], Qt.Qt.magenta		   ],
+            "Electric":		 [[], [], Qt.Qt.yellow			],
+            #"Boundary":		[[], [], QtGui.QColor(128,  0,   0, 255)],
+            #"Miscelaneous":	[[], [], QtGui.QColor(0,  128,   0, 255)],
+            "Kinetic":		  [[], [], QtGui.QColor(0,	0, 128, 255)],
+            "Potential":		[[], [], QtGui.QColor(128,128,   0, 255)],
+            "Total":			[[], [], QtGui.QColor(128,  0, 128, 255)]
+        }
+        self = Plot.__init__(self, "EnergyPlot", self.energy, plotType, parent)
 
 
 class KineticsPlot(Plot):
         
         def __init__(self, plotType="Total", parent=None):
-			self.kinetics = {
-				"Temperature":		  [[], [], Qt.Qt.red			   ],
-				"Temperature Average":  [[], [], Qt.Qt.green			 ],
-				"Pressure":			 [[], [], Qt.Qt.blue			  ],
-				"Pressure Average":	 [[], [], Qt.Qt.cyan			  ],
-				"G-Pressure":		   [[], [], Qt.Qt.magenta		   ],
-				"G-Pressure Average":   [[], [], Qt.Qt.yellow			],
-				"Volume":			   [[], [], QtGui.QColor(128,  0, 128, 255)]
-			}
-			self = Plot.__init__(self, "KineticsPlot", self.kinetics, plotType, parent)
+            self.kinetics = {
+                "Temperature":		  [[], [], Qt.Qt.red			   ],
+                "Temperature Average":  [[], [], Qt.Qt.green			 ],
+                "Pressure":			 [[], [], Qt.Qt.blue			  ],
+                "Pressure Average":	 [[], [], Qt.Qt.cyan			  ],
+                "G-Pressure":		   [[], [], Qt.Qt.magenta		   ],
+                "G-Pressure Average":   [[], [], Qt.Qt.yellow			],
+                "Volume":			   [[], [], QtGui.QColor(128,  0, 128, 255)]
+            }
+            self = Plot.__init__(self, "KineticsPlot", self.kinetics, plotType, parent)

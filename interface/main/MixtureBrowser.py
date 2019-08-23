@@ -43,8 +43,10 @@ from lib.chemicalGraph.Mixture import Mixture
 from ui_MixtureBrowser import Ui_MixtureBrowser
 from .WFileDialogs import WFileNameDialog
 from conf.Wolffia_conf import WOLFFIA_GRAPHICS
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-class MixtureBrowser(QtGui.QDialog):
+
+class MixtureBrowser(QtWidgets.QDialog):
     '''
     Creates a dialog to browse the mixtures
     '''
@@ -185,14 +187,14 @@ class MixtureBrowser(QtGui.QDialog):
             info.setModal(True) # blocks Wolffia
             info.showMessage("The current mixture cannot be deleted.")
         else:
-			msg = "Are you sure you want to delete simulation " + self.lastSelectedItem.text() + "?"
-			reply = QtGui.QMessageBox.question(self, 'Message', msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-			if reply == QtGui.QMessageBox.Yes:
-			    import shutil
-			    shutil.rmtree(self.settings.workingFolder + str(self.lastSelectedItem.text()))
-			    self.mixtures.pop(index.row())
-			    self.loadTable.removeRow(index.row())
-			    self.setTable()
+            msg = "Are you sure you want to delete simulation " + self.lastSelectedItem.text() + "?"
+            reply = QtGui.QMessageBox.question(self, 'Message', msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+            if reply == QtGui.QMessageBox.Yes:
+                import shutil
+                shutil.rmtree(self.settings.workingFolder + str(self.lastSelectedItem.text()))
+                self.mixtures.pop(index.row())
+                self.loadTable.removeRow(index.row())
+                self.setTable()
         
     def on_previewButton_pressed(self):
         '''
