@@ -46,9 +46,9 @@ class SDS(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando SDS"
+	print("Probando SDS")
 	m = SDS()
-	print m
+	print(m)
 	m.writePSF("SDS.psf")
 	m.writePDB("SDS.pdb")
 

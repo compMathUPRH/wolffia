@@ -52,7 +52,7 @@ class CoordinateFile:
 		self.fileType = fileType
 		self.fileName = mixtureFile
 		self.mixtureName = mixtureName
-		print "CoordinateFile ", fileType
+		print("CoordinateFile ", fileType)
 
 		if psfFile == None: self.psf = None
 		else: self.psf = PSF(psfFile)
@@ -61,7 +61,7 @@ class CoordinateFile:
 		
 	def __iter__(self):
 		if self.fileType == "cc1":
-			import cc1
+			from . import cc1
 			self.molIterator = cc1.readfile(self.fileName)
 		else:
 			self.molIterator = pybel.readfile(self.fileType, self.fileName)
@@ -77,7 +77,7 @@ class CoordinateFile:
 		Raises whichever exception that pybel throws (probably StopIteration).
 		"""
 		
-		mol = self.molIterator.next()
+		mol = next(self.molIterator)
 		chemicalGraphMixed = ChemicalGraph()
 		etable			 = openbabel.OBElementTable()
 
@@ -93,11 +93,11 @@ class CoordinateFile:
 			#print "_processFirstFrame: '" + psfType + "'"
 			charge = atom.partialcharge
 			mass	 = atom.atomicmass	
-			if self.psf <> None:
+			if self.psf != None:
 				psfType = self.psf.getType(n)
 				charge = self.psf.getCharge(n)
 				mass	 = self.psf.getMass(n)
-				print "CoordinateFile _processFirstFrame charge  ", charge
+				print("CoordinateFile _processFirstFrame charge  ", charge)
 		
 		
 			ai  = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
@@ -106,8 +106,8 @@ class CoordinateFile:
 			n += 1
 		
 		# add edges
-		print '_processFirstFrame add edges'
-		if self.psf <> None:
+		print('_processFirstFrame add edges')
+		if self.psf != None:
 			for b in self.psf.bonds:
 				try:  # avoids adding an edge twice
 					chemicalGraphMixed.add_edge(b)
@@ -144,8 +144,8 @@ class CoordinateFile:
 		Raises whichever exception that pybel throws (probably StopIteration).
 		"""
 		self.currentMolecule = Mixture(self.currentMolecule)  # copy mixture
-		mol = self.molIterator.next()
-		print "_processNextFrame", mol
+		mol = next(self.molIterator)
+		print("_processNextFrame", mol)
 		coordinates = []
 		for atom in mol.atoms:
 			coordinates.append(atom.coords)
@@ -153,7 +153,7 @@ class CoordinateFile:
 		return self.currentMolecule
 
 		
-	def next(self):
+	def __next__(self):
 		"""
 		Returns next frame if present.
 		Raises whichever exception that pybel throws (probably StopIteration).
@@ -187,14 +187,14 @@ class CoordinatesUpdateFile:
 		self.mixFile = open(mixtureFile, "r")
 		self.mixture = mixture
 		
-	def next(self):
+	def __next__(self):
 		"""
 		Update the coordinates of the mixture.  It is meant to load results from simumations.
 
 		"""
 		num = 0
 		line = self.mixFile.readline()
-		while line <> "" and line[:3] <> "END":
+		while line != "" and line[:3] != "END":
 			if line[:4] == "ATOM":
 				try:
 					# print "updateCoordinates ", num
@@ -204,7 +204,7 @@ class CoordinatesUpdateFile:
 					self.mixture.atomOrder[num].setCoord([x, y, z])
 					num += 1
 				except (IndexError, ValueError):
-					print "CoordinatesUpdateFile.updateCoordinates failed to update atom ", num
+					print("CoordinatesUpdateFile.updateCoordinates failed to update atom ", num)
 					break
 			line = self.mixFile.readline()
 		return len(line) > 0

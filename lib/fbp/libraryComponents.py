@@ -7,11 +7,11 @@ FBP_NO_WRAP_FUNCTIONS = ["split", "collate", "wolffiaState",  "beacon"]
 
 def beacon(out):
 	while out.empty():
-		print "beacon sending signal"
+		print("beacon sending signal")
 		out.put(BEACON_SIGNAL)
 
 def split(values, queueList):
-	print "entro a splitter"
+	print("entro a splitter")
 	value = values.get()
 	while value != FBP_CONSTANTS.END_TOKEN:
 		for queue in queueList:
@@ -23,7 +23,7 @@ def split(values, queueList):
 
 
 def collate(queueList, out):
-	print "entro a lumper"
+	print("entro a lumper")
 	while True:
 		values = []
 		for queue in queueList:
@@ -40,9 +40,9 @@ def collate(queueList, out):
 def wolffiaState(inQ, outQ):
 	inItem = inQ.get()
 	while inItem != FBP_CONSTANTS.END_TOKEN:
-		print "wolffiaState recibio"
+		print("wolffiaState recibio")
 		outQ.put([inItem])
 		inItem = inQ.get()
-	print "wolffiaState termino"
+	print("wolffiaState termino")
 	outQ.put(FBP_CONSTANTS.END_TOKEN)
 

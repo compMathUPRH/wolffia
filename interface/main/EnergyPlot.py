@@ -113,7 +113,7 @@ class Plot(Qwt.QwtPlot):
 				    presa = float(chartLine[286:301])
 				    gprea = float(chartLine[301:])
 				except:
-				    print "Plot.on_timer: energy line missed."
+				    print("Plot.on_timer: energy line missed.")
 				    pass
 				
 				#try:
@@ -163,7 +163,7 @@ class Plot(Qwt.QwtPlot):
 
     
     def reset(self):
-        for t in self.charts.keys():
+        for t in list(self.charts.keys()):
             self.charts[t][self.xpos] = []
             self.charts[t][self.ypos] = []
         self.setType(self.plotType)
@@ -185,7 +185,7 @@ class Plot(Qwt.QwtPlot):
         self.updateCurve()
 
     def types(self):
-        return self.charts.keys()
+        return list(self.charts.keys())
     
     def updateCurve(self):
         if len(self.x) > self.xrange:
@@ -215,7 +215,7 @@ class Plot(Qwt.QwtPlot):
 
     def mousePressEvent(self, event):
         if event.button() == 1: # left-button click
-            keys = self.charts.keys()
+            keys = list(self.charts.keys())
             keys.sort()
             self.setType(keys[(keys.index(self.plotType)+1)%len(keys)])
         elif event.button() == 2: # right-button click

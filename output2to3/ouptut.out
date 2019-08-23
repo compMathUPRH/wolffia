@@ -1,0 +1,4708 @@
+--- ./wolffia.py	(original)
++++ ./wolffia.py	(refactored)
+@@ -34,4 +34,4 @@
+ wolfiadir = os.path.dirname(os.path.realpath(__file__))
+ sys.path.append(wolfiadir+'/../../conf')
+ 
+-import interface.main.Wolffia
++from . import interface.main.Wolffia
+--- ./interface/celluloseEditor/CelluloseEditor.py	(original)
++++ ./interface/celluloseEditor/CelluloseEditor.py	(refactored)
+@@ -106,7 +106,7 @@
+ 		try:
+ 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+ 		except:
+-			print "WARNING: Could not read style specifications"
++			print("WARNING: Could not read style specifications")
+ 		self.homopolPreview.update()
+ 
+ 
+--- ./interface/celluloseEditor/celluloseEditor.py	(original)
++++ ./interface/celluloseEditor/celluloseEditor.py	(refactored)
+@@ -431,4 +431,4 @@
+         self.okButton.setText(_translate("HomopolyEditor", "Save", None))
+         self.cancelButton.setText(_translate("HomopolyEditor", "Cancel", None))
+ 
+-import polymer_images_rc
++from . import polymer_images_rc
+--- ./interface/classifier/ImportMolecules.py	(original)
++++ ./interface/classifier/ImportMolecules.py	(refactored)
+@@ -55,7 +55,7 @@
+             try:
+                 self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+             except:
+-                print "WARNING: Could not read style specifications"
++                print("WARNING: Could not read style specifications")
+ 
+     #--------------------------------- Methods ------------------------------------------
+     
+@@ -81,7 +81,7 @@
+ 
+     @QtCore.pyqtSlot()
+     def on_ok_pressed(self):
+-        print "pdb Is checked?",self.uiImportMolecules.pdbRButton.isChecked()
++        print("pdb Is checked?",self.uiImportMolecules.pdbRButton.isChecked())
+         #Specifies the user that has to write a valid filename
+         moleculeName = self.uiImportMolecules.IDlineEdit.text()
+         fileCode = str(moleculeName.replace(' ','-'))
+@@ -99,9 +99,9 @@
+                 ext           =  "/sdf"    
+                 self.fileType = "sdf"
+                 
+-            import httplib
+-            print "on_ok_pressed", host+url+fileCode+ext
+-            conn = httplib.HTTPSConnection(host,timeout=10)
++            import http.client
++            print("on_ok_pressed", host+url+fileCode+ext)
++            conn = http.client.HTTPSConnection(host,timeout=10)
+             conn.request("GET", url+fileCode+ext)
+             r1 = conn.getresponse()
+             if r1.reason == 'OK':
+@@ -109,10 +109,10 @@
+                 self.proceedValue = True
+                 self.close()
+             else: 
+-                print "ERRORRR!!!!!"
++                print("ERRORRR!!!!!")
+                 QtGui.QMessageBox.warning(self, 'Error '+str(r1.status), r1.reason)
+                 
+-            print r1.status, r1.reason
++            print(r1.status, r1.reason)
+             conn.close()
+ 
+                 
+--- ./interface/classifier/Load.py	(original)
++++ ./interface/classifier/Load.py	(refactored)
+@@ -51,7 +51,7 @@
+     def __init__(self, parent=None, dropedPdb=None):
+         super(Load, self).__init__(parent, modal = 1)
+         
+-        print "Load dropedPdb=", dropedPdb
++        print("Load dropedPdb=", dropedPdb)
+         #Dialog settings
+         self.uiLoad         = Ui_Load()
+         self.uiLoad.setupUi(self)
+@@ -60,13 +60,13 @@
+         self.history.currentState().reset()
+         
+         #Viewer
+-        print "Load setting viewer"
++        print("Load setting viewer")
+         self.previewArea    = MixtureViewer(self.history, self, None)
+         self.previewArea.showHelp(False)
+         self.uiLoad.moleculeViewerLayout.addWidget(self.previewArea)
+         
+         #Mixture
+-        print "Load setting getting mixture"
++        print("Load setting getting mixture")
+         self.myMixture      = self.history.currentState().getMixture()
+         self.mixAndRows     = list()
+         
+@@ -83,14 +83,14 @@
+         self.uiLoad.connectDataBaseButton.setIcon(QtGui.QIcon().fromTheme("network-server", QtGui.QIcon(str(NANOCAD_BASE+"\\interface\\graphics\\") +"dialog-information.png")))    
+ 
+         #PDB droped from MixtureViewer
+-        print "Load setting pdbDirectory"
++        print("Load setting pdbDirectory")
+         self.pdbDirectory = dropedPdb
+         if self.pdbDirectory != None:
+-            print "Load setting self.pdbDirectory != None"
++            print("Load setting self.pdbDirectory != None")
+             self.uiLoad.lineEdit_1.setText(self.pdbDirectory)
+-            print "Load animateClick"
++            print("Load animateClick")
+             self.uiLoad.loadButton.animateClick()
+-        print "Load end"
++        print("Load end")
+         
+     def update(self):
+         self.previewArea.update()
+@@ -131,23 +131,23 @@
+     
+         # Gets paths
+         path_1 = str(self.uiLoad.lineEdit_1.displayText())
+-        print "Load getLineEditInfo",path_1
++        print("Load getLineEditInfo",path_1)
+         self.uiLoad.lineEdit_1.clear()
+         path_2 = str(self.uiLoad.lineEdit_2.displayText())
+-        print "Load getLineEditInfo",path_2
++        print("Load getLineEditInfo",path_2)
+         self.uiLoad.lineEdit_2.clear()
+-        print "Load getLineEditInfo loadInfo"
++        print("Load getLineEditInfo loadInfo")
+         self.loadInfo(path_1, path_2)
+-        print "Load getLineEditInfo end"
++        print("Load getLineEditInfo end")
+  
+ #--------------------------------------
+     def loadInfo(self,path_1='',path_2= ''):       
+-        if path_1 <> '' and path_2 == '':
++        if path_1 != '' and path_2 == '':
+             try:
+                 self.history.currentState().getMixture().load(path_1)
+             except:
+                 QtGui.QMessageBox.warning(self,"Error 1 !!!","There is a problem loading the file " + path_1 + " in box 1.")
+-                print sys.exc_info()
++                print(sys.exc_info())
+         elif not(path_2 == '') and path_1 == '':
+             try:
+                 self.history.currentState().getMixture().load(path_2)
+@@ -157,12 +157,12 @@
+             if (path_1[len(path_1)-3]+path_1[len(path_1)-2]+path_1[len(path_1)-1]) == 'pdb' and (path_2[len(path_2)-3]+path_2[len(path_2)-2]+path_2[len(path_2)-1]) == 'psf':
+                 try: 
+                     self.history.currentState().getMixture().load(path_1,path_2)
+-                except Exception  as e:
++                except Exception as e:
+                     QtGui.QMessageBox.warning(self,"Error 3 !!!","There is a problem with the file."+str(e))
+             elif (path_1[len(path_1)-3]+path_1[len(path_1)-2]+path_1[len(path_1)-1]) == 'psf' and (path_2[len(path_2)-3]+path_2[len(path_2)-2]+path_2[len(path_2)-1]) == 'pdb':
+                 try:
+                     self.history.currentState().getMixture().load(path_2,path_1)
+-                except Exception  as e:
++                except Exception as e:
+                     QtGui.QMessageBox.warning(self,"Error 4 !!!","There is a problem with the file."+str(e))
+             else:QtGui.QMessageBox.warning(self,"Error 5 !!!","There is a problem with the file.")  
+             
+@@ -503,7 +503,7 @@
+             self.uiLoad.lineEdit_2.setText(str(d.fullFilename()))
+             
+     def on_hint_pressed(self):
+-        from AboutLoad import AboutLoad
++        from .AboutLoad import AboutLoad
+         about = AboutLoad(self)
+         about.show()
+         about.exec_()
+@@ -511,7 +511,7 @@
+     def on_connectDataBaseButton_pressed(self):
+         #print"on_connectDataBaseButton_pressed"
+         
+-        from ImportMolecules import ImportMolecules
++        from .ImportMolecules import ImportMolecules
+         
+         importMoleculeDialog = ImportMolecules()
+         importMoleculeDialog.show()
+@@ -522,7 +522,7 @@
+             try:
+                 #print importMoleculeDialog.getMoleculeFile()
+                 self.history.currentState().getMixture().load(None,None,importMoleculeDialog.getMoleculeFile(),importMoleculeDialog.getFileType(),importMoleculeDialog.inputName())
+-            except Exception, err:
++            except Exception as err:
+             	#print "Load on_connectDataBaseButton_pressed: There is a problem with the file ", importMoleculeDialog.getMoleculeFile()
+                 QtGui.QMessageBox.warning(self,"Error 15 !!!","There is a problem with the file."+ err)
+             
+@@ -542,23 +542,23 @@
+         self.close()
+ 
+     def on_loadButton_pressed(self,dropedPdb=None):
+-    	print "Load on_loadButton_pressed",dropedPdb
++    	print("Load on_loadButton_pressed",dropedPdb)
+         if dropedPdb == None:
+-            print "Load on_loadButton_pressed getLineEditInfo"
++            print("Load on_loadButton_pressed getLineEditInfo")
+             self.getLineEditInfo()           
+-        print "Load on_loadButton_pressed loadTable.clear"
++        print("Load on_loadButton_pressed loadTable.clear")
+         self.loadTable.clear()
+         self.loadTableRows = 0
+         self.mixAndRows    = []
+-        print "Load on_loadButton_pressed setTable"
++        print("Load on_loadButton_pressed setTable")
+         self.setTable()
+     
+         if self.uiLoad.SelectAllLayout.isEmpty():
+             self.addSelectAllCheckBox()
+             self.addShowHideAllCheckBox()
+-        print "Load on_loadButton_pressed previewArea.setMixture"
++        print("Load on_loadButton_pressed previewArea.setMixture")
+         self.previewArea.setMixture(self.history.currentState().getMixture())    
+-        print "Load on_loadButton_pressed end"
++        print("Load on_loadButton_pressed end")
+ 
+     def on_okButton_pressed(self):
+         if self.myMixture._len() == 0:
+--- ./interface/diamondEditor/diamondEditor.py	(original)
++++ ./interface/diamondEditor/diamondEditor.py	(refactored)
+@@ -93,7 +93,7 @@
+ 		try:
+ 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+ 		except:
+-			print "WARNING: Could not read style specifications"
++			print("WARNING: Could not read style specifications")
+ 
+ 	def generateDimond(self):
+ 		n			= self.ui.nSpinBox.value()
+@@ -136,7 +136,7 @@
+ 			ntDialog.show()
+ 			ntDialog.exec_()
+ 			self.files = ntDialog.getFileNames()
+-			print self.files
++			print(self.files)
+ 
+ 	@QtCore.pyqtSlot()
+ 	def on_previewButton_pressed(self):
+--- ./interface/grapheneEditor/grapheneEditor.py	(original)
++++ ./interface/grapheneEditor/grapheneEditor.py	(refactored)
+@@ -93,7 +93,7 @@
+ 		try:
+ 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+ 		except:
+-			print "WARNING: Could not read style specifications"
++			print("WARNING: Could not read style specifications")
+ 			
+ 		self.graphenePreview.update()
+ 
+@@ -125,13 +125,13 @@
+ 			self.isAdded = True
+ 			self.close()
+ 		else:
+-			from GrapheneSaveDialog import GrapheneSaveDialog
++			from .GrapheneSaveDialog import GrapheneSaveDialog
+ 			self.generateGraphene()
+ 			ntDialog = GrapheneSaveDialog(self.graphene,files=self.files, parent=self)
+ 			ntDialog.show()
+ 			ntDialog.exec_()
+ 			self.files = ntDialog.getFileNames()
+-			print self.files
++			print(self.files)
+ 
+ 	@QtCore.pyqtSlot()
+ 	def on_previewButton_pressed(self):
+--- ./interface/homopolyEditor/HomopolyEditor.py	(original)
++++ ./interface/homopolyEditor/HomopolyEditor.py	(refactored)
+@@ -107,14 +107,14 @@
+ 		try:
+ 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+ 		except:
+-			print "WARNING: Could not read style specifications"
++			print("WARNING: Could not read style specifications")
+ 		self.homopolPreview.update()
+ 
+ 
+ 	def generateHomopol(self):
+ 		n = self.ui.nSpinBox.value()
+ 		self.homopol = Mixture()
+-		exec "from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type)
++		exec("from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type))
+ 		self.poly = eval(str(self.type) + "(n)")
+ 		self.homopol.add(self.poly)
+ 
+--- ./interface/homopolyEditor/HomopolyEditor2.py	(original)
++++ ./interface/homopolyEditor/HomopolyEditor2.py	(refactored)
+@@ -89,7 +89,7 @@
+ 		self.ui.headerLabel.setText(str(self.type) + " Editor")
+ 		n = self.ui.nSpinBox.value()
+ 		self.homopol = Mixture()
+-		exec "from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type)
++		exec("from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type))
+ 		self.homopol.add(eval(str(self.type) + "(n)"))
+ 		self.homopolPreview.setMixture(self.homopol)
+ 
+--- ./interface/main/Analysis.py	(original)
++++ ./interface/main/Analysis.py	(refactored)
+@@ -55,25 +55,25 @@
+ #-----------------------------------------------------
+ 
+ 	def dragEnterEvent(self, e):
+-		print "PRIMERdrag"
++		print("PRIMERdrag")
+ 		dropUrl = e.mimeData().urls()[0]
+ 		if not dropUrl.isLocalFile():
+ 			return 
+ 
+ 		if e.mimeData().hasFormat('text/plain'):
+-			print "mimeData.hasFormat (text Plain)"
++			print("mimeData.hasFormat (text Plain)")
+ 			fileName    = str(dropUrl.toLocalFile())
+ 			extension   = os.path.splitext(fileName)
+-			print "filename:" + fileName
+-			print "extension:" + str(extension[1])
++			print("filename:" + fileName)
++			print("extension:" + str(extension[1]))
+ 				
+ 			e.accept()
+-			print "aceptado"
+-			print "PRIMERif"
++			print("aceptado")
++			print("PRIMERif")
+ 
+ 	def dropEvent(self, e):
+ 		text = open(str(e.mimeData().urls()[0].toLocalFile())).read()
+-		print "PRIMERdrop"
++		print("PRIMERdrop")
+ 		
+ 		self.setText(text)
+ 
+@@ -209,7 +209,7 @@
+ 		
+ 		
+ 		# redirect stdout, execute, display result and restore stdout
+-		from cStringIO import StringIO
++		from io import StringIO
+ 		old_stdout = sys.stdout
+ 		redirected_output = sys.stdout = StringIO()
+ 		thr = RunScriptThread(self,self.network,state, self.components)
+@@ -234,7 +234,7 @@
+ 		pass
+ 
+ 	def update(self):
+-		print "Analysis.update"
++		print("Analysis.update")
+ 		if self.analysisClass != None:
+ 			self.analysisClass.update()
+ 		#from lib.fbp.Network import removeEdgesAndRestart
+--- ./interface/main/BuildTab.py	(original)
++++ ./interface/main/BuildTab.py	(refactored)
+@@ -44,13 +44,13 @@
+ from lib.chemicalGraph.Mixture import Mixture
+ from lib.chemicalGraph.molecule.element.Element import *
+ import logging
+-from WFileDialogs import WFileDialog
+-from PropertyEditor import PropertyEditor
++from .WFileDialogs import WFileDialog
++from .PropertyEditor import PropertyEditor
+ #from MixtureViewer import * 
+-from SettingsDialog import WDirectoryDialog
+-from WWidgets import PreviewButton,FixedButton
+-
+-from WFileDialogs import WFileNameDialog
++from .SettingsDialog import WDirectoryDialog
++from .WWidgets import PreviewButton,FixedButton
++
++from .WFileDialogs import WFileNameDialog
+ 
+ class BuildTab(QtGui.QFrame):   
+ 	def __init__(self, hist, parent=None, previewer=None, settings=None):
+@@ -117,8 +117,8 @@
+ 		modifiers = QtGui.QApplication.keyboardModifiers()
+ 		if modifiers == QtCore.Qt.ShiftModifier and self.prevFixed != None:
+ 			if self.prevFixed[1] == selected:
+-				if row < self.prevFixed[0]: ind = range(row+1,self.prevFixed[0]+1)
+-				else: ind = range(self.prevFixed[0],row)
++				if row < self.prevFixed[0]: ind = list(range(row+1,self.prevFixed[0]+1))
++				else: ind = list(range(self.prevFixed[0],row))
+ 				for i in ind:
+ 					pin = self.ui.structManager.cellWidget(i, 1)
+ 					#if selected: pin.setFixed(update=False)
+@@ -137,8 +137,8 @@
+ 		modifiers = QtGui.QApplication.keyboardModifiers()
+ 		if modifiers == QtCore.Qt.ShiftModifier and self.prevShow != None:
+ 			if self.prevShow[1] == selected:
+-				if row < self.prevShow[0]: ind = range(row,self.prevShow[0])
+-				else: ind = range(self.prevShow[0]+1,row)
++				if row < self.prevShow[0]: ind = list(range(row,self.prevShow[0]))
++				else: ind = list(range(self.prevShow[0]+1,row))
+ 				for i in ind:
+ 					pin = self.ui.structManager.cellWidget(i, 0)
+ 					#if selected: pin.setShown(update=False)
+@@ -186,7 +186,7 @@
+ 			c = CelluloseEditor(self.history.currentState(), self, settings=self.settings)
+ 			moleculeDialog(self, c)
+ 		elif self.key == "ssDNA":
+-			print "ssDNA is not yet implemented!"
++			print("ssDNA is not yet implemented!")
+ 		elif self.parent == "Homopolymer":
+ 			from interface.homopolyEditor.HomopolyEditor import HomopolyEditor
+ 			homopol = HomopolyEditor(self.key, self.history.currentState(), settings=self.settings)
+@@ -313,22 +313,22 @@
+ 				customTreeWidget = self.ui.molCatalog.topLevelItem (self.ui.molCatalog.topLevelItemCount()-1)
+ 				#print "on_catalogButton_pressed childCount", customTreeWidget.childCount ()
+ 				
+-				print "SELCTEDDDDDD >>." , selected
++				print("SELCTEDDDDDD >>." , selected)
+ 				mixtureToSave = Mixture()
+-				print "mixtureToSave >>>>", mixtureToSave
++				print("mixtureToSave >>>>", mixtureToSave)
+ 				molName = ""
+-				print "molName >>>>" , molName
++				print("molName >>>>" , molName)
+ 				for mol in selected:
+-					print "mol >>>>", mol
++					print("mol >>>>", mol)
+ 					mixtureToSave.add(mol.copy(), True)
+-					print "mixtureToSave agregados >>>>" ,mixtureToSave
++					print("mixtureToSave agregados >>>>" ,mixtureToSave)
+ 					if molName == "":
+ 						molName = mol.molname()
+ 					else:
+ 						molName += ("-" + mol.molname())
+ 						
+-				print "SELECETEDDDD: ", selected , "mixtureToSave Final" , mixtureToSave
+-				print "############################################################"
++				print("SELECETEDDDD: ", selected , "mixtureToSave Final" , mixtureToSave)
++				print("############################################################")
+ 				#Pregunta el nombre de la molecula que quiere guardar en el catalogo
+ 				nameMolGUI = QtGui.QInputDialog(self)
+ 				nameMolGUI.setTextValue(str(selected[0]))
+@@ -336,24 +336,24 @@
+ 				nameMol, ok = nameMolGUI.getText(self, "Custom Molecule", "Set Molecule Name:",0,str(selected[0]))
+ 	
+ 				
+-				print "value ",nameMol," ok ",ok
++				print("value ",nameMol," ok ",ok)
+ 				if ok:		
+ 					#Guarda archivo en .cMolecule dentro de .wolffia
+ 					cMixFileName = "/" + nameMol + ".wfm"
+ 					cMixFileDir = WOLFFIA_DIR + C_MOLECULE_CATALOG + cMixFileName
+ 					if os.path.exists(cMixFileDir):
+-						print "archivo existe" , cMixFileDir
++						print("archivo existe" , cMixFileDir)
+ 						nameMol = nameMol + "*"
+ 						cMixFileName = "/" + nameMol + ".wfm"
+ 						cMixFileDir = WOLFFIA_DIR + C_MOLECULE_CATALOG + cMixFileName
+ 						
+-					print "cMixFileDir>>>>>" , cMixFileDir
++					print("cMixFileDir>>>>>" , cMixFileDir)
+ 					#Add a child to Custom Molecule in the Molecular Structure Catalog 
+ 					nameQT = QtGui.QTreeWidgetItem()
+ 					nameQT.setText(0,nameMol)
+ 					customTreeWidget.addChild(nameQT)
+ 					#customTreeWidget.addChild(QtGui.QTreeWidgetItem())
+-					print "NAMEMOL1", nameMol												 
++					print("NAMEMOL1", nameMol)												 
+ 					self.history.currentState().getMixture().save(cMixFileDir)
+ 
+ 
+@@ -395,9 +395,9 @@
+ 					message = QtGui.QMessageBox(1, "Warning", "There's a simulation running right now.")
+ 					message.exec_()
+ 			else:
+-				print "on_catalogButton_pressed",  self.ui.molCatalog.topLevelItemCount()
++				print("on_catalogButton_pressed",  self.ui.molCatalog.topLevelItemCount())
+ 				customTreeWidget = self.ui.molCatalog.topLevelItem (self.ui.molCatalog.topLevelItemCount()-1)
+-				print "on_catalogButton_pressed childCount", customTreeWidget.childCount ()
++				print("on_catalogButton_pressed childCount", customTreeWidget.childCount ())
+ 				selected = self.editor.selectedMolecules()
+ 				nombre = QtGui.QInputDialog(self)
+ 				nombre.setTextValue(str(selected[0]))
+@@ -586,8 +586,8 @@
+ 			modifiers = QtGui.QApplication.keyboardModifiers()
+ 			if modifiers == QtCore.Qt.ShiftModifier and self.prevSelection != None:
+ 				if self.prevSelection[1] == selected:
+-					if row < self.prevSelection[0]: ind = range(row+1,self.prevSelection[0])
+-					else: ind = range(self.prevSelection[0]+1,row)
++					if row < self.prevSelection[0]: ind = list(range(row+1,self.prevSelection[0]))
++					else: ind = list(range(self.prevSelection[0]+1,row))
+ 					for i in ind:
+ 						mol = str(self.ui.structManager.item(i, 4).text())
+ 						m = self.history.currentState().getMixture().getMolecule(mol)
+@@ -626,7 +626,7 @@
+ 
+ 	
+ 	def on_showCheckbox(self, on):
+-		print "on_showCheckbox", 
++		print("on_showCheckbox", end=' ') 
+ 		
+ 
+ 	def addMolecule(self, mol, remember=True):
+@@ -908,7 +908,7 @@
+ 		if ShownSolvent.isSolvent(solventName):
+ 			#print "ShownSolvent isShown buscando"
+ 			solvType = ShownSolvent.solventType(solventName)
+-			if not self.solventList.has_key(solvType): self.setAsNotShown(solventName)
++			if solvType not in self.solventList: self.setAsNotShown(solventName)
+ 			return self.solventList[solvType]
+ 		return False
+ 	
+--- ./interface/main/CHARMMParameterFinderDialog.py	(original)
++++ ./interface/main/CHARMMParameterFinderDialog.py	(refactored)
+@@ -115,7 +115,7 @@
+     def on_timer(self):
+         if self.thread.is_alive():
+             if self.thread.getPairing() != None:
+-                print "on_startButton_pressed matches", self.thread.getPairing().getMatches()
++                print("on_startButton_pressed matches", self.thread.getPairing().getMatches())
+             #print "on_startButton_pressed  timer ", self.timeLimit - (time.clock() - self.startTime)
+             self.ui.timeLeftClock.setValue(max(0,int(self.timeLimit - (time.clock() - self.startTime))))
+             self.ui.timeLeftClock.step()
+--- ./interface/main/ConnectionDialog.py	(original)
++++ ./interface/main/ConnectionDialog.py	(refactored)
+@@ -55,7 +55,7 @@
+ 		self.ui.cancelButton.setFlat(False)
+ 		self.ui.cancelButton.setIcon(QtGui.QIcon().fromTheme("computer"	))
+ 		
+-		if self.connection <> None:
++		if self.connection != None:
+ 			self.ui.hostnameEdit.setText(self.connection.getHostName())
+ 			self.ui.usernameEdit.setText(self.connection.getUserName())
+ 			self.ui.passwordEdit.setText("***")
+@@ -87,11 +87,11 @@
+ 				#self.connection.setPassword(str(self.ui.passwordEdit.text()))
+ 				self.connection.probe()
+ 				
+-		except Exception, e:
++		except Exception as e:
+ 		    self.ui.statusLabel.setText("Connection failed."+str(e))
+ 		    self.ui.okButton.setEnabled(False)
+ 		    self.connection = None
+-		    print "on_probeButton_pressed exception", e
++		    print("on_probeButton_pressed exception", e)
+ 		    return
+ 		
+ 		if self.connection.isConnected():
+--- ./interface/main/Drawer.py	(original)
++++ ./interface/main/Drawer.py	(refactored)
+@@ -83,7 +83,7 @@
+ 		try:
+ 			cell = NAMDcell(archivo)
+ 			box = cell.getBox()
+-			print "readNAMD ", box
++			print("readNAMD ", box)
+ 			self.setCellBasisVectors([[box[0][0][0], 0.0, 0.0],
+ 									[0.0, box[0][1][1], 0.0],
+ 									[0.0, 0.0, box[0][2][2]]])
+@@ -194,7 +194,7 @@
+ 		#print "colisiones... ", len(collisions)
+ 		toRemove  = set(collisions).difference(set(originalMolecules))
+ 		if gui:	progress.setValue(2)
+-		print "removeCollisions removiendo... ", len(toRemove)
++		print("removeCollisions removiendo... ", len(toRemove))
+ 		self._history.currentState().removeMoleculesFrom(toRemove)
+ 		
+ 		if gui:	progress.hide()
+--- ./interface/main/EnergyPlot.py	(original)
++++ ./interface/main/EnergyPlot.py	(refactored)
+@@ -113,7 +113,7 @@
+ 				    presa = float(chartLine[286:301])
+ 				    gprea = float(chartLine[301:])
+ 				except:
+-				    print "Plot.on_timer: energy line missed."
++				    print("Plot.on_timer: energy line missed.")
+ 				    pass
+ 				
+ 				#try:
+@@ -163,7 +163,7 @@
+ 
+     
+     def reset(self):
+-        for t in self.charts.keys():
++        for t in list(self.charts.keys()):
+             self.charts[t][self.xpos] = []
+             self.charts[t][self.ypos] = []
+         self.setType(self.plotType)
+@@ -185,7 +185,7 @@
+         self.updateCurve()
+ 
+     def types(self):
+-        return self.charts.keys()
++        return list(self.charts.keys())
+     
+     def updateCurve(self):
+         if len(self.x) > self.xrange:
+@@ -215,7 +215,7 @@
+ 
+     def mousePressEvent(self, event):
+         if event.button() == 1: # left-button click
+-            keys = self.charts.keys()
++            keys = list(self.charts.keys())
+             keys.sort()
+             self.setType(keys[(keys.index(self.plotType)+1)%len(keys)])
+         elif event.button() == 2: # right-button click
+--- ./interface/main/ForceTab.py	(original)
++++ ./interface/main/ForceTab.py	(refactored)
+@@ -117,7 +117,7 @@
+         list all molecules in the Structure Manager
+         '''
+         # count nonb in all molecules
+-        print "insertChargesTable start"
++        print("insertChargesTable start")
+         #timer = WTimer("ForceTab.insertChargesTable")
+         row = 0
+         rows = 0
+@@ -136,7 +136,7 @@
+             charVals = dict()
+             molecule = self.history.currentState().mixture.getMolecule(molName)
+             if not molecule.molname() in displayedMols:
+-                print "insertChargesTable ", molecule.molname()
++                print("insertChargesTable ", molecule.molname())
+                 #self.allForceField[molName] = {"nonBonded" : [], "Bonds" : [] , "Angles": [], "Dihedrals": []}
+                 displayedMols.append(molecule.molname() )
+                 
+@@ -435,7 +435,7 @@
+         item = self.horizontalHeaderItem(1)
+         item.setText("Ktheta")
+         item = self.horizontalHeaderItem(2)
+-        item.setText(u"Ⲑ0")
++        item.setText("Ⲑ0")
+ 
+         # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
+         header = self.horizontalHeader()
+@@ -684,7 +684,7 @@
+     @QtCore.pyqtSlot()
+     def on_aboutTab_pressed(self):
+         #self.messageAboutTab()
+-        from AboutFT import AboutFT
++        from .AboutFT import AboutFT
+         about = AboutFT(self)
+         about.show()
+         about.exec_()
+@@ -703,7 +703,7 @@
+ 
+     
+     def on_chargesTable_itemChanged(self, wi):
+-    	print "on_chargesTable_itemChanged"
++    	print("on_chargesTable_itemChanged")
+         self.history.push()
+         self._changeAtomType(wi)
+         self.update()
+@@ -728,7 +728,7 @@
+ 		If there are more than one bond of certain type, the average bond length is set.
+ 		'''
+  		selected = self.parent.buildTab.editor.selectedMolecules()
+-		print "on_bondButton_pressed ", selected
++		print("on_bondButton_pressed ", selected)
+ 		if len(selected) != 1 or selected[0].molname() != self.selectedMolecule:
+ 			errorgui = QtGui.QErrorMessage(self)
+ 			errorgui.setModal(True) 
+@@ -754,7 +754,7 @@
+             return
+     
+         self.history.push()
+-        from CHARMMParameterFinderDialog import CHARMMParameterFinderDialog
++        from .CHARMMParameterFinderDialog import CHARMMParameterFinderDialog
+         #print "on_findCHARMMButton_pressed ", self.selectedMolecule
+ 
+         #  find first molecule with name as self.selectedMolecule
+@@ -772,7 +772,7 @@
+             pairing = charmm.getPairing()
+             ff = charmm.getForceField()
+             if pairing != None:
+-                print "on_findCHARMMButton_pressed obtained  " , pairing.getPairing()
++                print("on_findCHARMMButton_pressed obtained  " , pairing.getPairing())
+                 for molName in currentMixture:
+                     mol = currentMixture.getMolecule(molName) 
+                     if mol.molname() == self.selectedMolecule: 
+@@ -812,7 +812,7 @@
+ 
+ 
+     def on_nonBondTable_itemChanged(self, wi):
+-    	print "on_nonBondTable_itemChanged"
++    	print("on_nonBondTable_itemChanged")
+         if len(str(wi.text())) > 0:
+             self.history.push()
+             self._changeType(wi)
+@@ -821,11 +821,11 @@
+ 
+ 
+     def on_nonBondTable_itemClicked(self, item):
+-        print "on_nonBondTable_itemClicked ", item.text()
++        print("on_nonBondTable_itemClicked ", item.text())
+         self._selectMolecule(item)
+ 
+     def on_saveButton_pressed(self):     
+-        print "on_saveButton_pressed self.selectedMolecule =", self.selectedMolecule
++        print("on_saveButton_pressed self.selectedMolecule =", self.selectedMolecule)
+         if self.selectedMolecule == None:
+             errorgui = QtGui.QErrorMessage(self)
+             errorgui.setModal(True) # blocks Wolffia
+@@ -847,7 +847,7 @@
+ 
+ 
+     def on_typesButton_pressed(self):
+-    	print "on_typesButton_pressed ", self.selectedMolecule
++    	print("on_typesButton_pressed ", self.selectedMolecule)
+         if self.selectedMolecule == None:
+             errorgui = QtGui.QErrorMessage(self)
+             errorgui.setModal(True) 
+@@ -870,7 +870,7 @@
+             typeAssignments = molecule.redefineTypes()
+             if typeAssignments != None:
+                 report = "The following types were defined:\n\ttype\tatoms\n"
+-                for type in typeAssignments.keys():
++                for type in list(typeAssignments.keys()):
+                     report += "\t" + type + "\t" + str(len(typeAssignments[type])) + "\n"
+                 
+                 msgBox = QtGui.QMessageBox.information (self, "Detect Atom Type", report, buttons=QtGui.QMessageBox.Ok, defaultButton=QtGui.QMessageBox.Cancel)
+@@ -923,12 +923,12 @@
+     def hideEvent(self,e):
+         if self.valueChanged:
+             self.history.push()
+-        print "ForceTab hideEvent"
++        print("ForceTab hideEvent")
+     #    self.wolffia.update()
+         
+ 
+     def on_anglesTable_showEvent(self,e):
+-        print "ForceTab on_anglesTable_showEvent"
++        print("ForceTab on_anglesTable_showEvent")
+ 
+ 
+     def setChargesInMolecule(self, molname, aType, charge):
+@@ -958,7 +958,7 @@
+         self.equivalences =  self.history.currentState().getMixture().equivalenceClasses()
+ 
+     def update(self):
+-        print "ForceTab.update "
++        print("ForceTab.update ")
+         timer = WTimer("ForceTab")
+         self._updateEquivalences()
+ 
+@@ -982,7 +982,7 @@
+         self.ui.saveButton.setEnabled(selecteed)
+         self.ui.typesButton.setEnabled(selecteed)
+         timer.report()
+-        print "ForceTab.update fin"
++        print("ForceTab.update fin")
+ 
+ 
+     def updateTAB(self):
+@@ -990,27 +990,27 @@
+ 
+ 
+     def _changeAtomType(self, wi):
+-        print "ForceTab _changeAtomType  row-col ", wi.row(), wi.column()
++        print("ForceTab _changeAtomType  row-col ", wi.row(), wi.column())
+         if wi.column() == 1:
+ 			row = wi.row()
+ 			nameRow = row
+-			print "ForceTab _changeAtomType  ", wi.row(),self.ui.chargesTable.rowSpan(wi.row(),2)
++			print("ForceTab _changeAtomType  ", wi.row(),self.ui.chargesTable.rowSpan(wi.row(),2))
+ 			while self.ui.chargesTable.item(nameRow,0).toolTip() != "Click to select.":
+ 				nameRow -= 1
+ 				
+-			print "ForceTab _changeAtomType  ", nameRow, row
++			print("ForceTab _changeAtomType  ", nameRow, row)
+ 			if nameRow == row: return
+ 			
+ 			molName = self.ui.chargesTable.item(nameRow,0).text()
+ 			atom    = int(self.ui.chargesTable.item(row,0).text())
+-			print "ForceTab _changeAtomType  ", nameRow,molName
++			print("ForceTab _changeAtomType  ", nameRow,molName)
+ 			molecules = self.history.currentState().getMixture().molecules()
+ 			for mol in molecules:
+ 				molecule = self.history.currentState().getMixture().getMolecule(mol)
+ 				if molName == molecule.molname():
+ 					types = molecule.atomTypes()
+ 					oldType = types[row - nameRow - 1]
+-					print "ForceTab _changeAtomType  ", mol,oldType
++					print("ForceTab _changeAtomType  ", mol,oldType)
+ 					if len(wi.text()) == 0 or len(wi.text()) > 3:  # check if new name is good (write a method for this)
+ 						wi.setText(oldType)
+ 						return
+@@ -1046,7 +1046,7 @@
+ 
+ 
+     def _selectMolecule(self, item):
+-        print "_selectMolecule ", item.text(),item.flags() != (QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
++        print("_selectMolecule ", item.text(),item.flags() != (QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled))
+         
+         # act only when item has a molecule name
+         if item.flags() != (QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled):
+@@ -1098,10 +1098,10 @@
+     def change(self):
+         import inspect
+         if self.ff != None:
+-            print 'ForceSpinBox self.value(): ', self.value()
++            print('ForceSpinBox self.value(): ', self.value())
+             for force in self.ff:
+ 				#print 'ForceSpinBox change changecaller name:', inspect.stack()
+-				print "ForceSpinBox valueChanged  " , "force.", self.method, self.value(), force
++				print("ForceSpinBox valueChanged  " , "force.", self.method, self.value(), force)
+ 				self.method(self.type,self.value(),self.pos)
+             if self.value() == 0 :
+                self.setStyleSheet('background: '+self.color)
+@@ -1139,7 +1139,7 @@
+         import inspect
+         if self.molecules != None:
+             for molecule in self.molecules:
+-				print "ChargeSpinBox valueChanged  " , self.value(), molecule
++				print("ChargeSpinBox valueChanged  " , self.value(), molecule)
+ 				molecule.getAtomAttributes(self.atom).getInfo().setCharge(self.value())
+             self.paint()
+                
+--- ./interface/main/History.py	(original)
++++ ./interface/main/History.py	(refactored)
+@@ -43,10 +43,10 @@
+ import sys, os, time, copy, tempfile
+ import logging
+ from lib.chemicalGraph.Mixture import Mixture #@UnresolvedImport
+-from Drawer import Drawer
++from .Drawer import Drawer
+ from conf.Wolffia_conf import WOLFFIA_DEFAULT_MIXTURE_LOCATION, WOLFFIA_DEFAULT_MIXTURE_NAME, WOLFFIA_VERSION #@UnresolvedImport
+ from lib.chemicalGraph.molecule.Molecule import Molecule
+-import cPickle as pickle #Tremenda aportación por carlos cortés.
++import pickle as pickle #Tremenda aportación por carlos cortés.
+ 
+ from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
+ 
+@@ -232,7 +232,7 @@
+ 
+ 	def save(self, filename=None, fileObject=None):
+ 	
+-		if fileObject <> None:
++		if fileObject != None:
+ 			f = fileObject
+ 			f.seek(0)
+ 			pickle.dump(self.__dict__, f)
+@@ -247,7 +247,7 @@
+ 			try: 
+ 			    f = open(filename, "w")
+ 			except IOError:
+-			    print filename + ": File does not exist."
++			    print(filename + ": File does not exist.")
+ 			pickle.dump(self.__dict__, f)
+ 			f.close()
+ 		
+@@ -306,7 +306,7 @@
+ 	
+ 	#--------------------------------------------------------------------
+ 	def load(self, filename=None):
+-		import cPickle as pickle #Tremenda aportación por carlos cortés
++		import pickle as pickle #Tremenda aportación por carlos cortés
+ 		#import inspect
+ 		#print "NanoCADState.load, caller1=",inspect.stack()[1]
+ 		#print "NanoCADState.load, caller2=",inspect.stack()[2]
+@@ -389,7 +389,7 @@
+ 		if self.wolffiaVerion < "1.13":  	# until further versions
+ 											# self.mixture.mixName should be the same as 
+ 											# self.parent.settings.currentMixtureName.
+-			print "History.load_ self.mixture.mixName should be the same as self.parent.settings.currentMixtureName"
++			print("History.load_ self.mixture.mixName should be the same as self.parent.settings.currentMixtureName")
+ 			try:
+ 				self.mixture.setMixtureName(self.parent.settings.currentMixtureName) 
+ 			except: pass
+@@ -397,7 +397,7 @@
+ 		if self.wolffiaVerion < "1.131":  	# fix for 1.13 did not work. 
+ 											# self.parent.settings.currentMixtureName is being
+ 											# eliminated in this version.
+-			print "History.load_ self.mixture.mixName should be the same as self.parent.settings.currentMixtureName"
++			print("History.load_ self.mixture.mixName should be the same as self.parent.settings.currentMixtureName")
+ 			try:
+ 				self.parent.settings.setMixtureLocation(self.parent.settings.currentMixtureName)
+ 				del self.parent.settings.currentMixtureName
+@@ -414,9 +414,9 @@
+ 		#from PyQt4 import QtGui
+ 		if self.wolffiaVerion < WOLFFIA_VERSION: 
+ 			#QtGui.QMessageBox.information(self.parent,"Wolffia", "Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION))
+-			print "NANOCADState.load: Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION)
++			print("NANOCADState.load: Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION))
+ 		self.wolffiaVerion =  WOLFFIA_VERSION
+-		print "NanoCADState.load_ imported cPickle, load sucessful", f.name
++		print("NanoCADState.load_ imported cPickle, load sucessful", f.name)
+ 		#print "History.load self.shownMolecules", self.shownMolecules
+ 		#self.shownMolecules.showAll()
+ 	
+@@ -664,7 +664,7 @@
+ 	        self.addMolecule(mix.getMolecule(mol))
+ 	
+ 	def addMolecule(self,mol, checkForInconsistentNames=True):
+-	    print "NanoCADState addMolecule",mol
++	    print("NanoCADState addMolecule",mol)
+ 	    molname = self.mixture.add(mol, checkForInconsistentNames)
+ 	    self.shownMolecules.show(molname)
+ 	    return molname
+@@ -710,7 +710,7 @@
+ import inspect
+ class ShownMoleculesSet(set):
+     def __init__(self, mixture):
+-        print "ShownMoleculesSet,__init__ caller=",inspect.stack()[1]#[3], mixture, type(mixture)
++        print("ShownMoleculesSet,__init__ caller=",inspect.stack()[1])#[3], mixture, type(mixture)
+         if isinstance(mixture,list):
+                 self.mixture = Mixture()
+                 for m in mixture: self.mixture.add(m)
+@@ -768,7 +768,7 @@
+             return False
+         
+     def shownList(self, mixture):
+-    	print "WARNING: ShownMoleculesSet deprecated."
++    	print("WARNING: ShownMoleculesSet deprecated.")
+         return list(self)
+     
+     def addMolecules(self, mixture):
+@@ -865,24 +865,24 @@
+         self[mol] = False
+     
+     def remove(self, mol):
+-        if self.has_key(mol):
++        if mol in self:
+             self.pop(mol)
+ 
+ 
+     def duplicate(self, mol):
+-        if self.has_key(mol):
++        if mol in self:
+             self.pop(mol)
+ 
+ 
+     def isFixed(self, mol):
+         #print "isShown ", mol, mol in self.keys(), self[mol]
+-        if not mol in self.keys():
++        if not mol in list(self.keys()):
+             self[mol] = False
+         return self[mol]
+ 
+     def fixedList(self):
+         result = list()
+-        for m in self.keys():
++        for m in list(self.keys()):
+             if self[m]: result.append(m)
+         return result
+     
+@@ -891,9 +891,9 @@
+     
+     def addMolecules(self, mixture):
+         for mol in mixture:
+-            if not mol in self.keys():
++            if not mol in list(self.keys()):
+                 self[mol] = False
+-        for mol in self.keys():
++        for mol in list(self.keys()):
+             if not mol in mixture:
+                 self.pop(mol)
+ 
+--- ./interface/main/LogWindow.py	(original)
++++ ./interface/main/LogWindow.py	(refactored)
+@@ -30,7 +30,7 @@
+     USA National Science Foundation grant number DMR-0934195. 
+ """
+ from conf.Wolffia_conf import WOLFFIA_GRAPHICS
+-from QClasses import *
++from .QClasses import *
+ from PyQt4.QtGui import QToolTip
+ from PyQt4.QtCore import QPoint
+ #from ui_LogWindow import Ui_LogWindow
+--- ./interface/main/MinTab.py	(original)
++++ ./interface/main/MinTab.py	(refactored)
+@@ -37,11 +37,11 @@
+ from PyQt4 import QtCore, QtGui
+ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
+ from conf.Wolffia_conf import _WOLFFIA_OS,WOLFFIA_GRAPHICS, WOLFFIA_USES_IMD
+-from QClasses import * #@UnusedWildImport
++from .QClasses import * #@UnusedWildImport
+ from ui_MinTab import Ui_minTab
+ from subprocess import signal, Popen, PIPE #@UnusedImport
+ from lib.communication.namd.Configuration import Configuration, ConfigurationError
+-from namdMinParm import parmDict
++from .namdMinParm import parmDict
+ import logging
+ from chemicalGraph.io.PRM import PRMError
+ 
+@@ -122,7 +122,7 @@
+ 		
+ 		#Uses the parmDict dictionary to initialize all the objects, 
+ 		#give them values and add them on the widgetTree
+-		for defaults in  parmDict.iterkeys():
++		for defaults in  parmDict.keys():
+ 		    if parmDict[defaults][1] == "InputFile":
+ 		        vars(self)[defaults] = InputFile(self.minTree)
+ 		        vars(self)[defaults].setEnabled(parmDict[defaults][2])
+@@ -200,7 +200,7 @@
+         [inputWidgetObjectName] [value]
+         '''
+         picklesan = dict()
+-        for elements in parmDict.keys():
++        for elements in list(parmDict.keys()):
+             picklesan[elements] = vars(self)[elements].value()
+         return picklesan
+     
+@@ -211,7 +211,7 @@
+         :param initVal: dictionary that contains the values of all the boxes in minTab
+         '''
+         if initVal != None:
+-            for elements in parmDict.keys():
++            for elements in list(parmDict.keys()):
+                 vars(self)[elements].setValues(initVal[elements])
+ 
+     def setDefaultValues(self):
+@@ -219,7 +219,7 @@
+         Sets the default values in the input widgets 
+         using the default parameter dictionary
+         '''
+-        for elements in parmDict.keys():
++        for elements in list(parmDict.keys()):
+                 vars(self)[elements].setValues(parmDict[elements][0])
+ 
+ 
+@@ -233,14 +233,14 @@
+         self.ui.stopButton.setEnabled(False)
+ 
+         if self.simRun != None:
+-            print "stopMin canceling"
++            print("stopMin canceling")
+             self.simRun.cancel()
+-            print "stopMin stopping timers"
++            print("stopMin stopping timers")
+             self.minTimer.stop()
+             self.minCoordTimer.stop()
+-            print "stopMin updating coords"
++            print("stopMin updating coords")
+             self.updateCoordinates()
+-            print "stopMin logging"
++            print("stopMin logging")
+             logging.getLogger(self.__class__.__name__).info("Minimization has stopped.")
+         
+         self.parent.simRunning = False
+@@ -315,7 +315,7 @@
+ 		self.minTimer.stop()
+ 		namdOutput = self.simRun.getOutput()
+ 		if namdOutput != None:
+-			print "SimTab on_minTimer", namdOutput
++			print("SimTab on_minTimer", namdOutput)
+ 			self.checkError(namdOutput)
+ 			if WOLFFIA_USES_IMD:
+ 			    self.energyPlot1.addValuesFromIMD(self.simRun.getEnergies())
+@@ -340,7 +340,7 @@
+ 		               
+ 		
+ 		except:
+-			print "SimTab on_minTimer exception occured", sys.exc_info()[0]
++			print("SimTab on_minTimer exception occured", sys.exc_info()[0])
+ 			pass
+ 
+             
+@@ -445,7 +445,7 @@
+             self.minCoordTimer.stop() 
+             
+         except:
+-            print "MinTab reset: algo fallo"
++            print("MinTab reset: algo fallo")
+             pass    
+         
+         
+@@ -480,7 +480,7 @@
+         try:
+ 			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.history.currentState().getMixture().getMixtureName()))
+             #conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.settings.currentMixtureName))
+-        except ConfigurationError, e:
++        except ConfigurationError as e:
+             Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
+             Error.exec_()
+             return
+@@ -492,7 +492,7 @@
+         #print "MinTab runSim", self.history.currentState().getMixture().getMolecule(self.history.currentState().getMixture().molecules()[0]).getForceField()._ANGLES
+         try:
+             self.history.currentState().writeFiles(self.settings.currentMixtureLocation() + str(self.history.currentState().getMixture().getMixtureName()))
+-        except Exception,  e:
++        except Exception as  e:
+ 			Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
+ 			Error.exec_()
+ 			progress.cancel()
+--- ./interface/main/MixtureBrowser.py	(original)
++++ ./interface/main/MixtureBrowser.py	(refactored)
+@@ -38,10 +38,10 @@
+ import sys, os
+ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
+ #from conf.Wolffia_conf import NANOCAD_BASE #@UnresolvedImport
+-from MixtureViewer import MixtureViewer
++from .MixtureViewer import MixtureViewer
+ from lib.chemicalGraph.Mixture import Mixture
+ from ui_MixtureBrowser import Ui_MixtureBrowser
+-from WFileDialogs import WFileNameDialog
++from .WFileDialogs import WFileNameDialog
+ from conf.Wolffia_conf import WOLFFIA_GRAPHICS
+ 
+ class MixtureBrowser(QtGui.QDialog):
+@@ -198,7 +198,7 @@
+         '''
+         Enables the possibility of previewing a mixture before choosing it by loading the mixture onto the viewer.
+         '''
+-        from History import History
++        from .History import History
+         history = History(None, None, None, self.settings.workingFolder + str(self.lastSelectedItem.text()) + "/" + str(self.lastSelectedItem.text()) + ".wfy")
+         #print "loaded mixture from", self.settings.workingFolder + str(self.lastSelectedItem.text()) + "/" + str(self.lastSelectedItem.text()) + ".wfy"
+         #print "mixture being sent is: ", history.currentState().getMixture()
+@@ -277,12 +277,12 @@
+         self.loadTable.blockSignals(True)
+         mixSet = []
+         name = str(widEdit.text()).strip("\/\\")
+-        print "on_tableWidget_itemChanged" ,self.lastSelectedItemText, name
++        print("on_tableWidget_itemChanged" ,self.lastSelectedItemText, name)
+ 
+         if not name.isspace() and name:
+             #print "on_tableWidget_itemChanged : got in, ", bool(name), bool (not name.isspace()), name
+             if not os.path.isdir(self.settings.workingFolder + "/" + name):
+-                for mixture in xrange(0, self.loadTable.rowCount()):
++                for mixture in range(0, self.loadTable.rowCount()):
+                     mixSet.append(str(self.loadTable.item(mixture,0).text()))
+                 #print "on_tableWidget_itemChanged, " , set(mixSet), set(self.mixtures)
+                 if bool(set(mixSet) - set(self.mixtures)) :
+--- ./interface/main/MixtureViewer.py	(original)
++++ ./interface/main/MixtureViewer.py	(refactored)
+@@ -40,7 +40,7 @@
+ from OpenGL.GL import *
+ from OpenGL.GLU import *
+ from OpenGL.GLUT import *
+-from GeometricObjects import SolidSphere
++from .GeometricObjects import SolidSphere
+ 
+ if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
+ from conf.Wolffia_conf import WOLFFIA_GRAPHICS
+@@ -48,7 +48,7 @@
+ 
+ import openbabel
+ _ELEMENT_TABLE_ = openbabel.OBElementTable()
+-from History import History, ShownMoleculesSet
++from .History import History, ShownMoleculesSet
+ from lib.chemicalGraph.Mixture import Mixture
+ 
+ import math
+@@ -72,7 +72,7 @@
+ 		self.box =  box
+ 	def run(self):
+ 		for X,Y,Z,pbc in self.coordinatesGenerator:
+-			print "DCDLoader updating frame"
++			print("DCDLoader updating frame")
+ 			mixture.updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
+ 			if pbc != None:
+ 				self.box.setCellBasisVectors([[pbc[0], 0.0, 0.0],
+@@ -204,7 +204,7 @@
+ 		mixture = self.getCurrentMixture()
+ 		
+ 		import inspect
+-		print "MixtureViewer setMixture: actualizando MixtureViewer con ", mixture, adjustViewingVolume,inspect.stack()[1][1:4]
++		print("MixtureViewer setMixture: actualizando MixtureViewer con ", mixture, adjustViewingVolume,inspect.stack()[1][1:4])
+ 		#self.history.currentState().updateMixture(mixture)
+ 		#mixture = None         # para forzar errores en los lugares que los usen
+ 		self.changeTracker = None   # para forzar errores en los lugares que los usen
+@@ -226,14 +226,14 @@
+ 			
+ 			self.buildTables()
+ 			self.setBoundingSphere()
+-		print "MixtureViewer setMixture fin ", mixture, adjustViewingVolume
++		print("MixtureViewer setMixture fin ", mixture, adjustViewingVolume)
+ 
+     def getCurrentMixture(self): return self.history.currentState().getMixture()
+ 
+     def buildTables(self):
+ 		mixture = self.getCurrentMixture()
+ 		import inspect
+-		print "MixtureViewer buildTables ", mixture.getMixtureName(),len(mixture),inspect.stack()[1][3]
++		print("MixtureViewer buildTables ", mixture.getMixtureName(),len(mixture),inspect.stack()[1][3])
+ 		#self.atomCoordinates = numpy.array([])
+ 		atomCoordinates = []
+ 		self.atomElements	 = []
+@@ -249,7 +249,7 @@
+ 				self.bondsTable.append((b[0].getCoord(),b[1].getCoord()))
+ 		self.atomCoordinates = numpy.array(atomCoordinates)
+ 		del(atomCoordinates)
+-		print "buildTables fin"
++		print("buildTables fin")
+ 
+ 
+     def setBox(self, box):
+@@ -263,18 +263,18 @@
+         start = time.clock()
+         #print "MitueViewer.update"
+         import inspect
+-        print "MitueViewer.update, caller=",inspect.stack()[1][3]
++        print("MitueViewer.update, caller=",inspect.stack()[1][3])
+ 
+         if self.isVisible():
+-            print "MitueViewer.update visible"
++            print("MitueViewer.update visible")
+             #print "MitueViewer.update", self.size().width(), self.size().height()
+-            print "MitueViewer.update self.setBoundingSphere()"
++            print("MitueViewer.update self.setBoundingSphere()")
+             if adjustViewingVolume: self.setBoundingSphere()
+             #print "MitueViewer.update", self.size().width(), self.size().height()
+             #print "MitueViewer.update self.setBoundingSphere", self.boundingSphere
+-            print "MitueViewer.update resizeGL()"
++            print("MitueViewer.update resizeGL()")
+             self.resizeGL(self.size().width(), self.size().height())
+-            print "MitueViewer.update self.makeGenList()"
++            print("MitueViewer.update self.makeGenList()")
+ 
+             if self.moleculeEditor == None: self.makeGenList()
+             else: 
+@@ -288,7 +288,7 @@
+         else:
+             self.genList = None # forces call to makeGenList() at the next paint
+             
+-        print "MitueViewer.update time=", time.clock() - start
++        print("MitueViewer.update time=", time.clock() - start)
+ 
+ 
+     def setMode(self, mode):
+@@ -356,12 +356,12 @@
+ 		    loader = Load(self,fileName)
+ 
+ 		    loader.show()
+-		    print "MixtureViewer dropEvent exec"
++		    print("MixtureViewer dropEvent exec")
+ 		    loader.exec_()
+-		    print" EXEC"
++		    print(" EXEC")
+ 		    
+ 		    #Adding mixture
+-		    print "MixtureViewer dropEvent adding mixture"
++		    print("MixtureViewer dropEvent adding mixture")
+ 		    self.parent.buildTab.addMixture(loader.getMixture())
+ 		    self.parent.update()       
+ 		     
+@@ -418,7 +418,7 @@
+         mixture = self.getCurrentMixture()
+         
+         import inspect
+-        print "MitueViewer.makeGenList, caller=",inspect.stack()[1][3]
++        print("MitueViewer.makeGenList, caller=",inspect.stack()[1][3])
+         
+         #print "makeGenList mixture",self, mixture
+         self.makeBallGenList()
+@@ -428,7 +428,7 @@
+             #print "makeGenList genList created ", self.genList 
+             
+         if mixture != None and self.genList != 0 and self.genList !=None:
+-			print "makeGenList genList ", type(self.genList) 
++			print("makeGenList genList ", type(self.genList)) 
+ 			GL.glNewList(self.genList, GL.GL_COMPILE)
+ 			self.paintAll(selectedMolecules)
+ 			GL.glEndList()
+@@ -440,14 +440,14 @@
+ 
+     def paintAll(self, selectedMolecules=[]):
+ 		import inspect
+-		print "paintAll, caller=",inspect.stack()[1][3]
++		print("paintAll, caller=",inspect.stack()[1][3])
+ 		#if not self.isVisible(): 
+ 		#	print "paintAll: not visible .... skipping"
+ 		#	return
+ 
+ 		mixture = self.getCurrentMixture()
+ 
+-		print "paintAll shownMolecules"
++		print("paintAll shownMolecules")
+ 		#mixture = self.getCurrentMixture()
+ 		if self.history != None:
+ 			shownMolecules = self.history.currentState().shownMolecules
+@@ -455,23 +455,23 @@
+ 		else:
+ 			shownMolecules = set(mixture.molecules())
+ 			
+-		print "paintAll difference"
++		print("paintAll difference")
+ 		shownSolute = shownMolecules.difference(mixture.getSolvent())
+ 		shownSolvent = shownMolecules.intersection(mixture.getSolvent())
+-		print "paintAll paintBonds"
++		print("paintAll paintBonds")
+ 		if self.drawAs3DCriterion():
+ 		    self.paintBonds(selectedMolecules, shownSolute)
+ 		    self.paintAtoms(selectedMolecules, shownSolute)
+ 		else:
+ 		    self.paintBondsAsLines(selectedMolecules, shownSolute)
+ 		    
+-		print "paintAll solvent"
++		print("paintAll solvent")
+ 		if self.solventHighResolution:
+ 		    self.paintBonds(selectedMolecules, shownSolvent)
+ 		    self.paintAtoms(selectedMolecules, shownSolvent)
+ 		else:
+ 		    self.paintAtomsAsPoints(selectedMolecules, shownSolvent)
+-		print "paintAll, caller=",inspect.stack()[1][3], " --> fin"
++		print("paintAll, caller=",inspect.stack()[1][3], " --> fin")
+         
+         
+     def minimumSizeHint(self):
+@@ -607,8 +607,8 @@
+             
+ 
+         #GL.glPushMatrix()
+-        except Exception, ex:
+-            print "ERROR: ", ex
++        except Exception as ex:
++            print("ERROR: ", ex)
+ 
+     def initializeGL(self):
+         #print "initializeGL"
+@@ -845,9 +845,9 @@
+                 self.history.push()
+                 self.jointAtoms[1] = self.getClickedAtomCoordinates(event.pos())
+                 #print "mouseReleaseEvent pore", self.jointAtoms
+-                print "mouseReleaseEvent pore", mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1])
++                print("mouseReleaseEvent pore", mixture.getMolecule(self.jointAtoms[0][0]).getAtomAttributes(self.jointAtoms[0][1]), mixture.getMolecule(self.jointAtoms[1][0]).getAtomAttributes(self.jointAtoms[1][1]))
+                 self.getCurrentMixture().removeAtomsFromSphere(self.jointAtoms, self.history.currentState().shownMolecules)            
+-                print "mouseReleaseEvent pore ... regrese"
++                print("mouseReleaseEvent pore ... regrese")
+                 self.jointAtoms = None
+                 self.history.getCurrentState().shownMolecules.addMolecules(self.getCurrentMixture())
+                 self.parent.update()
+@@ -1030,12 +1030,12 @@
+ 				#GLU.gluSphere(self.quadric,MixtureViewer.atomRadius,7,7)
+ 				GL.glPopMatrix()
+ 
+-		print "paintAtoms time",time.clock()-start
++		print("paintAtoms time",time.clock()-start)
+ 
+ 
+     def paintAtoms(self, selectedMolecules, shownMolecules):
+ 		import inspect
+-		print "paintAtoms, caller=",inspect.stack()[1][3]
++		print("paintAtoms, caller=",inspect.stack()[1][3])
+ 		#print "paintAtoms"
+ 		#pass
+ 		import time
+@@ -1057,11 +1057,11 @@
+ 				GLU.gluSphere(self.quadric,MixtureViewer.atomRadius,7,7)
+ 				GL.glPopMatrix()
+ 
+-		print "paintAtoms time",time.clock()-start
++		print("paintAtoms time",time.clock()-start)
+ 
+ 
+     def paintAtomsAsPoints(self, selectedMolecules=[], shownMolecules=set()):
+-		print "paintAtomsAsPoints"
++		print("paintAtomsAsPoints")
+ 		import time
+ 		start = time.clock()
+ 		mixture = self.getCurrentMixture()
+@@ -1090,7 +1090,7 @@
+ 					coordPos += len(molecule)
+ 			glEnd()
+ 				   
+-		print "paintAtomsAsPoints time",time.clock()-start
++		print("paintAtomsAsPoints time",time.clock()-start)
+ 
+ 
+     def paintLabels(self):
+@@ -1315,7 +1315,7 @@
+ 	#-------------------------------------------------------------------
+     def setBoundingSphere(self):
+ 		#self.buildTables(self.getCurrentMixture())
+-		print "setBoundingSphere for ", len(self.atomCoordinates), " atoms."
++		print("setBoundingSphere for ", len(self.atomCoordinates), " atoms.")
+ 		self.boundingSphere = [[0.,0.,0.], 1.]
+ 		if len(self.atomCoordinates) == 0 and len(self.getCurrentMixture()) > 0:
+ 			self.buildTables()
+@@ -1337,7 +1337,7 @@
+ 			maxXs, maxYs, maxZs = numpy.nanmax(self.atomCoordinates, axis=0)
+ 			minXs, minYs, minZs = numpy.nanmin(self.atomCoordinates, axis=0)
+ 			#print "setBoundingSphere shape ", self.atomCoordinates.shape
+-			print "setBoundingSphere maxXs ", maxXs
++			print("setBoundingSphere maxXs ", maxXs)
+ 			self.boundingSphere[0][0] = (maxXs+minXs)/2
+ 			self.boundingSphere[0][1] = (maxYs+minYs)/2
+ 			self.boundingSphere[0][2] = (maxZs+minZs)/2
+@@ -1380,19 +1380,19 @@
+         
+     #-------------------------------------------------------------------
+     def setProjection(self):
+-        print "setProjection"
++        print("setProjection")
+         #print "setProjection",self.viewBox 
+         GL.glMatrixMode(GL.GL_PROJECTION)
+         GL.glLoadIdentity()
+         
+         # set box centered at the origin
+         if self.boundingSphere == None or self.boundingSphere[1] <= 0:
+-            print "setProjection glOrtho  self.boundingSphere == None"
++            print("setProjection glOrtho  self.boundingSphere == None")
+             GL.glOrtho(-2, 2, -2, 2, -2, 2)
+         else:
+             self.setBoundingSphere()
+             width = self.boundingSphere[1]
+-            print "setProjection glOrtho", -width, width, -width, width, -width, width 
++            print("setProjection glOrtho", -width, width, -width, width, -width, width) 
+             GL.glOrtho(-width, width,
+                     -width, width,
+                     -width, width)
+--- ./interface/main/PreviewerToolbar.py	(original)
++++ ./interface/main/PreviewerToolbar.py	(refactored)
+@@ -61,7 +61,7 @@
+         self.addWidget(stretchWidgetOne)
+         #loop initiates the QPushButtons, adds it to the QToolbar and connects the signal triggered 
+         #the different slots. 
+-        for actions in self.modeButtons.keys():
++        for actions in list(self.modeButtons.keys()):
+             if actions == "separator":
+                 self.addSeparator()
+             else:
+@@ -160,7 +160,7 @@
+         '''
+         
+         '''
+-        for actions in self.modeButtons.keys():
++        for actions in list(self.modeButtons.keys()):
+             if actions != "separator":
+                 self.modeButtons[actions].setChecked(False)
+ 
+--- ./interface/main/PropertyEditor.py	(original)
++++ ./interface/main/PropertyEditor.py	(refactored)
+@@ -125,7 +125,7 @@
+         # update resistry
+         presentMolecules = self.history.currentState().getMixture().molecules()
+         #print "PropertyEditor update  ",presentMolecules, self.registry
+-        regKeys = self.registry.keys()
++        regKeys = list(self.registry.keys())
+         for regKey in regKeys:
+             if not regKey in presentMolecules:
+                 if self.mixture.hasMoleculeID(regKey): self.mixture.remove(regKey)
+@@ -159,9 +159,9 @@
+         '''
+         Returns True if the molecule ends up selected, False otherwise..
+         '''
+-        from BuildTab import ShownSolvent
++        from .BuildTab import ShownSolvent
+         #print "PropertyEditor setMolecule new", ident,  self.registry
+-        if not self.registry.has_key(ident):
++        if ident not in self.registry:
+             if ShownSolvent.isSolvent(ident):
+                 mixture = self.history.currentState().getMixture()
+                 mixtureNames = mixture.molecules()
+@@ -203,7 +203,7 @@
+ 
+ 
+     def removeSelection(self, molecule, ident):
+-        if self.registry.has_key(ident):
++        if ident in self.registry:
+             self.mixture.remove(self.mixture.getMoleculeID(molecule))
+             self.registry.pop(ident)
+             #print "PropertyEditor removeSelection removed:",ident
+@@ -216,14 +216,14 @@
+ 
+     def selectedMolecules(self):
+     	#print "selectedMolecules ", self.registry
+-        return self.registry.values()
++        return list(self.registry.values())
+ 
+     def selectedNames(self):
+     	#print "selectedMolecules ",self.registry
+-        return self.registry.keys()
++        return list(self.registry.keys())
+ 
+     def __str__(self):
+-        return str(self.registry.keys())
++        return str(list(self.registry.keys()))
+ 
+     def __len__(self):
+         return len(self.registry)
+--- ./interface/main/Settings.py	(original)
++++ ./interface/main/Settings.py	(refactored)
+@@ -74,14 +74,14 @@
+ 	    if _WOLFFIA_OS == "Windows":
+ 	        self.namdLocation       = check_output(["where", "namd2"])
+ 	        if self.namdLocation == "":
+-	            print "NAMD not found, proceed with caution."
++	            print("NAMD not found, proceed with caution.")
+ 	    else:
+ 	        try:
+ 	            self.namdLocation      = check_output(["whereis", "namd2"]).split(' ')[1].rstrip('\n')
+-	            print "Settings.__init__(), NAMD found at ", self.namdLocation
++	            print("Settings.__init__(), NAMD found at ", self.namdLocation)
+ 	        except:
+ 	            self.namdLocation = ""
+-	            print "NAMD not found, proceed with caution.\nPlease specify the executable in the settings window."
++	            print("NAMD not found, proceed with caution.\nPlease specify the executable in the settings window.")
+ 	            
+ 	def reset(self):
+ 	    '''
+@@ -191,7 +191,7 @@
+ 	            self.save(filename)
+ 	            return
+ 	
+-	    import cPickle as pickle #Tremenda aportación por carlos cortés
++	    import pickle as pickle #Tremenda aportación por carlos cortés
+ 	
+ 	
+ 	    try:
+@@ -220,7 +220,7 @@
+ 	    if filename == None:
+ 	        filename = WOLFFIA_DIR + "/" + "defaultSettings.wfc"
+ 	
+-	    import cPickle as pickle #Tremenda aportación por carlos cortés.
++	    import pickle as pickle #Tremenda aportación por carlos cortés.
+ 	
+ 	    f = open(filename, "w")
+ 	    pickle.dump(self.__dict__, f)
+--- ./interface/main/SettingsDialog.py	(original)
++++ ./interface/main/SettingsDialog.py	(refactored)
+@@ -40,7 +40,7 @@
+ 
+ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
+ from conf.Wolffia_conf import *
+-from WFileDialogs import WDirectoryDialog, WFileDialog
++from .WFileDialogs import WDirectoryDialog, WFileDialog
+ from Wolffia_conf import WOLFFIA_DIR, _WOLFFIA_OS, WOLFFIA_VERSION, WOLFFIA_DEFAULT_MIXTURE_NAME #@UnresolvedImport
+ from subprocess import check_output
+ 
+@@ -216,7 +216,7 @@
+         if self.ui.namD.isChecked():
+             self.MDPackage = "NAMD"
+             self.settings.namdLocation = str(self.ui.defMDPlaceLabel.text())
+-            print "SettingsDialog.on_buttonBox_accepted, namdLocation:", self.settings.namdLocation
++            print("SettingsDialog.on_buttonBox_accepted, namdLocation:", self.settings.namdLocation)
+         if self.ui.gromacs.isChecked():
+             self.MDPackage = "GROMACS"
+ 
+@@ -225,8 +225,8 @@
+ 			self.settings.setWorkingDirectory(str(self.ui.defDirLine.text()))
+ 			self.wolffia.mixtureDialog()
+ 			#self.settings.setCurrentMixture(WOLFFIA_DEFAULT_MIXTURE_NAME)
+-			print self.settings.workingFolder
+-			print self.settings.currentMixtureLocation()
++			print(self.settings.workingFolder)
++			print(self.settings.currentMixtureLocation())
+ 			self.close()
+ 			        
+         self.close()
+--- ./interface/main/SetupTab.py	(original)
++++ ./interface/main/SetupTab.py	(refactored)
+@@ -229,7 +229,7 @@
+ 		progress.setWindowModality(QtCore.Qt.WindowModal)
+ 				
+ 		prefix = "SOLVENT(" + self.SOLVENT_TO_CLASS[self._solvent]
+-		print "on_removeButton_pressed ",prefix
++		print("on_removeButton_pressed ",prefix)
+ 		pos = len(prefix)
+ 		i = 1
+ 		toRemove = list()
+@@ -337,7 +337,7 @@
+ 		vol = self.getBoxVolume()
+ 		#print "vol",vol
+ 
+-		from SolventDialog import SolventDialog
++		from .SolventDialog import SolventDialog
+ 		dialog = SolventDialog(self._history.currentState(), vol)
+ 		dialog.show()
+ 		dialog.exec_()
+@@ -347,7 +347,7 @@
+ 			#self.preview.update()
+ 				
+ 	def on_addButton_pressed(self):
+-		print "on_addButton_pressed init ", len(self._history.currentState().getMixture())
++		print("on_addButton_pressed init ", len(self._history.currentState().getMixture()))
+ 		originalMolecules = set(self._history.currentState().getMixture().molecules())
+ 		self.fillBox(self._solvent, self._amount)
+ 		#originalMolecules = originalMolecules.intersection(set(self._history.currentState().getMixture().molecules()))
+@@ -360,7 +360,7 @@
+ 		'''
+ 		if str(self._solvent) == "Selected Molecule":
+ 			self.wolffia.buildTab.remove()  #remueve la molecula selleccionada que se va a usar de solvente mas abajo
+-		print "on_addButton_pressed end ", len(self._history.currentState().getMixture())
++		print("on_addButton_pressed end ", len(self._history.currentState().getMixture()))
+ 
+ 		'''
+ 		#self.preview.update()
+@@ -570,7 +570,7 @@
+ 				self.ui.widthSlider.setValue    (dimension[1][1])
+ 				self.ui.heightSlider.setValue   (dimension[2][2])
+ 			except TypeError as e: # recovers from NaNs
+-				print "SetupTab.setAllSliders() recovering from: ", e
++				print("SetupTab.setAllSliders() recovering from: ", e)
+ 				self._history.currentState().getDrawer().clear()
+ 		else:
+ 			#print "setAllSliders no Cell"
+@@ -600,7 +600,7 @@
+ 		boxmin = self._history.currentState().getDrawer().getCellOrigin()
+ 		boxmax =[ boxmin[0]+totalDim[0], boxmin[1]+totalDim[1], boxmin[2]+totalDim[2] ]
+ 		
+-		exec "from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *"
++		exec("from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *")
+ 		solv = eval(self.SOLVENT_TO_CLASS[str(self._solvent)] + "()")
+ 		
+ 		#calculate the volume for a single solvent molecule
+@@ -723,9 +723,9 @@
+ 			#self.wolffia.buildTab.remove()  #remueve la molecula selleccionada que se va a usar de solvente mas abajo
+ 		else:
+ 			if str(self._solvent) == "Argon":
+-				exec "from lib.chemicalGraph.molecule.gas." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *"
++				exec("from lib.chemicalGraph.molecule.gas." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *")
+ 			else:
+-				exec "from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *"
++				exec("from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *")
+ 				
+ 			solv = eval(self.SOLVENT_TO_CLASS[str(self._solvent)] + "()")
+ 
+--- ./interface/main/SimTab.py	(original)
++++ ./interface/main/SimTab.py	(refactored)
+@@ -34,13 +34,13 @@
+ """
+ 
+ 
+-import sys, os, math, time, Queue
++import sys, os, math, time, queue
+ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
+ from conf.Wolffia_conf import NANOCAD_BASE,WOLFFIA_GRAPHICS, WOLFFIA_USES_IMD
+-from QClasses import *
++from .QClasses import *
+ from PyQt4 import QtCore
+ from ui_SimTab import Ui_simTab 
+-from namdSimParm import parmDict
++from .namdSimParm import parmDict
+ from subprocess import signal, Popen, PIPE #@UnusedImport 
+ from lib.communication.namd.Configuration import Configuration, ConfigurationError
+ from lib.communication.namd.SimThread import SimThread, ImdSimThread
+@@ -323,10 +323,10 @@
+ 		smdOutAt                =    self.SMtree.topLevelItem(3).child(4).child(7)
+ 		
+ 		#utilizes the dictionary NAMDParmDict to initialize all the parameter variables and add them to the tree
+-		for trees in parmDict.keys():
++		for trees in list(parmDict.keys()):
+ 		    if trees == "PStree": tree = "PStree"
+ 		    else:    tree = "SMtree"
+-		    for defaults in    parmDict[trees].iterkeys():
++		    for defaults in    parmDict[trees].keys():
+ 		        if parmDict[trees][defaults][1] == "InputFile":
+ 		            vars(self)[defaults] = InputFile(tree)
+ 		            vars(self)[defaults].setEnabled(parmDict[trees][defaults][2])
+@@ -427,8 +427,8 @@
+ 	    [inputWidgetObjectName] [value]
+ 	    '''
+ 	    picklesan = dict()
+-	    for elements in parmDict.keys():
+-	        for defaults in    parmDict[elements].iterkeys():
++	    for elements in list(parmDict.keys()):
++	        for defaults in    parmDict[elements].keys():
+ 	            picklesan[defaults] = vars(self)[defaults].value()
+ 	    return picklesan
+ 	
+@@ -440,8 +440,8 @@
+ 	    '''
+ 	    #print "SimTab setValues"
+ 	    if initVal != None:
+-	        for elements in parmDict.keys():
+-	            for defaults in    parmDict[elements].iterkeys():
++	        for elements in list(parmDict.keys()):
++	            for defaults in    parmDict[elements].keys():
+ 	                vars(self)[defaults].setValues(initVal[defaults])
+ 	
+ 	def setDefaultValues(self):
+@@ -449,8 +449,8 @@
+ 	    Sets the default values in the input widgets 
+ 	    using the default parameter dictionary
+ 	    '''
+-	    for elements in parmDict.keys():
+-	        for defaults in    parmDict[elements].iterkeys():
++	    for elements in list(parmDict.keys()):
++	        for defaults in    parmDict[elements].keys():
+ 	            vars(self)[defaults].setValues(parmDict[elements][defaults][0])
+ 	
+ 	def checkScale(self):
+@@ -762,8 +762,8 @@
+ 		    confFile            =    self.wolffia.configurationFilesBasename() + ".para"
+ 		    conf                =    open(confFile, mode="w")
+ 		
+-		    for elements in parmDict.keys():
+-		        for defaults in    parmDict[elements].iterkeys():
++		    for elements in list(parmDict.keys()):
++		        for defaults in    parmDict[elements].keys():
+ 		            conf.write(str(defaults) + " " + str(vars(self)[defaults].value()) + "\n") 
+ 	
+ 	@QtCore.pyqtSlot()
+@@ -798,7 +798,7 @@
+ 	
+ 	
+ 	def on_remoteButton_pressed(self):
+-	    from ConnectionDialog import ConnectionDialog
++	    from .ConnectionDialog import ConnectionDialog
+ 	    connectDialog = ConnectionDialog(self, connection=self.remoteHost, logWidget=self.log)
+ 	    connectDialog.exec_()
+ 	    self.remoteHost = connectDialog.connection
+@@ -889,7 +889,7 @@
+ 					e = eQ.get_nowait()
+ 					self.energyPlot1.addValuesFromIMD(e)
+ 					self.energyPlot2.addValuesFromIMD(e)
+-				except Queue.Empty:
++				except queue.Empty:
+ 					break
+ 			
+ 			# without queue
+@@ -927,7 +927,7 @@
+ 		        #message.exec_()
+ 		        return
+ 		except:
+-		    print "on_simTimer problemas para detener"
++		    print("on_simTimer problemas para detener")
+ 		    pass
+ 		#print "on_simTimer G"
+ 		
+@@ -967,7 +967,7 @@
+ 	    '''
+ 	    Compresses the whole mixture folder to whatever location the user specifies
+ 	    '''
+-	    from WFileDialogs import WFileNameDialog
++	    from .WFileDialogs import WFileNameDialog
+ 	
+ 	    d = WFileNameDialog(self, 'Save Zipped Files', self.settings.workingFolder, "Zip File (*.zip)")
+ 	    if d.isReady():
+@@ -1009,14 +1009,14 @@
+ 	    if self.simRun != None:
+ 	    	try: self.simRun.cancel()
+ 	    	except:
+-				print "SimTab.cancelSim: Problem cancelling simulation. Communications lost?"
++				print("SimTab.cancelSim: Problem cancelling simulation. Communications lost?")
+ 	    self.simTimer.stop()
+ 	    self.simCoordTimer.stop()
+ 	    self.wolffia.simRunning = False
+ 	    self.ui.cancelButton.setEnabled(False)
+ 	    self.ui.runButton.setEnabled(False)
+ 	    if self.simRun != None: self.updateCoordinates()
+-	    print "cancelSim Simulation has been canceled."
++	    print("cancelSim Simulation has been canceled.")
+ 	    self.ui.runButton.setText("Run")
+ 	    self.ui.runButton.setIcon(QtGui.QIcon().fromTheme("media-playback-start",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "media-playback-start.svg")    ))
+ 	    self.ui.runButton.setEnabled(True)
+@@ -1119,14 +1119,14 @@
+ 		progress.setValue(1)
+ 		QtGui.QApplication.processEvents()
+ 		
+-		if self.remoteHost <> None:
++		if self.remoteHost != None:
+ 			conf = Configuration(self.__dict__, self.history.currentState().getDrawer(), self.history.currentState().fixedMolecules.hasFixedMolecules(), Configuration.CURRENT_FOLDER)
+ 		else:
+ 			conf = Configuration(self.__dict__, self.history.currentState().getDrawer(), self.history.currentState().fixedMolecules.hasFixedMolecules())
+ 
+ 		try:
+ 			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), self.history.currentState().getMixture().getMixtureName())
+-		except ConfigurationError, e:
++		except ConfigurationError as e:
+ 		    Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
+ 		    Error.exec_()
+ 		    return
+@@ -1136,7 +1136,7 @@
+ 		progress.setLabelText("Writing files...")
+ 		try:
+ 		    self.history.currentState().writeFiles(self.wolffia.configurationFilesBasename())
+-		except Exception,  e:
++		except Exception as  e:
+ 			Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
+ 			Error.exec_()
+ 			progress.cancel()
+@@ -1147,9 +1147,9 @@
+ 		progress.setValue(3)
+ 		progress.setLabelText("Starting namd...")
+ 		if WOLFFIA_USES_IMD:
+-			if self.remoteHost <> None: 
++			if self.remoteHost != None: 
+ 				#conf.setBuildDirectory(self.remoteHost.getWorkingDir())
+-				print "SimTab runSim", self.wolffia.configurationFilesBasename()
++				print("SimTab runSim", self.wolffia.configurationFilesBasename())
+ 				zipName = self.wolffia.configurationFilesBasename() + ".zip"
+ 				self.history.currentState().packFiles(self.wolffia.configurationFilesBasename(), zipName)
+ 				progress.setValue(4)
+@@ -1223,14 +1223,14 @@
+ 		
+ 		self.notifyProgress.emit(20)
+ 		
+-		if self.sim.remoteHost <> None:
++		if self.sim.remoteHost != None:
+ 			conf = Configuration(self.sim.__dict__, self.sim.history.currentState().getDrawer(), self.sim.history.currentState().fixedMolecules.hasFixedMolecules(), Configuration.CURRENT_FOLDER)
+ 		else:
+ 			conf = Configuration(self.sim.__dict__, self.sim.history.currentState().getDrawer(), self.sim.history.currentState().fixedMolecules.hasFixedMolecules())
+ 	
+ 		try:
+ 			conf.writeSimulationConfig(str(self.sim.settings.currentMixtureLocation()), self.sim.history.currentState().getMixture().getMixtureName())
+-		except ConfigurationError, e:
++		except ConfigurationError as e:
+ 		    Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
+ 		    Error.exec_()
+ 		    return
+@@ -1243,9 +1243,9 @@
+ 		
+ 		#progress.setLabelText("Starting namd...")
+ 		if WOLFFIA_USES_IMD:
+-			if self.sim.remoteHost <> None: 
++			if self.sim.remoteHost != None: 
+ 				#conf.setBuildDirectory(self.remoteHost.getWorkingDir())
+-				print "SimTab runSim", self.sim.wolffia.configurationFilesBasename()
++				print("SimTab runSim", self.sim.wolffia.configurationFilesBasename())
+ 				zipName = self.sim.wolffia.configurationFilesBasename() + ".zip"
+ 	
+ 				self.sim.progressBar.setLabelText("Packing files...")
+--- ./interface/main/SolventDialog.py	(original)
++++ ./interface/main/SolventDialog.py	(refactored)
+@@ -130,7 +130,7 @@
+ 		V = self._vol / 1E23
+ 		if V == 0: return 0
+ 		
+-		print "computeMolecules ", D,V,MM,D * V * MM * _AVOGRADRO_CONSTANT_
++		print("computeMolecules ", D,V,MM,D * V * MM * _AVOGRADRO_CONSTANT_)
+ 		n = int(D * V * MM * _AVOGRADRO_CONSTANT_)
+ 
+ 		return n
+@@ -142,7 +142,7 @@
+ 		global _AVOGRADRO_CONSTANT_
+ 		V = self._vol / 1E23
+ 		MM = self.DENSITY[self._solvent][self.MI]
+-		print "computeDensity ", self._amount, V,MM, self._amount / V * MM * _AVOGRADRO_CONSTANT_
++		print("computeDensity ", self._amount, V,MM, self._amount / V * MM * _AVOGRADRO_CONSTANT_)
+ 		return self._amount / V / MM / _AVOGRADRO_CONSTANT_
+ 	
+ 
+@@ -178,7 +178,7 @@
+ 
+ 	def closeEvent(self, e):
+ 		if not self._keepAmmount: self._amount = 0
+-		print "closeEvent ", e.type()
++		print("closeEvent ", e.type())
+ 		#super(SolventDialog, self).closeEvent(e)
+ 	#----------------------------------------------------------------
+ 	def on_okButton_pressed(self):
+--- ./interface/main/StructureManagerWidget.py	(original)
++++ ./interface/main/StructureManagerWidget.py	(refactored)
+@@ -43,7 +43,7 @@
+ 		start = time.clock()
+ 		self.clear()
+ 		for molName in mixture:
+-			print "insertMixture", molName
++			print("insertMixture", molName)
+ 			row = QtGui.QTreeWidgetItem(self)
+ 			self.addTopLevelItem(row)
+ 
+@@ -54,7 +54,7 @@
+ 			row.setText(2, mixture.getMolecule(molName).molname())
+ 			row.setText(3, str(mixture.getMolecule(molName).order()))    	 
+ 		stop = time.clock()
+-		print "insertMixture time",stop-start
++		print("insertMixture time",stop-start)
+ 
+ 
+ 	#activates the Structure Catalog
+--- ./interface/main/WTimer.py	(original)
++++ ./interface/main/WTimer.py	(refactored)
+@@ -23,7 +23,7 @@
+ 
+ 
+     def report(self):
+-        print "Timer(", self.id,"): ", time.clock()-self.start, " from ", self.caller, " called from ", self.callersCaller
++        print("Timer(", self.id,"): ", time.clock()-self.start, " from ", self.caller, " called from ", self.callersCaller)
+     
+ #--------------------------------------------------------------------------------
+ 
+--- ./interface/main/WWidgets.py	(original)
++++ ./interface/main/WWidgets.py	(refactored)
+@@ -65,9 +65,9 @@
+ 
+     
+     def mousePressEvent (self, QMouseEvent):
+-        from BuildTab import ShownSolvent
++        from .BuildTab import ShownSolvent
+         self.show = not self.show
+-        print "mousePressEvent:self.show**************************************",self.show
++        print("mousePressEvent:self.show**************************************",self.show)
+ 		
+ 	'''
+ 		if self.objectName()[:8] == "SOLVENT(":
+@@ -151,7 +151,7 @@
+ 
+    
+     def mousePressEvent (self, QMouseEvent):
+-        from BuildTab import ShownSolvent
++        from .BuildTab import ShownSolvent
+ 	self.fixed = not self.fixed
+ 		#print "FixedButton mousePressEvent:self.fixed",self.fixed
+ 	'''
+--- ./interface/main/Wolffia.py	(original)
++++ ./interface/main/Wolffia.py	(refactored)
+@@ -41,17 +41,17 @@
+ wolfiadir = os.path.dirname(os.path.realpath(__file__))
+ sys.path.append(wolfiadir+'/../../')
+ 
+-from History import History
+-from Settings import Settings
+-from SettingsDialog import SettingsDialog
++from .History import History
++from .Settings import Settings
++from .SettingsDialog import SettingsDialog
+ from interface.main.WFileDialogs import WFileNameDialog, WFileDialog
+ from interface.main.WTimer import WTimer
+ 
+ from ui_Wolffia import Ui_Wolffia
+-from MixtureBrowser import MixtureBrowser
+-from MixtureViewer import MixtureViewer 
+-from PreviewerToolbar import PreviewerToolbar
+-from EnergyPlot import EnergyPlot, KineticsPlot
++from .MixtureBrowser import MixtureBrowser
++from .MixtureViewer import MixtureViewer 
++from .PreviewerToolbar import PreviewerToolbar
++from .EnergyPlot import EnergyPlot, KineticsPlot
+ from conf.Wolffia_conf import WOLFFIA_GRAPHICS, WOLFFIA_STYLESHEET, WOLFFIA_VERSION,C_MOLECULE_CATALOG
+ 
+ 
+@@ -116,7 +116,7 @@
+ 	    try:
+ 	        self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+ 	    except:
+-	        print "WARNING: Could not read style specifications"
++	        print("WARNING: Could not read style specifications")
+ 	
+ 	    splash.showMessage(self.__TITLE__ + ": Main window.")
+ 	
+@@ -164,13 +164,13 @@
+ 	
+ 	    # create and show main GUI
+ 	    splash.showMessage(self.__TITLE__ + ": Importing modules.")
+-	    from BuildTab import BuildTab
+-	    from SetupTab import SetupTab
+-	    from ForceTab import ForceTab
+-	    from SimTab import SimTab
+-	    from MinTab import MinTab
+-	    from LogWindow import LogWindow
+-	    from Analysis import Analysis
++	    from .BuildTab import BuildTab
++	    from .SetupTab import SetupTab
++	    from .ForceTab import ForceTab
++	    from .SimTab import SimTab
++	    from .MinTab import MinTab
++	    from .LogWindow import LogWindow
++	    from .Analysis import Analysis
+ 	
+ 	
+ 	    #self.logWindow = LogWindow(self, self.ui.actionLog)
+@@ -211,7 +211,7 @@
+ 	
+ 	@QtCore.pyqtSlot()
+ 	def on_actionLoad_triggered(self, checked = True):
+-	    print "on_actionLoad_triggered", checked
++	    print("on_actionLoad_triggered", checked)
+ 	    if not checked:  return
+ 	    if self.simRunning:
+ 	        QtGui.QMessageBox.information(self, "Stop!", "This action is not allowed while a simulation/minimization is running.", QtGui.QMessageBox.Ok)
+@@ -229,7 +229,7 @@
+ 	            folder = self.history.currentState().getBuildDirectory()  # remember current folder
+ 	            mName = self.history.currentState().getMixture().getMixtureName()
+ 	            self.history.currentState().load(filename)
+-	            print "on_actionLoad_triggered ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
++	            print("on_actionLoad_triggered ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder)
+ 	            self.history.currentState().setBuildDirectory(folder)
+ 	            self.history.currentState().getMixture().setMixtureName(mName)
+ 	            self.history.currentState().save()
+@@ -304,7 +304,7 @@
+ 	    
+ 	    :param saveState:
+ 	    '''
+-	    print "on_saveWFY_triggered "
++	    print("on_saveWFY_triggered ")
+ 	    if not saveState: return
+ 	    if self.simRunning:
+ 	        QtGui.QMessageBox.information(self, "Warning", "This action is not allowed while a simulation/minimization is running.", QtGui.QMessageBox.Ok)
+@@ -315,7 +315,7 @@
+ 	        d = WFileNameDialog(self, 'Save current data', self.settings.currentMixtureLocation(), "Wolffia file (*.wfy)")
+ 	        if d.isReady():
+ 	            filename = d.fullFilename()
+-	            print "on_saveWFY_triggered ","\'"+filename[-4:]+"\'"
++	            print("on_saveWFY_triggered ","\'"+filename[-4:]+"\'")
+ 	            if filename[-4:] != ".wfy" and QtGui.QMessageBox.question (self, "Wolffia's message", "File does not end with .wfy. Add extension?", "Yes", "No") == 0:
+ 	                filename += ".wfy"
+ 	                if os.path.exists(filename) and QtGui.QMessageBox.question (self, "Wolffia's message", "File exists.", "Overwrite", "Cancel") != 0:
+@@ -369,7 +369,7 @@
+ 	                except:
+ 	                    self.minTab.stopMin()
+ 	    self.saveWolffiaState()
+-	    print "closeEvent", event
++	    print("closeEvent", event)
+ 	    event.accept()
+ 	
+ 	
+@@ -381,7 +381,7 @@
+ 		folder = self.history.currentState().getBuildDirectory()  # remember current folder
+ 		mName = self.history.currentState().getMixture().getMixtureName()
+ 		self.history.reset()
+-		print "Wolffia.reset ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
++		print("Wolffia.reset ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder)
+ 		self.history.currentState().setBuildDirectory(folder)
+ 		self.history.currentState().getMixture().setMixtureName(mName)
+ 		self.history.currentState().save()
+@@ -401,7 +401,7 @@
+ 	    self.history.currentState().setSimTabValues(self.simTab.getValues())
+ 	    self.history.currentState().minTabValues = self.minTab.getValues()
+ 	    
+-	    print "saveWolffiaState ",baseFilename , self.configurationFilesBasename()
++	    print("saveWolffiaState ",baseFilename , self.configurationFilesBasename())
+ 	    self.history.currentState().save(filename=baseFilename + ".wfy")
+ 	    self.settings.save()
+ 	
+@@ -427,13 +427,13 @@
+ 	        try:
+ 	            tab.setDefaultValues()
+ 	        except:
+-	            print "Wolffia.py:setDefaultTabs: Tab has no setDefaultValues"
++	            print("Wolffia.py:setDefaultTabs: Tab has no setDefaultValues")
+ 	            
+ 	def update(self):
+ 	
+ 	    #timer = WTimer("Wolffia")
+ 	    if self.allowUpdate:
+-	        print "wolffia.update, updating Wolffia"
++	        print("wolffia.update, updating Wolffia")
+ 	        self.allowUpdate = False
+ 	        self.setTitle()
+ 	        for tab in self.tabs:
+@@ -457,7 +457,7 @@
+     app.processEvents()
+ 
+     gui = Wolffia()
+-    print "cargado"
++    print("cargado")
+     screen = QtGui.QDesktopWidget().screenGeometry()
+     gui.setGeometry(screen & gui.geometry())
+     gui.show()
+--- ./interface/main/setDialMixture.py	(original)
++++ ./interface/main/setDialMixture.py	(refactored)
+@@ -82,13 +82,13 @@
+             self.wolffia.reset()
+             self.settings.workingFolder = str(self.newFolder)
+             self.settings.setCurrentMixture("Unnamed") #piensa en darle la opcion, de darle un nombre, al usuario
+-            print self.settings.workingFolder
+-            print self.settings.currentMixtureLocation()
++            print(self.settings.workingFolder)
++            print(self.settings.currentMixtureLocation())
+             self.close()
+         else:
+             mixN = self.settings.currentMixtureName 
+             dirName = self.newFolder + mixN 
+-            print self.newFolder, dirName
++            print(self.newFolder, dirName)
+             try:
+                 shutil.copytree(self.settings.workingFolder + mixN,dirName)
+             except OSError:
+--- ./interface/nanotubeEditor/nanotubeEditor.py	(original)
++++ ./interface/nanotubeEditor/nanotubeEditor.py	(refactored)
+@@ -94,7 +94,7 @@
+ 		try:
+ 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+ 		except:
+-			print "WARNING: Could not read style specifications"
++			print("WARNING: Could not read style specifications")
+ 		self.tubePreview.update()
+ 
+ 	def generateTubes(self):
+@@ -152,12 +152,12 @@
+ 			self.isAdded = True
+ 			self.close()
+ 		else:
+-			from NanotubeSaveDialog import NanotubeSaveDialog
++			from .NanotubeSaveDialog import NanotubeSaveDialog
+ 			ntDialog = NanotubeSaveDialog(self.getMixture(),files=self.files, parent=self)
+ 			ntDialog.show()
+ 			ntDialog.exec_()
+ 			self.files = ntDialog.getFileNames()
+-			print self.files
++			print(self.files)
+ 
+ 	@QtCore.pyqtSlot()
+ 	def on_previewButton_pressed(self):
+--- ./lib/analysis/Nucleation.py	(original)
++++ ./lib/analysis/Nucleation.py	(refactored)
+@@ -118,7 +118,7 @@
+ 		totals = list()
+ 		i      = 2
+ 		subTotal = numpy.sum(numpy.equal(self.tags,i))
+-		while subTotal <> 0:
++		while subTotal != 0:
+ 			totals.append(subTotal)
+ 			i += 1
+ 			subTotal = numpy.sum(numpy.equal(self.tags,i))
+@@ -164,12 +164,12 @@
+ 	    self.maxCurve	= Qwt.QwtPlotCurve("Maximum")
+ 	    self.maxCurve.attach(self.ui.maximosQwtPlot)
+ 	    self.ui.maximosQwtPlot.setTitle("Maxima")
+-	    self.maxCurve.setData(range(100), range(100))
++	    self.maxCurve.setData(list(range(100)), list(range(100)))
+ 	    
+ 	    self.sumCurve = Qwt.QwtPlotCurve("Sum")
+ 	    self.sumCurve.attach(self.ui.SumasQwtPlot)
+ 	    self.ui.SumasQwtPlot.setTitle("Sumas")
+-	    self.sumCurve.setData(range(100),range(100))
++	    self.sumCurve.setData(list(range(100)),list(range(100)))
+ 
+ 	    
+ 	    
+@@ -201,7 +201,7 @@
+ 	def on_runButton_pressed(self):#4
+ 		wfyFile, corridaFile = self.getPaths()
+ 		self.cellValue = self.ui.cellSizeSpinBox.value()
+-		print "self.cellValur = " + str(self.cellValue)
++		print("self.cellValur = " + str(self.cellValue))
+ 		#print "runButton_pressed" + "wfyFile:"+wfyFile + "corridaFile:"+corridaFile
+ 		
+ 		#prueba= ["/home/kaori/Investigacion/PruebaNucleationGui/DispersionCNTclf.wfy",
+@@ -211,28 +211,28 @@
+ 		prueba= [wfyFile,corridaFile,None,
+ 				 "/home/kaori/Investigacion/PruebaNucleationGui/liquido.pdb"]
+ 
+-		print "Void Volumes ", prueba
++		print("Void Volumes ", prueba)
+ 		state = NanoCADState(filename=prueba[0])
+ 		#if prueba[2] <> None: state.getDrawer().readNAMD(prueba[2])
+ 		ufile = CoordinatesUpdateFile(prueba[1],state.getMixture())
+ 		i=1
+ 		maximos = list()
+ 		sumas = list()
+-		while ufile.next():
++		while next(ufile):
+ 			n = Nucleation(state.getMixture(), state.getDrawer(),self.cellValue,0)
+ 			cells = n.voidsCells()
+ 
+ #----------------------------------------------------------------
+ 			if cells == []: 
+-				print i,0,0
++				print(i,0,0)
+ 				maximos.append(0)
+ 				sumas.append(0)
+ 			else: 
+-				print i,max(cells), sum(cells)
++				print(i,max(cells), sum(cells))
+ 				maximos.append(max(cells))
+ 				sumas.append(sum(cells))
+-			self.maxCurve.setData(range(i), maximos)
+-			self.sumCurve.setData(range(i), sumas)
++			self.maxCurve.setData(list(range(i)), maximos)
++			self.sumCurve.setData(list(range(i)), sumas)
+ 			self.ui.maximosQwtPlot.setAxisScale(Qwt.QwtPlot.xBottom, 0, i, 0)
+ 			self.ui.SumasQwtPlot.setAxisScale(Qwt.QwtPlot.xBottom, 0, i, 0)
+ 			self.ui.maximosQwtPlot.replot()
+@@ -247,12 +247,12 @@
+ 			i += 1
+ 	
+ 		#liquid = n.filledVoids()
+-		print "Termine ciclo"
++		print("Termine ciclo")
+ 		liquid.writePDB(prueba[3])
+-		print "Termine escribir"
++		print("Termine escribir")
+ 		
+ 		os.system("vmd -m -pdb "+ prueba[1] + " -pdb "+ prueba[3])
+-		print "Termine "
++		print("Termine ")
+ 
+ 	def on_cancelButton_pressed(self):
+ 		self.close()
+--- ./lib/analysis/Trajectory.py	(original)
++++ ./lib/analysis/Trajectory.py	(refactored)
+@@ -18,7 +18,7 @@
+ 		self.position = -1
+ 		return self
+ 	
+-	def next(self):	
++	def __next__(self):	
+ 		self.position += 1
+ 		if self.position > len(self.frames):
+ 			raise StopIteration
+--- ./lib/chemicalGraph/ChemicalGraph.py	(original)
++++ ./lib/chemicalGraph/ChemicalGraph.py	(refactored)
+@@ -73,7 +73,7 @@
+         # add nodes
+         elements = psf.get_elements()
+         charges = psf.get_charges()
+-        print "ChemicalGraph loadFiles charges", charges[:30]
++        print("ChemicalGraph loadFiles charges", charges[:30])
+         masses = psf.get_masses()
+         for n in range(len(atoms)):
+             atom=atoms[n]
+@@ -255,14 +255,14 @@
+         @graph2:  graph to be compared to self
+         @return: true if they are isomorphic.
+         """
+-        print "graph1: " , graph1.order()
+-        print "graph2: " , graph2.order()
++        print("graph1: " , graph1.order())
++        print("graph2: " , graph2.order())
+         matcher = isomorphism.GraphMatcher(graph1,graph2)
+ 
+         if graph1.order() == graph2.order():
+-            print "order is the same"
++            print("order is the same")
+             try:
+-                match_iter = matcher.isomorphisms_iter().next()
++                match_iter = next(matcher.isomorphisms_iter())
+                 for atom in match_iter:
+                     if not(graph1.getAttributes(atom) == graph2.getAttributes(match_iter[atom])):
+                         return False
+@@ -281,19 +281,19 @@
+         """
+         matcher = isomorphism.GraphMatcher(graph1,graph2)
+         match_iter = matcher.isomorphisms_iter()
+-        print "is_isomorphic(graph1, graph2)"
+-        print "graph1: " , graph1.order()
+-        print "graph2: " , graph2.order()
+-        print "match_iter + ",match_iter
++        print("is_isomorphic(graph1, graph2)")
++        print("graph1: " , graph1.order())
++        print("graph2: " , graph2.order())
++        print("match_iter + ",match_iter)
+         for iso in match_iter:
+-            print "iso = ",iso
++            print("iso = ",iso)
+             for atom in iso:
+-                print "pair = ",atom, iso[atom]
++                print("pair = ",atom, iso[atom])
+                 if not(graph1.getAttributes(atom) == graph2.getAttributes(iso[atom])):
+-                    print "is_isomorphic: False"
++                    print("is_isomorphic: False")
+                     return False
+                     break
+-                print "is_isomorphic: True"
++                print("is_isomorphic: True")
+             
+             
+         return True
+--- ./lib/chemicalGraph/Mixture.py	(original)
++++ ./lib/chemicalGraph/Mixture.py	(refactored)
+@@ -152,29 +152,29 @@
+ 			x1 = math.fabs (Atomo[0]  -(pos[0]*dx))
+ 			y1 = math.fabs (Atomo[1]  -(pos[1]*dy))
+ 			z1 = math.fabs (Atomo[2]  -(pos[2]*dz))
+-			print "x", x, "y", y, "z", z, "x1", x1, "y1", y1, "z1", z1
++			print("x", x, "y", y, "z", z, "x1", x1, "y1", y1, "z1", z1)
+ 			if pos not in diccionario:
+ 			    diccionario.update({pos: [Atomo]})
+ 			else:
+ 			    diccionario[pos].append(Atomo)
+ 			if x < VDW:
+ 			    diccionario.update({(pos[0]-1, pos[1], pos[2]): [Atomo]})
+-			    print "*X*"
++			    print("*X*")
+ 			if y < VDW:
+ 			    diccionario.update({(pos[0], pos[1]-1, pos[2]): [Atomo]})
+-			    print "*Y*"
++			    print("*Y*")
+ 			if z < VDW:
+ 			    diccionario.update({(pos[0], pos[1], pos[2]-1): [Atomo]})
+-			    print "*Z*"
++			    print("*Z*")
+ 			if x1 < VDW:
+ 				diccionario.update({(pos[0]+1, pos[1], pos[2]): [Atomo]})
+-				print "*X1*"
++				print("*X1*")
+ 			if y1 < VDW:
+ 				diccionario.update({(pos[0], pos[1]+1, pos[2]): [Atomo]})
+-				print "*Y1*"
++				print("*Y1*")
+ 			if z1 < VDW:
+ 				diccionario.update({(pos[0], pos[1], pos[2]+1): [Atomo]})
+-				print "*Z1*"
++				print("*Z1*")
+ 		return diccionario    
+ #------X--------------------------------------------------------------------------------------------------------
+ 	
+@@ -261,7 +261,7 @@
+             
+             ff  = mol.getForceField()
+             newFF = True
+-            for f2 in writtenFF.keys():#reuse the translation for other molecule if FFs are the same
++            for f2 in list(writtenFF.keys()):#reuse the translation for other molecule if FFs are the same
+                 #print "__buildTranslatorTable__ comparacion ",  ff, f2," = ", ff == f2
+                 if ff == f2:
+                     self.trad[molecule] = writtenFF[f2]
+@@ -275,18 +275,18 @@
+             
+                 for atom in mol:
+                     a = mol.getAtomAttributes(atom).getInfo().typeName()
+-                    if not a in self.trad[molecule].keys():
++                    if not a in list(self.trad[molecule].keys()):
+ 						t = a
+ 						#typeWasRenamed = t in usedNames
+ 						strFormat = "%s%0" + str(4-len(t)) + "X"
+ 						#if len(t) < 2: t += 'X'
+ 						#t = t[:2]
+-						if not t in indexTable.keys(): indexTable[t] = 0
++						if not t in list(indexTable.keys()): indexTable[t] = 0
+ 						else: indexTable[t] += 1
+ 						t = strFormat % (t, indexTable[t])
+ 						#if len(t) > 4:
+ 						#    raise MixtureException("Too many atoms types " + t + " in __buildTranslatorTable__.")
+-						print "renameTypes type ", a, "->", t
++						print("renameTypes type ", a, "->", t)
+ 						#a.setType(t)
+ 						self.trad[molecule][a] = t
+ 						#usedNames.append(t)
+@@ -435,7 +435,7 @@
+                 #print "checkExistingMoleculeNames", existingMolecule.getForceField()._ANGLES.keys(), mol.getForceField()._ANGLES.keys()
+                 mol.rename(self.newMolName(mol.molname()))
+                 #warnings.warn("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.", SyntaxWarning)
+-                print "Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield."
++                print("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.")
+                 #raise MixtureException(MixtureException.SAME_NAME, "Non-isomorphic molecules with same name " + mol.molname())
+                 return False
+ 
+@@ -443,7 +443,7 @@
+         mol.rename(self.newMolName(mol.molname()))
+         mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
+         warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
+-        print "Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field."
++        print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
+         return True
+ 
+ 	
+@@ -483,7 +483,7 @@
+ 					#	print k,existingMolecule.getForceField()._ANGLES[k][1], mol.getForceField()._ANGLES[k][1]
+ 					#raise MixtureException(MixtureException.SAME_NAME, "Isomorphic molecules with different force fields have the same names")
+ 					warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
+-					print "Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field."
++					print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
+ 					return True
+ 				mol.setForceField(existingMolecule.getForceField())
+ 				return False  # ANTES HAY QUE HACER QUE LOS DOS FF SEAN EL MISMO EN MEMORIA
+@@ -525,7 +525,7 @@
+             molecule = self.getMolecule(molid)
+             molName = molecule.molname()
+             #print "equivalenceClasses ", molName
+-            if not equiv.has_key(molName):
++            if molName not in equiv:
+                 equiv[molName] = list()
+             equiv[molName].append(molecule)
+         return equiv
+@@ -537,7 +537,7 @@
+ 
+ 
+     def getModificationTime(self):
+-        if not self.__dict__.has_key('modificationTime'):
++        if 'modificationTime' not in self.__dict__:
+             self.modificationTime = time.clock()
+         return self.modificationTime
+ 
+@@ -585,7 +585,7 @@
+         logger.info("Loading molecule from " + filename)
+         
+         #print "History.load_ importing cPickle"
+-        import cPickle as pickle #Tremenda aportación por carlos cortés
++        import pickle as pickle #Tremenda aportación por carlos cortés
+         #print "History.load_ imported cPickle, starting to load"
+ 
+         f = open(filename, "r")
+@@ -599,7 +599,7 @@
+         if fileType == None:
+             fileType = os.path.splitext(moleculeFile)[1][1:].strip() # get filename extension
+         #print "Mixture.readFile reading", moleculeFile,fileType
+-        return pybel.readfile(fileType, moleculeFile).next()
++        return next(pybel.readfile(fileType, moleculeFile))
+     
+     def readStringBAK(self, fileContents, fileType=None):
+         if fileType == None:
+@@ -617,13 +617,13 @@
+ 		"""
+ 		from lib.io.CoordinateFile import CoordinateFile, CoordinateString
+ 		
+-		if pdbFile <> None:
++		if pdbFile != None:
+ 			reader = CoordinateFile(pdbFile,fileType,psfFile,id)
+ 		else:
+ 			#print "Mixture load ", fileType
+ 			reader = CoordinateString(moleculeFile,id,fileType)
+ 
+-		self.merge(reader.next())
++		self.merge(next(reader))
+ 		
+ 
+     def loadBAK(self, pdbFile=None,psfFile=None,moleculeFile=None,fileType=None,id=None):
+@@ -833,7 +833,7 @@
+     def newMolID(self, molid):
+         #print "newMolID ", self.__dict__
+         self.setChanged()
+-        if self.IDIndex.has_key(molid):
++        if molid in self.IDIndex:
+             self.IDIndex[molid] += 1
+         else:
+             self.IDIndex[molid] = 1
+@@ -843,7 +843,7 @@
+     def newMolName(self, molname):
+         #print "newMolName ", molname, self.molNameIndex.keys()
+         self.setChanged()
+-        if self.molNameIndex.has_key(molname):
++        if molname in self.molNameIndex:
+             #print "newMolName ",self.molNameIndex[molname] 
+             self.molNameIndex[molname] += 1
+         else:
+@@ -904,7 +904,7 @@
+ 		            # determinar si acoordinates chocan con alguien en diccionario de listaCoordenadas
+ 		            # JORDAN
+ 		            pos = posicion(acoordinates, box, cantCajas)
+-		            if atomosEnSubCajas.has_key(pos): 
++		            if pos in atomosEnSubCajas: 
+ 		                pruebaDistancia = distancia(atomosEnSubCajas[pos], acoordinates, 1.3)
+ 		                #print "distancias: ", acoordinates, distancias(listaCoordenadas, acoordinates)
+ 		                
+@@ -1062,7 +1062,7 @@
+         """
+         self.setChanged()
+         if not(pdbFile == None):
+-            mol          = pybel.readfile("pdb", pdbFile).next()
++            mol          = next(pybel.readfile("pdb", pdbFile))
+             moleculeName = os.path.basename(pdbFile).split('.')[0]
+         elif not(moleculeFile == None):
+             mol          = pybel.readstring(fileType, moleculeFile)
+@@ -1150,7 +1150,7 @@
+ 		
+ 		molname = mol.molname()
+ 		self.remove_node(molID)
+-		if not molname in self.moleculeNames() and molname in self.molNameIndex.keys():
++		if not molname in self.moleculeNames() and molname in list(self.molNameIndex.keys()):
+ 			del self.molNameIndex[molname]
+ 			#print "remove deleted", mol.molname(), self.molNameIndex.keys()
+ 		
+@@ -1198,8 +1198,8 @@
+ 		    molName = self.getMoleculeID(currentMolecule)
+ 		    if molName != None:
+ 			    molecules       = currentMolecule.removeAtomsFromSphere(coord, radius)
+-			    print 'removeAtomsFromSphere',molName, [m.molname() for m in molecules]
+-			    print 'Mixture.removeAtomsFromSphere',molName, currentMolecule.getForceField().getTypes()
++			    print('removeAtomsFromSphere',molName, [m.molname() for m in molecules])
++			    print('Mixture.removeAtomsFromSphere',molName, currentMolecule.getForceField().getTypes())
+ 			    
+ 			    # finally, add the pieces to the mixture
+ 			    for m in molecules:
+@@ -1218,18 +1218,18 @@
+         @type  edgesList: list of tuples of 2 atoms.
+         @param edgesList: list of bonded atoms.
+         """
+-        print "Mixture.removeBonds recibio mezla con ", len(self.molecules()), " moleculas", self.bonds(), " enlaces"
++        print("Mixture.removeBonds recibio mezla con ", len(self.molecules()), " moleculas", self.bonds(), " enlaces")
+         newMolecules = self.getMolecule(molecule).removeBonds(edgesList)
+         currentMolecule = self.getMolecule(molecule)
+         self.remove(molecule)
+         shownMolecules.updateMixture(self)
+-        print "Mixture.removeBonds tiene ", len(self.molecules()), " moleculas", self.bonds(), " enlaces lugo de remover"
++        print("Mixture.removeBonds tiene ", len(self.molecules()), " moleculas", self.bonds(), " enlaces lugo de remover")
+         # finally, add the pieces to the mixture
+         for m in newMolecules:
+             mol = Molecule(currentMolecule.molname(), molecule=m)
+             mol.setForceField(currentMolecule.getForceField())
+             self.add(mol)
+-        print "Mixture.removeBonds tiene ", len(self.molecules()), " moleculas", self.bonds(), " enlaces luego de reanadir"
++        print("Mixture.removeBonds tiene ", len(self.molecules()), " moleculas", self.bonds(), " enlaces luego de reanadir")
+ 
+         
+     def renameMolecule(self, molID, newName):
+@@ -1250,7 +1250,7 @@
+     def save(self, filename):
+ 
+         #print "Mixture.save_ importing cPickle"
+-        import cPickle as pickle #Tremenda aportación por carlos cortés.
++        import pickle as pickle #Tremenda aportación por carlos cortés.
+         #print "Mixture.save_ imported cPickle, starting to save"
+         f = open(filename, "w")
+         pickle.dump(self.__dict__, f)
+@@ -1298,7 +1298,7 @@
+                     z = float(line[46:54])
+                     self.atomOrder[num].setCoord([x,y,z])
+                 except (IndexError,ValueError):
+-                    print "Mixture.updateCoordinates failed to update atom ",num
++                    print("Mixture.updateCoordinates failed to update atom ",num)
+                     break
+         f.close()
+ 
+@@ -1316,7 +1316,7 @@
+                 #print "updateCoordinatesFromArray xyz", x,y,z
+                 self.atomOrder[i].setCoord([x,y,z])
+             except (IndexError,ValueError):
+-                print "Mixture.updateCoordinatesFromArray failed to update atom ",i
++                print("Mixture.updateCoordinatesFromArray failed to update atom ",i)
+                 break
+         #print "updateCoordinatesFromArray finished time=", time.clock() - start
+             
+@@ -1339,10 +1339,10 @@
+         self.setChanged()
+         self.__dict__ = mix.__dict__
+         for mol in self:
+-            print "mix @t NanoCADState",self.mixture.getMolecule(mol)._name
++            print("mix @t NanoCADState",self.mixture.getMolecule(mol)._name)
+ 
+     def upgrade(self, version):
+-		print "Mixture update ", version
++		print("Mixture update ", version)
+ 		if version < "1.137":
+ 			from lib.chemicalGraph.molecule.AtomAttributes import AtomAttributes,AtomInfo
+ 			for mol in self:
+@@ -1355,7 +1355,7 @@
+ 				molecule.getForceField().upgrade(version)
+ 
+ 		if version < "1.31":
+-			print "Mixture update 1.31"
++			print("Mixture update 1.31")
+ 			from lib.chemicalGraph.molecule.AtomAttributes import AtomAttributes,AtomInfo
+ 			for mol in self:
+ 			    molecule = self.getMolecule(mol)
+@@ -1363,7 +1363,7 @@
+ 			    for atom in molecule:
+ 			    	ai = molecule.getAtomAttributes(atom).getInfo()
+ 			    	ai.setCharge(molecule.getForceField().nonBond(ai.getType())[2])
+-			    	print "Mixture update ", ai.getType(), molecule.getForceField().nonBond(ai.getType()),ai.getCharge()
++			    	print("Mixture update ", ai.getType(), molecule.getForceField().nonBond(ai.getType()),ai.getCharge())
+ 			    	#t = AtomInfo(a._name,a._element,a._type,a._charge,a._mass,fullname = a._fullname,res=a._residue,chain=a._chain,res_seq = a._res_seq)
+ 			    	#molecule.setAtomAttributes(atom,AtomAttributes(t,numpy.array(a.getCoord())))
+ 				molecule.getForceField().upgrade(version)
+@@ -1371,7 +1371,7 @@
+     def writeFiles(self,baseFilename, fixedMolecules=[]):
+     	from chemicalGraph.io.PRM import PRMError
+         #start = time.clock()
+-        print "Mixture writeFiles"
++        print("Mixture writeFiles")
+         self.writePDB(baseFilename+".pdb",fixedMolecules)
+         #print "Mixture writeFiles writePDB", time.clock() - start
+         self.writePSF(baseFilename+".psf")
+@@ -1557,7 +1557,7 @@
+         self.modificationTime = time.clock()
+         
+     def hasChanged(self, tracker, keepTime=False):
+-        if self.trackers.has_key(tracker):
++        if tracker in self.trackers:
+             mt = self.trackers[tracker]
+             if not keepTime:
+                 self.trackers[tracker] = self.modificationTime
+@@ -1576,7 +1576,7 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Testing Mixture class"
++    print("Testing Mixture class")
+     from lib.chemicalGraph.molecule.solvent.WATER import WATER
+     from lib.chemicalGraph.molecule.solvent.THF import THF
+     from lib.chemicalGraph.molecule.solvent.DMF import DMF
+@@ -1588,13 +1588,13 @@
+     mix.add(THF())
+     mix.add(DMF())
+     
+-    for mol in mix.moleculeGenerator(): print mol
+-    
+-    for atom in mix.atomsGenerator(): print atom
++    for mol in mix.moleculeGenerator(): print(mol)
++    
++    for atom in mix.atomsGenerator(): print(atom)
+     
+     caja = Drawer()
+     caja.setCellOrigin([0.,0.,0])
+     caja.setCellBasisVectors([[10.,0.,0.],[0.,10.,0.],[0.,0.,10.]])
+     colisiones = mix.overlapingMolecules(agua, caja)
+-    print "colisiones: ", colisiones
+-    
++    print("colisiones: ", colisiones)
++    
+--- ./lib/chemicalGraph/io/PRM.py	(original)
++++ ./lib/chemicalGraph/io/PRM.py	(refactored)
+@@ -97,7 +97,7 @@
+ 
+ 		for line in f:
+ 			#print  "linea: ", line[:4]
+-			if line[:4] in self.keys():
++			if line[:4] in list(self.keys()):
+ 				mode = line[:4]
+ 			elif mode == 'MASS':  #FORMAT(A2,2X,F10.2x,f10.2)unpack("6sx8sx9sx6sx2sx30sx6sx6sx6sx2s", line.strip())
+ 				self['MASS'].append(struct.unpack('2s2x10.2fx10.2f', line))
+@@ -131,7 +131,7 @@
+ 		try:
+ 			f = open(filename)
+ 		except:
+-			print "Error in PRM.loadCHARMM: could not open \'" + str(filename) + "\'"
++			print("Error in PRM.loadCHARMM: could not open \'" + str(filename) + "\'")
+ 			sys.exit(0)
+ 
+ 		mode = None
+@@ -144,12 +144,12 @@
+ 				#print "linea: ", line, ": Cont ", line[-2:-1]
+ 				while line[-2:-1] == '-':
+ 					line = line[:-2]
+-					line += f.next()
++					line += next(f)
+ 
+ 				if len(line.strip()) == 0 or line.strip()[0] == '*' or line.strip()[0] == '!':
+ 					#print " blank line and comments"
+ 					pass # ignore blank lines and comments
+-				elif line[:3] in self.keys() or line[:4] in self.keys():
++				elif line[:3] in list(self.keys()) or line[:4] in list(self.keys()):
+ 					mode = line[:4]
+ 					#print "Cambio modo a ", mode
+ 				elif mode == 'MASS': 
+@@ -199,7 +199,7 @@
+ 
+ 	#-----------------------------------------------------------------------------------------
+ 	def __tr__(self, elt):
+-		if self.trad == None or not self.trad.has_key(elt):
++		if self.trad == None or elt not in self.trad:
+ 			return elt
+ 		else:
+ 			return self.trad[elt]
+@@ -221,37 +221,37 @@
+ 		f.write("*>>>>>> CHARMM parameter file for " + self.molname + " <<<<<<<<<\n")
+ 		f.write("*>>>>>> Produced by Wolfia, wolffia.uprh.edu <<<<<<<<<\n")
+ 
+-		if len(self['NONB'].keys()) > 0:
++		if len(list(self['NONB'].keys())) > 0:
+ 			f.write("\nNONB     ! " + self.molname + "\n")
+ 			if self.trad == None:
+-				for elttype in self['NONB'].keys():
++				for elttype in list(self['NONB'].keys()):
+ 					f.write("{:<4} {:10.6f} {:10.6f}   {:10.6f}\n".format(self.__tr__(elttype), 0.0, self['NONB'][elttype][0], self['NONB'][elttype][1])) 
+ 			else:
+-				for elttype in self.trad.keys():
++				for elttype in list(self.trad.keys()):
+ 					if not elttype in self['NONB']:
+ 						raise PRMError("Element type " + elttype + " does not have Lennard-Jones parameter values.")
+ 					f.write("{:<4} {:10.6f} {:10.6f}   {:10.6f}\n".format(self.__tr__(elttype), 0.0, self['NONB'][elttype][0], self['NONB'][elttype][1])) 
+ 
+-		if len(self['BOND'].keys()) > 0:
++		if len(list(self['BOND'].keys())) > 0:
+ 			f.write("\nBOND   ! " + self.molname + "\n")
+-			for elts in self['BOND'].keys():
++			for elts in list(self['BOND'].keys()):
+ 				[elt1, elt2] = elts
+-				if self.trad == None or (elt1 in self.trad.keys() and elt2 in self.trad.keys()):
++				if self.trad == None or (elt1 in list(self.trad.keys()) and elt2 in list(self.trad.keys())):
+ 					f.write("{:<4} {:<4} {:8.3f}   {:8.4f}\n".format(self.__tr__(elt1), self.__tr__(elt2), self['BOND'][elts][0], self['BOND'][elts][1])) 
+ 
+-		if len(self['ANGL'].keys()) > 0:
++		if len(list(self['ANGL'].keys())) > 0:
+ 			f.write("\nANGL   ! " + self.molname + "\n")
+ 
+-			for elts in self['ANGL'].keys():
++			for elts in list(self['ANGL'].keys()):
+ 				[elt1, elt2, elt3] = elts
+-				if self.trad == None or (elt1 in self.trad.keys() and elt2 in self.trad.keys() and elt3 in self.trad.keys()):
++				if self.trad == None or (elt1 in list(self.trad.keys()) and elt2 in list(self.trad.keys()) and elt3 in list(self.trad.keys())):
+ 					f.write("{:<4} {:<4} {:<4} {:8.3f}   {:8.4f}\n".format(self.__tr__(elt1), self.__tr__(elt2), self.__tr__(elt3), self['ANGL'][elts][0], self['ANGL'][elts][1])) 
+ 
+-		if len(self['DIHE'].keys()) > 0:
++		if len(list(self['DIHE'].keys())) > 0:
+ 			f.write("\nDIHE   ! " + self.molname + "\n")
+-			for elts in self['DIHE'].keys():
++			for elts in list(self['DIHE'].keys()):
+ 				[elt1, elt2, elt3, elt4] = elts
+-				if self.trad == None or (elt1 in self.trad.keys() and elt2 in self.trad.keys() and elt3 in self.trad.keys() and elt4 in self.trad.keys()):
++				if self.trad == None or (elt1 in list(self.trad.keys()) and elt2 in list(self.trad.keys()) and elt3 in list(self.trad.keys()) and elt4 in list(self.trad.keys())):
+ 					f.write("{:<4} {:<4} {:<4} {:<4} {:10.4f}  {:1}  {:7.2f}\n".format(self.__tr__(elt1), self.__tr__(elt2), self.__tr__(elt3), self.__tr__(elt4), self['DIHE'][elts][0], int(self['DIHE'][elts][1]), self['DIHE'][elts][2])) 
+ 
+ 	@staticmethod
+--- ./lib/chemicalGraph/io/PSF.py	(original)
++++ ./lib/chemicalGraph/io/PSF.py	(refactored)
+@@ -51,7 +51,7 @@
+ 		    atomBase = atomcount - 1
+ 		    natoms = int(line[:8])
+ 		    for i in range(0, natoms):
+-		       line = f.next()
++		       line = next(f)
+ 		       self.atoms.append("%8d" % (atomcount) + line[8:])
+ 		       #print "%8d" % (atomcount) + line[8:]
+ 		       atomcount = atomcount+1
+@@ -59,33 +59,33 @@
+ 		 if line.find('!NBOND') > -1:
+ 		    nbonds = int(line[:8])
+ 		    for i in range(0, nbonds/4):
+-		       line = f.next()
++		       line = next(f)
+ 		       self.bonds.append([int(line[:8])+atomBase, int(line[9:16])+atomBase])
+ 		       self.bonds.append([int(line[17:24])+atomBase, int(line[25:32])+atomBase])
+ 		       self.bonds.append([int(line[33:40])+atomBase, int(line[41:48])+atomBase])
+ 		       self.bonds.append([int(line[49:56])+atomBase, int(line[57:64])+atomBase])
+-		    line = f.next()
++		    line = next(f)
+ 		    for i in range(0, nbonds % 4):
+ 		       self.bonds.append([int(line[i*16+1: i*16+8])+atomBase, int(line[i*16+9: i*16+16])+atomBase])
+ 
+ 		 if line.find('!NTHETA') > -1:
+ 		    nangles = int(line[:8])
+ 		    for i in range(0, nangles/3):
+-		       line = f.next()
++		       line = next(f)
+ 		       self.angles.append([int(line[:8])+atomBase, int(line[9:16])+atomBase,int(line[17:24])+atomBase])
+ 		       self.angles.append([int(line[25:32])+atomBase, int(line[33:40])+atomBase, int(line[41:48])+atomBase])
+ 		       self.angles.append([int(line[49:56])+atomBase, int(line[57:64])+atomBase, int(line[65:72])+atomBase])
+-		    line = f.next()
++		    line = next(f)
+ 		    for i in range(0, nangles % 3):
+ 		       self.angles.append([int(line[i*24+1: i*24+8])+atomBase, int(line[i*24+9: i*24+16])+atomBase, int(line[i*24+17: i*24+24])+atomBase])
+ 
+ 		 if line.find('!NPHI') > -1:
+ 		    ndihedrals = int(line[:8])
+ 		    for i in range(0, ndihedrals/2):
+-		       line = f.next()
++		       line = next(f)
+ 		       self.dihedrals.append([int(line[:8])+atomBase, int(line[9:16])+atomBase,int(line[17:24])+atomBase,int(line[25:32])+atomBase])
+ 		       self.dihedrals.append([int(line[33:40])+atomBase, int(line[41:48])+atomBase,int(line[49:56])+atomBase, int(line[57:64])+atomBase])
+-		    line = f.next()
++		    line = next(f)
+ 		    for i in range(0, ndihedrals % 2):
+ 		       self.dihedrals.append([int(line[i*32+1: i*32+8])+atomBase, int(line[i*32+9: i*32+16])+atomBase, int(line[i*32+17: i*32+24])+atomBase, int(line[i*32+25: i*32+32])+atomBase])
+ 	      f.close()
+@@ -115,15 +115,15 @@
+ 							#print radical, (n2, atom, n1), "radical"
+ 							#print ff._ANGLES
+ 							if awesome in ff._ANGLES:
+-								print "Append: '" + awesome + "' <<< awesome", ([n1,atom,n2])
++								print("Append: '" + awesome + "' <<< awesome", ([n1,atom,n2]))
+ 								angles.append([n1,atom,n2])
+ 								#print ff._ANGLES[awesome]
+ 							elif radical in ff._ANGLES:
+-								print "Append: '" + radical + "' <<< radical", ([n1,atom,n2])
++								print("Append: '" + radical + "' <<< radical", ([n1,atom,n2]))
+ 								angles.append([n1,atom,n2])
+ 								#print ff._ANGLES[radical]
+ 							else:
+-								print "NoAppd:", ([n1,atom,n2]), awesome, ";", radical
++								print("NoAppd:", ([n1,atom,n2]), awesome, ";", radical)
+ 				#print "This.Type: ", self._types[atom]
+ 		#print "Angles:", angles
+ 		#print "Tipos:", self._types
+@@ -263,9 +263,9 @@
+ 
+ 	mol = PolyCYT(1)
+ 	ff = mol.getForceField()
+-	print mol.__dict__.keys()
++	print(list(mol.__dict__.keys()))
+ 	m.inferAngles(mol)
+-	print "FF Angles:\n", ff._ANGLES, "\n======================================"
++	print("FF Angles:\n", ff._ANGLES, "\n======================================")
+ 	assert(m.hasAngle([1, 2, 3]))
+ 	
+ 	assert(True)
+--- ./lib/chemicalGraph/molecule/AtomAttributes.py	(original)
++++ ./lib/chemicalGraph/molecule/AtomAttributes.py	(refactored)
+@@ -211,7 +211,7 @@
+ 			import inspect
+ 			global DEPRECATED_CALLS
+ 			if not str(inspect.stack()[1][1:]) in DEPRECATED_CALLS:
+-				print "WARNING: Deprecated AtomAttributes.__init__ called from "+ str(inspect.stack()[1][1:]) + "."
++				print("WARNING: Deprecated AtomAttributes.__init__ called from "+ str(inspect.stack()[1][1:]) + ".")
+ 			raise Exception
+ 
+ 
+@@ -235,7 +235,7 @@
+ 			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self.getCoord()[0],self.getCoord()[1],self.getCoord()[2],0,0.0,tObj._element)
+ 
+ 	def getType(self):
+-		print "WARNING: Deprecated call to AtomAttributes.getType() from ", inspect.stack()[1]
++		print("WARNING: Deprecated call to AtomAttributes.getType() from ", inspect.stack()[1])
+ 		return self.getInfo().getType() 
+ 
+ 	def getInfo(self):
+@@ -250,7 +250,7 @@
+ 			return AtomInfo("X", "X", "X",  0., 0., 0.0, 1.0, ' ', "X   ", "XXX", "X", 1)
+ 		
+ 	def setInfo(self, t):
+-		print "AA setInfo", t
++		print("AA setInfo", t)
+ 		self._info = t
+ 
+ 	#-------------------------------------------------------------
+@@ -301,15 +301,15 @@
+ 			#print " distanceTo ", origin,boxDims
+ 			X0, Y0, Z0 = list(self.getCoord())
+ 			X1, Y1, Z1 = list(attr2.getCoord())
+-			print "----------------> ", X0, Y0, Z0, list(attr2.getCoord())
++			print("----------------> ", X0, Y0, Z0, list(attr2.getCoord()))
+ 			
+ 			box = [origin, [origin[0]+vectors[0][0], origin[1]+vectors[1][1], origin[2]+vectors[2][2]]]
+ 			#-----------------------------------------------------------------
+ 			dx = box[1][0]-box[0][0]
+ 			dy = box[1][1]-box[0][1]
+ 			dz = box[1][2]-box[0][2]
+-			print "box=", box
+-			print "dx:", dx,"dy:", dy,"dz:", dz
++			print("box=", box)
++			print("dx:", dx,"dy:", dy,"dz:", dz)
+ 			
+ 			dmin = float("inf")
+ 			Xmin = box[0][0]
+@@ -323,11 +323,11 @@
+ 			X1 = X1 - (math.floor((X1-Xmin)/dx)) * dx
+ 			Y1 = Y1 - (math.floor((Y1-Ymin)/dy)) * dy
+ 			Z1 = Z1 - (math.floor((Z1-Zmin)/dz)) * dz
+-			print "Atom1:", (X0,Y0,Z0), "Atom2:", (X1,Y1,Z1)
+-			
+-			print "Xmin=", Xmin, "   X0=", X0, "X1:", X1, "  dx=", dx
+-			print "Ymin=", Ymin, "   Y0=", Y0, "Y1:", Y1, "  dy=", dy
+-			print "Zmin=", Zmin, "   Z0=", Z0, "Z1:", Z1, "  dz=", dz
++			print("Atom1:", (X0,Y0,Z0), "Atom2:", (X1,Y1,Z1))
++			
++			print("Xmin=", Xmin, "   X0=", X0, "X1:", X1, "  dx=", dx)
++			print("Ymin=", Ymin, "   Y0=", Y0, "Y1:", Y1, "  dy=", dy)
++			print("Zmin=", Zmin, "   Z0=", Z0, "Z1:", Z1, "  dz=", dz)
+ 			#d = []
+ 			# traer los puntos a la caja central
+ 			for sigX in [-dx,0,dx]:
+@@ -337,7 +337,7 @@
+ 						#d.append(  math.sqrt ((X1+sigX-X0)**2 + (Y1+sigY-Y0)**2 + (Z1+sigZ-Z0)**2))
+ 						dmin = min(dmin, math.sqrt (((X1+(sigX))-X0)**2 + ((Y1+(sigY))-Y0)**2 + ((Z1+(sigZ))-Z0)**2))
+ 			#print "Distances:", d
+-			print "Minimum Distance:", dmin
++			print("Minimum Distance:", dmin)
+ 			return dmin
+ 		else:
+ 			#print "distanceTo ", self.getCoord(), attr2._coordinates
+--- ./lib/chemicalGraph/molecule/ForceField.py	(original)
++++ ./lib/chemicalGraph/molecule/ForceField.py	(refactored)
+@@ -34,7 +34,7 @@
+ import sys,os, time
+ if __name__ == '__main__':
+ 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
+-	print sys.path
++	print(sys.path)
+ from conf.Wolffia_conf import CHARMM_FORCE_FIELDS
+ from lib.chemicalGraph.io.PRM import PRM
+ from chemicalGraph.io.PRM import PRMError
+@@ -129,7 +129,7 @@
+ 	    
+ 	
+ 	def __tr__(self, elt):
+-	    if self.trad == None or not self.trad.has_key(elt):
++	    if self.trad == None or elt not in self.trad:
+ 	        return elt
+ 	    else:
+ 	        return self.trad[elt]
+@@ -138,36 +138,36 @@
+ 	def addZeroAngles(self, angles):
+ 	    for [t1,t2,t3] in angles:
+ 		if t1 < t3:
+-		    if not (t1, t2, t3) in self._ANGLES.keys():
++		    if not (t1, t2, t3) in list(self._ANGLES.keys()):
+ 		        self._ANGLES[(t1, t2, t3)] = [0.,0.]
+ 		else:
+-		    if not (t3, t2, t1) in self._ANGLES.keys():
++		    if not (t3, t2, t1) in list(self._ANGLES.keys()):
+ 		        self._ANGLES[(t3, t2, t1)] = [0.,0.]
+ 	
+ 	def addZeroParameters(self, molecule):
+ 	    aTypes = molecule.atomTypes()
+ 	    for t in aTypes:
+-	        if not t in self._NONBONDED.keys():
++	        if not t in list(self._NONBONDED.keys()):
+ 	            self._NONBONDED[t] = [0.,0.,0.]
+ 	        #print "FF addZeroParameters self._NONBONDED.keys() ",t,id(self._NONBONDED[t])
+ 	    aTypes = molecule.bondTypes()
+ 	    for t in aTypes:
+-	        if not t in self._BONDS.keys():
++	        if not t in list(self._BONDS.keys()):
+ 	            self.setBond((t[0],t[1]), 0.,0)
+ 	            self.setBond((t[0],t[1]), 0.,1)
+ 	    #print "FF addZeroParameters self._BONDS.keys() ",self._BONDS.keys()
+ 	    aTypes = molecule.atomTypes()
+ 	    for t in aTypes:
+-	        if not t in self._MASS.keys():
++	        if not t in list(self._MASS.keys()):
+ 	            self._MASS[t] = 0.
+ 	    aTypes = molecule.angleTypes()
+ 	    for t in aTypes:
+-	        if not t in self._ANGLES.keys():
++	        if not t in list(self._ANGLES.keys()):
+ 	            self.setAngle((t[0],t[1],t[2]), 0.,0)
+ 	            self.setAngle((t[0],t[1],t[2]), 0.,1)
+ 	    aTypes = molecule.dihedralTypes()
+ 	    for t in aTypes:
+-	        if not t in self._DIHEDRALS.keys():
++	        if not t in list(self._DIHEDRALS.keys()):
+ 	            self.setDihedral((t[0],t[1],t[2],t[3]), 0.,0)
+ 	            self.setDihedral((t[0],t[1],t[2],t[3]), 0 ,1)
+ 	            self.setDihedral((t[0],t[1],t[2],t[3]), 0.,2)
+@@ -210,17 +210,17 @@
+ 		This is a temporary fix for removing unused types from the data fields.
+ 		'''
+ 		#types = [t.typeName() for t in typesObj]
+-		for t in self._NONBONDED.keys():
++		for t in list(self._NONBONDED.keys()):
+ 		    if not t in types: del self._NONBONDED[t]
+ 		
+-		for b in self._BONDS.keys():
++		for b in list(self._BONDS.keys()):
+ 			#print "FF clean bond",b
+ 			if not(b[0] in types or b[1] in types): del self._BONDS[b]
+ 		
+-		for a in self._ANGLES.keys():
++		for a in list(self._ANGLES.keys()):
+ 			if not(a[0] in types or a[1] in types or a[2] in types): del self._ANGLES[a]
+ 			
+-		for d in self._DIHEDRALS.keys():
++		for d in list(self._DIHEDRALS.keys()):
+ 			if not(d[0] in types or d[1] in types or d[2] in types or d[3] in types): 
+ 				del self._DIHEDRALS[d]
+ 		
+@@ -242,7 +242,7 @@
+ 	def dihedral(self, t1, t2, t3, t4):
+ 	    types = self.sortDihedral(t1, t2, t3, t4)
+ 	    #print "FF dihedral",types,self._DIHEDRALS.keys()
+-	    if types in self._DIHEDRALS.keys():
++	    if types in list(self._DIHEDRALS.keys()):
+ 	        return self._DIHEDRALS[types]
+ 	    '''
+ 	    count = 0
+@@ -266,7 +266,7 @@
+ 	
+ 	
+ 	def getTypes(self):
+-	    return self._NONBONDED.keys()
++	    return list(self._NONBONDED.keys())
+ 	
+ 	
+ 	def guess(self, molecule, timeLimit=float("inf"), options=_CHARMM_FILES_, includeHydrogens=True):
+@@ -284,7 +284,7 @@
+ 	    timeSlot = timeLimit
+ 	    for fftype in options:
+ 	        fn       = _CHARMM_PARAMETER_FILES_[_CHARMM_FILES_.index(fftype)]
+-	        print "ForceField guess", fftype, fn
++	        print("ForceField guess", fftype, fn)
+ 	        charmFF  = ForceField(None, filename=CHARMM_FORCE_FIELDS+fn)
+ 	        pareoMin.append(FFPairings(molecule,charmFF, timeLimit=timeSlot, includeHydrogens=includeHydrogens))
+ 	        
+@@ -304,7 +304,7 @@
+ 	    return pairings
+ 	
+ 	def isDefined(self, k):
+-	    return self._NONBONDED.has_key(k)
++	    return k in self._NONBONDED
+ 	
+ 	
+ 	def hasType(self,t):
+@@ -398,13 +398,13 @@
+ 	            "_HBONDS"     ]
+ 	    
+ 	    #print "ForceField merge typesToMerge", typesToMerge
+-	    if typesToMerge == None: typesToMerge = ff._NONBONDED.keys()
++	    if typesToMerge == None: typesToMerge = list(ff._NONBONDED.keys())
+ 	    #print "ForceField merge typesToMerge2", typesToMerge
+ 	    
+ 	    for pType in pars:
+ 		#print "ForceField merge", pType, self.__dict__[pType]
+ 		#print "ForceField merff", pType, ff.__dict__[pType]
+-		for k in ff.__dict__[pType].keys():
++		for k in list(ff.__dict__[pType].keys()):
+ 		    copyOK =True
+ 		    for aType in k:
+ 		        #print "for aType in k.split(' '): ", aType
+@@ -424,10 +424,10 @@
+ 	
+ 			
+ 	def renameTypes(self, nameTable):
+-	    print "renameTypes  ", nameTable, self._NONBONDED.keys()
++	    print("renameTypes  ", nameTable, list(self._NONBONDED.keys()))
+ 	    resultDict = dict()
+-	    for nonb in self._NONBONDED.keys():
+-	        if nameTable.has_key(nonb):
++	    for nonb in list(self._NONBONDED.keys()):
++	        if nonb in nameTable:
+ 	            #resultDict[nameTable[nonb]] = nameTable.getForceField()._NONBONDED[nameTable[nonb]]
+ 	            resultDict[nameTable[nonb]] = self._NONBONDED[nonb]
+ 	        else:
+@@ -435,9 +435,9 @@
+ 	            resultDict[nonb] = self._NONBONDED[nonb]
+ 	    self._NONBONDED = resultDict
+ 	    
+-	    print "renameTypes2 ", nameTable, self._NONBONDED.keys()
++	    print("renameTypes2 ", nameTable, list(self._NONBONDED.keys()))
+ 	    resultDict = dict()
+-	    for bond in self._BONDS.keys():
++	    for bond in list(self._BONDS.keys()):
+ 	        t1, t2 = bond
+ 	        try:
+ 	        	resultDict[(nameTable[t1], nameTable[t2])] = self._BONDS[bond]
+@@ -446,7 +446,7 @@
+ 	    self._BONDS = resultDict
+ 	    
+ 	    resultDict = dict()
+-	    for angle in self._ANGLES.keys():
++	    for angle in list(self._ANGLES.keys()):
+ 	        t1, t2, t3 = angle
+ 	        try:
+ 	        	resultDict[(nameTable[t1], nameTable[t2], nameTable[t3])] = self._ANGLES[angle]
+@@ -455,7 +455,7 @@
+ 	    self._ANGLES = resultDict
+ 	    
+ 	    resultDict = dict()
+-	    for dih in self._DIHEDRALS.keys():
++	    for dih in list(self._DIHEDRALS.keys()):
+ 	        t1, t2, t3, t4 = dih
+ 	        try:
+ 	        	resultDict[(nameTable[t1], nameTable[t2], nameTable[t3], nameTable[t4])] = self._DIHEDRALS[dih]
+@@ -468,7 +468,7 @@
+ 		assert(isinstance(t,tuple))
+ 		if t[2] < t[0]:
+ 		    t = (t[2], t[1], t[0])
+-		if not self._ANGLES.has_key(t):
++		if t not in self._ANGLES:
+ 		    self._ANGLES[t] = [0,0]
+ 		self._ANGLES[t][pos] = val
+ 		
+@@ -480,7 +480,7 @@
+ 		assert(isinstance(t,tuple))
+ 		if t[1] < t[0]:
+ 		    t = (t[1],t[0])
+-		if not self._BONDS.has_key(t):
++		if t not in self._BONDS:
+ 		    self._BONDS[t] = [0,0]
+ 		self._BONDS[t][pos] = val
+ 		
+@@ -499,7 +499,7 @@
+ 	def setDihedral(self, t, val, pos):
+ 		assert(isinstance(t,tuple))
+ 		t = self.sortDihedral(t[0], t[1], t[2], t[3])
+-		if not self._DIHEDRALS.has_key(t):
++		if t not in self._DIHEDRALS:
+ 		    self._DIHEDRALS[t] = [0,0,0]
+ 		self._DIHEDRALS[t][pos] = val
+ 		
+@@ -508,7 +508,7 @@
+ 	
+ 	
+ 	def setNonBond(self, t, val, pos):
+-	    if not self._NONBONDED.has_key(t):
++	    if t not in self._NONBONDED:
+ 	        self._NONBONDED[t] = [0,0,0]
+ 	    self._NONBONDED[t][pos] = val
+ 	    #print "setNonBond ", t, val, pos, id(self), id(self._NONBONDED[t])
+@@ -575,7 +575,7 @@
+ 		try: 
+ 			prm.writeCHARMM(filename, mode, trad)
+ 		except : 
+-			print "writeCHARMM"
++			print("writeCHARMM")
+ 			raise
+ 
+ 
+@@ -612,13 +612,13 @@
+         
+     def run(self):
+ 		#print "FFPairings run A ",   self.tiposMol, self.tiposFF.keys()
+-		self.__pareaListas(self.tiposMol, self.tiposFF.keys())
++		self.__pareaListas(self.tiposMol, list(self.tiposFF.keys()))
+ 		if self.parMin != None:
+ 			self.resultFF  = ForceField(self.molecule)
+ 			self.resultFF.merge(self.molecule.getForceField())
+ 			#print "FFPairings run before ",   self.resultFF._NONBONDED.keys()
+ 			self.resultFF.renameTypes(self.parMin)
+-			self.resultFF.merge(self.FFcharm, self.resultFF._NONBONDED.keys())
++			self.resultFF.merge(self.FFcharm, list(self.resultFF._NONBONDED.keys()))
+ 			#print "FFPairings run",   self.resultFF._NONBONDED.keys()
+ 			#self.resultFF.merge(self.FFcharm, self.molecule.atomTypes())
+     '''        
+@@ -634,14 +634,14 @@
+         #print "FFPairings getPairedForceField, self.resultFF._NONBONDED",  self.resultFF._NONBONDED
+         newFF = ForceField()
+         
+-        for nonb  in self.parMin.keys():
++        for nonb  in list(self.parMin.keys()):
+             #print "FFPairings getPairedForceField self.parMin[nonb]", nonb,self.parMin[nonb],oldFF._NONBONDED.has_key(nonb),oldFF._NONBONDED.keys()
+             newFF._NONBONDED[nonb] = list(self.resultFF._NONBONDED[self.parMin[nonb]])
+             #if keepCharges and oldFF._NONBONDED.has_key(nonb): 
+             #    newFF._NONBONDED[nonb][NonBond._CHARGE] = oldFF._NONBONDED[nonb][NonBond._CHARGE]
+ 
+ 		#print "FFPairings getPairedForceField,oldFF._BONDS.keys()",  oldFF._BONDS.keys()
+-        for bond  in oldFF._BONDS.keys():
++        for bond  in list(oldFF._BONDS.keys()):
+ 			t1, t2 = bond
+ 			try:
+ 			    vals   = [val for val in self.resultFF.bond(self.parMin[t1], self.parMin[t2])]
+@@ -650,7 +650,7 @@
+ 			except KeyError:
+ 			    pass
+         #print "FFPairings getPairedForceField,oldFF._ANGLES.keys()",  oldFF._ANGLES.keys()
+-        for angle in oldFF._ANGLES.keys():
++        for angle in list(oldFF._ANGLES.keys()):
+             t1, t2, t3 = angle
+             try:
+                 vals   = [val for val in self.resultFF.angle(self.parMin[t1], self.parMin[t2], self.parMin[t3])]
+@@ -659,7 +659,7 @@
+             except KeyError:
+                 pass
+ 
+-        for dih in oldFF._DIHEDRALS.keys():
++        for dih in list(oldFF._DIHEDRALS.keys()):
+             t1, t2, t3, t4 = dih
+             try:
+                 vals   = [val for val in self.resultFF.dihedral(self.parMin[t1], self.parMin[t2], self.parMin[t3], self.parMin[t4])]
+@@ -731,7 +731,7 @@
+         for bond in self.molecule.bonds():
+             t1 = self.molecule.getAtomAttributes(bond[0]).getInfo().getType()
+             t2 = self.molecule.getAtomAttributes(bond[1]).getInfo().getType()
+-            if pareo.has_key(t1) and pareo.has_key(t2):
++            if t1 in pareo and t2 in pareo:
+             	#print " molOK ",
+                 t1 = pareo[t1]
+                 t2 = pareo[t2]
+@@ -784,7 +784,7 @@
+ 		            #print "\n-----> ", pareo
+ 		            #print "\n-----> pot ", pot, " NEW", (pot  < self.minPot)
+ 		            if pot  < self.minPot:
+-		                print "-----> ", pareo, pot
++		                print("-----> ", pareo, pot)
+ 		                #print "%8.2f\033[12D", pot
+ 		                self.minPot = pot
+ 		                self.parMin = dict(pareo)
+@@ -815,7 +815,7 @@
+ 				                self.minPot = pot
+ 				                self.parMin = dict(pareo)
+ 				                subMatch = True
+-		                		print "sub--> ", -pot, len(pareo), pareo
++		                		print("sub--> ", -pot, len(pareo), pareo)
+ 		                #porProbar2.append(t2)
+ 		            pareo.pop(t1)
+ 		        #print "\033[8D        \033[8D",
+@@ -828,11 +828,11 @@
+ #    print "Probando ForceField"
+     m = ForceField("Probando ForceField")
+     m.load("../../data/forceFields/PMMA.prm")
+-    print "FF__main__: ", m._ANGLES
++    print("FF__main__: ", m._ANGLES)
+     trad={'HT': 'ht', 'CZ':'XX'}
+     
+     m.writeCHARMM("/tmp/prueba.prm", trad=trad)
+-    print "FF__main__: ", m._ANGLES
++    print("FF__main__: ", m._ANGLES)
+     #print " Probando ForceFieldWriter"
+     #r = ForceFieldWriter()
+     #r.load("/home_inv/frances/Desktop/CLF.prm" )
+--- ./lib/chemicalGraph/molecule/Molecule.py	(original)
++++ ./lib/chemicalGraph/molecule/Molecule.py	(refactored)
+@@ -32,8 +32,8 @@
+ 
+ if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
+ from lib.chemicalGraph.ChemicalGraph import ChemicalGraph
+-from ForceField import ForceField, NonBond
+-from AtomAttributes import AtomAttributes,AtomInfo
++from .ForceField import ForceField, NonBond
++from .AtomAttributes import AtomAttributes,AtomInfo
+ from networkx import NetworkXError, isomorphism
+ import numpy as np
+ 
+@@ -255,7 +255,7 @@
+ 			try:  #  there seems to be problems with Networkx on removing edges
+ 				yield (self.getAtomAttributes(e[0]), self.getAtomAttributes(e[1]))
+ 			except KeyError:
+-				print "WARNING: Molecule.bondsGenerator ", e
++				print("WARNING: Molecule.bondsGenerator ", e)
+ 				pass
+ 
+ 	#-------------------------------------------------------------
+@@ -277,7 +277,7 @@
+ 			if self.getAtomAttributes(atoms[i]).getElement() == element1:
+ 				for j in range(i+1,len(atoms)):
+ 					if self.getAtomAttributes(atoms[j]).getElement() == element2 and math.fabs(self.distance(atoms[i], atoms[j]) ) < self._EPSILON_:
+-						print "WARNING: Atoms ",atoms[i], " and ", atoms[j] , " are too close."
++						print("WARNING: Atoms ",atoms[i], " and ", atoms[j] , " are too close.")
+ 					if self.getAtomAttributes(atoms[j]).getElement() == element2 and math.fabs(self.distance(atoms[i], atoms[j]) - bondDistance) < self._EPSILON_:
+ 						self.addBond(atoms[i], atoms[j])
+ 			if element1 != element2 and self.getAtomAttributes(atoms[i]).getElement() == element2:
+@@ -373,7 +373,7 @@
+ 		for atom in self:
+ 			attr    = self.getAtomAttributes(atom).getInfo()
+ 			element = attr.getElement()
+-			if usedElments.has_key(element):
++			if element in usedElments:
+ 				newType               = element+str(usedElments[element])
+ 				usedElments[element] += 1
+ 			else:
+@@ -437,7 +437,7 @@
+ 			#atomSignature = str(atomType[0]+str(atom)+",")
+ 			#print "redefineTypes atomSignature", atomSignature
+ 			
+-			if not atomClasses.has_key(atomSignature):
++			if atomSignature not in atomClasses:
+ 				atomClasses[atomSignature] = list()
+ 			atomClasses[atomSignature].append(atom)
+ 
+@@ -445,10 +445,10 @@
+ 		#define new type names
+ 		newTypeNames = dict()
+ 		usedElments = dict()
+-		for aClass in atomClasses.keys():
++		for aClass in list(atomClasses.keys()):
+ 			element = aClass[2:aClass.find(',')-1] 
+ 			#element = aClass[0] 
+-			if usedElments.has_key(element):
++			if element in usedElments:
+ 				usedElments[element] += 1
+ 				newTypeNames[aClass] = element + str(usedElments[element])
+ 				
+@@ -469,7 +469,7 @@
+ 		self.forceField.addZeroParameters(self)
+ 		self.copyChargesToForceField()
+ 
+-		print "Molecule.redefineTypes typeAssignments", typeAssignments
++		print("Molecule.redefineTypes typeAssignments", typeAssignments)
+ 		return typeAssignments
+ 	#-------------------------------------------------------------
+ 
+@@ -605,10 +605,10 @@
+ 			try:
+ 				newMol.remove_edge(edge[0], edge[1])
+ 			except NetworkXError:
+-				print "WARNING: Tried to remove inexistent bond ", edge, " from molecule ", self, " in Molecule.removeBond()"
++				print("WARNING: Tried to remove inexistent bond ", edge, " from molecule ", self, " in Molecule.removeBond()")
+ 
+ 		newMolsList = newMol.connectedComponents()
+-		print "Molecule.removeBonds() produjo ", len(newMolsList), " moleculas"
++		print("Molecule.removeBonds() produjo ", len(newMolsList), " moleculas")
+ 		return newMolsList
+ 	
+ 	def removeAtoms(self, atomsList):
+@@ -628,10 +628,10 @@
+ 			try:
+ 				newMol.remove_node(atom)
+ 			except NetworkXError:
+-				print "WARNING: Tried to remove inexistent atom ", atom, " from molecule ", self, " in Molecule.removeBond()"
++				print("WARNING: Tried to remove inexistent atom ", atom, " from molecule ", self, " in Molecule.removeBond()")
+ 
+ 		newMolsList = newMol.connectedComponents()
+-		print "Molecule.removeBonds() produjo ", len(newMolsList), " moleculas"
++		print("Molecule.removeBonds() produjo ", len(newMolsList), " moleculas")
+ 		return newMolsList
+ 	
+ 	#-------------------------------------------------------------
+@@ -914,7 +914,7 @@
+ 		#print "Molecule.setForceField types: ",fftypes
+ 		for atom in self:
+ 			if not self.forceField.hasType(self.getAtomAttributes(atom).getInfo().getType()):
+-				print "WARNING: Molecule.setForceField found type ", self.getAtomAttributes(atom).getInfo().getType()," not present in FF", self.getAtomAttributes(atom).getInfo().getTypes(), ".  Setting parameters to zero."
++				print("WARNING: Molecule.setForceField found type ", self.getAtomAttributes(atom).getInfo().getType()," not present in FF", self.getAtomAttributes(atom).getInfo().getTypes(), ".  Setting parameters to zero.")
+ 				#ff.setNonBond(self.getAtomAttributes(atom).getInfo().getType(),0.,0) # sets both parameters to 0.
+ 				raise Molecule.MoleculeError("Trying to assign incompatible force field to a molecule in Molecule.setForceField()")
+ 		
+@@ -946,10 +946,10 @@
+ 			pairing = self.getForceField().guess(self, timeLimit, options, includeHydrogens)
+ 		#self.renameTypes(pairing.getPairing())
+ 		if pairing != None:
+-			print "guessForceField result", pairing.getForceField()._NONBONDED
+-			print "guessForceField result", pairing.getForceField()._BONDS
++			print("guessForceField result", pairing.getForceField()._NONBONDED)
++			print("guessForceField result", pairing.getForceField()._BONDS)
+ 		else:
+-			print "guessForceField NO result"
++			print("guessForceField NO result")
+ 		return pairing
+ 
+ 	def renameTypes(self, nameTable=None):
+@@ -957,7 +957,7 @@
+ 			#print "Mol renameTypes ", nameTable, self.angleTypes()
+ 			for atom in self.atoms():
+ 				a = self.getAtomAttributes(atom).getInfo()
+-				if a.getType() in nameTable.keys():
++				if a.getType() in list(nameTable.keys()):
+ 					a.setType(nameTable[a.getType()])
+ 			self.forceField.renameTypes(nameTable)
+ 	
+@@ -976,12 +976,12 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	from solvent.THF import THF
++	from .solvent.THF import THF
+ 	mol = THF()
+-	print mol.getForceField()._ANGLES
++	print(mol.getForceField()._ANGLES)
+ 	#mol.guessForceField(5)
+ 	#print mol.getForceField()._NONBONDED
+ 
+-	for atom in mol.atomsGenerator(): print atom
+-
+-
++	for atom in mol.atomsGenerator(): print(atom)
++
++
+--- ./lib/chemicalGraph/molecule/molecules_conf.py	(original)
++++ ./lib/chemicalGraph/molecule/molecules_conf.py	(refactored)
+@@ -27,9 +27,9 @@
+     by the UPR-Penn Partnership for Research and Education in Materials program, 
+     USA National Science Foundation grant number DMR-0934195. 
+ """
+-from polymer.PMMA import PMMA
+-from allotrope.Tube import Tube
+-from allotrope.Graphene import Graphene
++from .polymer.PMMA import PMMA
++from .allotrope.Tube import Tube
++from .allotrope.Graphene import Graphene
+ 
+ #----------------------------------------------------------------------
+ # Molecules data structure
+--- ./lib/chemicalGraph/molecule/allotrope/Diamond.py	(original)
++++ ./lib/chemicalGraph/molecule/allotrope/Diamond.py	(refactored)
+@@ -168,7 +168,7 @@
+ 				molecule.removeAtom(i+1)
+ 			molecule.removeAtom(idxNa)	
+ 		
+-		Molecule.__init__(self, "Diamond", G.moleculeGenerator().next())
++		Molecule.__init__(self, "Diamond", next(G.moleculeGenerator()))
+ 		
+ 		# Fix atom types
+ 		for atom in self:
+@@ -263,7 +263,7 @@
+ #==========================================================================
+ if __name__ == '__main__':
+ 	d = Diamond(3,3,3)
+-	print d.edges()
++	print(d.edges())
+ 	d.writePDB("/home/jse/Desktop/Diamantito.pdb")
+ 	
+ 	m = Mixture()
+--- ./lib/chemicalGraph/molecule/allotrope/Hexagonal2D.py	(original)
++++ ./lib/chemicalGraph/molecule/allotrope/Hexagonal2D.py	(refactored)
+@@ -193,9 +193,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando Hexagonal2D"
++	print("Probando Hexagonal2D")
+ 	m = Hexagonal2D(10,10,200)
+-	print m
++	print(m)
+ 	m.writePDB("prueba.pdb")
+ 	m.writePSF("prueba.psf")
+ 
+--- ./lib/chemicalGraph/molecule/allotrope/Tube.py	(original)
++++ ./lib/chemicalGraph/molecule/allotrope/Tube.py	(refactored)
+@@ -111,9 +111,9 @@
+ 	#============================================================================
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando Tube"
++	print("Probando Tube")
+ 	m = Tube(10,10,20)
+-	print m
++	print(m)
+ 	m.writePDB("prueba.pdb")
+ 	m.writePSF("prueba.psf")
+ 
+--- ./lib/chemicalGraph/molecule/element/Element.py	(original)
++++ ./lib/chemicalGraph/molecule/element/Element.py	(refactored)
+@@ -124,7 +124,7 @@
+             import logging
+             logger = logging.getLogger(self.__class__.__name__)
+             logger.error("Invalid element symbol \"" + str(symbol) + "\"")
+-            print "Invalid element symbol \"" + str(symbol) + "\""
++            print("Invalid element symbol \"" + str(symbol) + "\"")
+             return
+ 
+         Molecule.__init__(self, symbol)
+--- ./lib/chemicalGraph/molecule/polymer/Cellulose.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/Cellulose.py	(refactored)
+@@ -43,7 +43,7 @@
+ class Cellulose(Polymer):
+ 	ALL_MONOMERS = Mixture()
+ 	ALL_MONOMERS.loadWFM(WOLFFIA_WFY_DIR + "/Cellulose.wfm")
+-	print ALL_MONOMERS.molecules()
++	print(ALL_MONOMERS.molecules())
+ 
+ 	IMAGE                = "/Cellulose.png"
+ 	
+@@ -95,7 +95,7 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Probando Cellulose"
++    print("Probando Cellulose")
+     m = Cellulose(7)
+     #m = Cellulose.MONOMERS_MOLS['Oe']
+     #print [m.getAtomAttributes(a) for a in m.atoms()]
+--- ./lib/chemicalGraph/molecule/polymer/Chitosan.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/Chitosan.py	(refactored)
+@@ -75,9 +75,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Probando Chitosan"
++    print("Probando Chitosan")
+     m = Chitosan(6)
+-    print m
++    print(m)
+     #m.writePDB("/home/wensy/invewstigacion/prueba/chito.pdb")
+     #m.writePSF("/home/wensy/invewstigacion/prueba/chito.psf")
+ 
+--- ./lib/chemicalGraph/molecule/polymer/PANI.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/PANI.py	(refactored)
+@@ -92,9 +92,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando PANI"
++	print("Probando PANI")
+ 	m = PANI(1,1,4)
+-	print m
++	print(m)
+ 	m.writePDB("prueba.pdb")
+ 	m.writePSF("prueba.psf")
+ 
+--- ./lib/chemicalGraph/molecule/polymer/PEDOT.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/PEDOT.py	(refactored)
+@@ -131,9 +131,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Probando PEDOT"
++    print("Probando PEDOT")
+     m = PEDOT(2,2,2)
+-    print m
++    print(m)
+     #m.writePDB("/home/wensy/invewstigacion/prueba/chito.pdb")
+     #m.writePSF("/home/wensy/invewstigacion/prueba/chito.psf")
+ 
+--- ./lib/chemicalGraph/molecule/polymer/PMMA.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/PMMA.py	(refactored)
+@@ -70,9 +70,9 @@
+ 		
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Probando PMMA"
++    print("Probando PMMA")
+     m = PMMA(6)
+-    print m
++    print(m)
+     #m.writePDB("/home/wensy/invewstigacion/prueba/chito.pdb")
+     #m.writePSF("/home/wensy/invewstigacion/prueba/chito.psf")
+ 
+--- ./lib/chemicalGraph/molecule/polymer/PSS.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/PSS.py	(refactored)
+@@ -111,7 +111,7 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Probando PSS"
++    print("Probando PSS")
+     m = PSS(2,2,3)
+     #m = PSS.MONOMERS_MOLS['Oe']
+     #print [m.getAtomAttributes(a) for a in m.atoms()]
+--- ./lib/chemicalGraph/molecule/polymer/Polymer.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/Polymer.py	(refactored)
+@@ -38,7 +38,7 @@
+    momomerAtoms = []  # lists of atom counts made by constructPDB()
+ 
+    def __init__(self, chain, molname=None):
+-   		print "Polymer"
++   		print("Polymer")
+ 		if type(self) == Polymer:
+ 		   raise Molecule.MoleculeError("Polymer is an abstract class.  Should not be directly instantiated.")
+ 		
+@@ -75,7 +75,7 @@
+ 				lastSegment = set(self.atoms()) - lastSegment
+ 
+    def chainOldStyle(self, chain):
+-   		print "chainOldStyle"
++   		print("chainOldStyle")
+ 		if len(chain) == 1:
+ 		   self.load(self.ONE_MONOMER_PDB[chain[0]])
+ 		   return
+--- ./lib/chemicalGraph/molecule/polymer/Polystyrene.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/Polystyrene.py	(refactored)
+@@ -75,9 +75,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Probando Polystyrene"
++    print("Probando Polystyrene")
+     m = Polystyrene(6)
+-    print m
++    print(m)
+     m.writePDB("/home/jse/Desktop/Polystyrene.pdb")
+     m.writePSF("/home/jse/Desktop/Polystyrene.psf")
+ 
+--- ./lib/chemicalGraph/molecule/polymer/SDS.py	(original)
++++ ./lib/chemicalGraph/molecule/polymer/SDS.py	(refactored)
+@@ -46,9 +46,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando SDS"
++	print("Probando SDS")
+ 	m = SDS()
+-	print m
++	print(m)
+ 	m.writePSF("SDS.psf")
+ 	m.writePDB("SDS.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/AcetoneAllH.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/AcetoneAllH.py	(refactored)
+@@ -50,9 +50,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando AcetoneAllH"
++	print("Probando AcetoneAllH")
+ 	m = AcetoneAllH()
+-	print m
++	print(m)
+ 	m.writePSF("AcetoneAllH.psf")
+ 	m.writePDB("Acetone-All-H.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/AcetoneNoH.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/AcetoneNoH.py	(refactored)
+@@ -50,9 +50,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando AcetoneNoH"
++	print("Probando AcetoneNoH")
+ 	m = AcetoneNoH()
+-	print m
++	print(m)
+ 	m.writePSF("AcetoneNoH.psf")
+ 	m.writePDB("AcetoneNoH.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/DMF.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/DMF.py	(refactored)
+@@ -87,7 +87,7 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando DMF"
++	print("Probando DMF")
+ 	m = DMF()
+-	print m
++	print(m)
+ 
+--- ./lib/chemicalGraph/molecule/solvent/H2O2.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/H2O2.py	(refactored)
+@@ -74,11 +74,11 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando H2O2"
++	print("Probando H2O2")
+ 	m = H2O2("H2O2 prueba" )
+-	print m
++	print(m)
+ 	for node in m:
+-		print m.getAtomAttributes(node)
++		print(m.getAtomAttributes(node))
+ 	m.writePSF("caca.psf")
+ 	m.writePDB("caca.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/Na.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/Na.py	(refactored)
+@@ -58,9 +58,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando Na"
++	print("Probando Na")
+ 	m = Na()
+-	print m
++	print(m)
+ 	m.writePSF("Na.psf")
+ 	m.writePDB("Na.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/PABA.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/PABA.py	(refactored)
+@@ -42,7 +42,7 @@
+     def __init__(self):
+ 		mix  = Mixture()
+ 		mix.loadWFM(WOLFFIA_WFY_DIR + "/PABAtetradecane.wfm")
+-		print mix.molecules()
++		print(mix.molecules())
+ 		Molecule.__init__(self, "PABA-Tetradecane", molecule=mix.getMolecule("PABA-TetradecaneQ_1"))
+ 		self.changeResidues("PAB")
+ #---------------------------------------------------------------------           
+@@ -51,7 +51,7 @@
+     def __init__(self):
+ 		mix  = Mixture()
+ 		mix.loadWFM(WOLFFIA_WFY_DIR + "/PABAheptane.wfm")
+-		print mix.molecules()
++		print(mix.molecules())
+ 		Molecule.__init__(self, "PABA-Heptane", molecule=mix.getMolecule("PABA-HeptaneQ_1"))
+ 		self.changeResidues("PAB")
+ #---------------------------------------------------------------------           
+@@ -60,7 +60,7 @@
+     def __init__(self):
+ 		mix  = Mixture()
+ 		mix.loadWFM(WOLFFIA_WFY_DIR + "/PABApentane.wfm")
+-		print mix.molecules()
++		print(mix.molecules())
+ 		Molecule.__init__(self, "PABA-Pentane", molecule=mix.getMolecule("PABA-Pentane_1"))
+ 		self.changeResidues("PAB")
+ #---------------------------------------------------------------------           
+--- ./lib/chemicalGraph/molecule/solvent/SDBS.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/SDBS.py	(refactored)
+@@ -64,8 +64,8 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-    print "Probando SBDS"
++    print("Probando SBDS")
+     m = SDBS()
+-    print m
++    print(m)
+     m.writePSF("SBDS.psf")
+     m.writePDB("SBDS.pdb")
+--- ./lib/chemicalGraph/molecule/solvent/SDS.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/SDS.py	(refactored)
+@@ -65,9 +65,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando SDS"
++	print("Probando SDS")
+ 	m = SDS()
+-	print m
++	print(m)
+ 	m.writePSF("SDS.psf")
+ 	m.writePDB("SDS.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/SDSplusNA.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/SDSplusNA.py	(refactored)
+@@ -46,9 +46,9 @@
+ 		self.setForceField(_FORCE_FIELD )			
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando SDSplusNA"
++	print("Probando SDSplusNA")
+ 	m = SDSplusNA()
+-	print m
++	print(m)
+ 	m.writePSF("SDSplusNA.psf")
+ 	m.writePDB("SDSplusNA.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/Solvent.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/Solvent.py	(refactored)
+@@ -38,7 +38,7 @@
+ class Solvent(Molecule):
+ 	#def __init__(self, moleculeClass, ident="Unknown"):
+ 	def __init__(self, molecule, ident="Unknown"):
+-		print "Solvent.__init__(): ", molecule.__class__
++		print("Solvent.__init__(): ", molecule.__class__)
+ 		#super(Solvent, self).__init__(molecule=moleculeClass())
+ 		#self.solventClass = moleculeClass
+ 		super(Solvent, self).__init__(molecule=molecule)
+@@ -65,7 +65,7 @@
+ 
+ 	def atomsGenerator(self):
+ 		#attributes = list(super(Solvent, self).atomsGenerator())
+-		print "Solvent.atomsGenerator: "
++		print("Solvent.atomsGenerator: ")
+ 		try: # back compatibility
+ 			attributes = list(self.solventClass().atomsGenerator())
+ 		except:
+@@ -140,7 +140,7 @@
+ 			return 0
+ 
+ 	def __iter__(self):
+-		return iter(range(self.order()))
++		return iter(list(range(self.order())))
+ 
+ '''
+ class SolventAtomIterator:
+@@ -187,24 +187,24 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	from THF import THF
++	from .THF import THF
+ 
+ 	solv = Solvent(THF)
+-	print type(solv.molname())
++	print(type(solv.molname()))
+ 	t = THF()
+-	print type(t.molname())
++	print(type(t.molname()))
+ 	solv = Solvent(t.__class__)
+-	print solv.molname()
++	print(solv.molname())
+ 	solv.addCoordinates(t)
+ 	solv.addCoordinates(t)
+-	print solv.coordinates
+-
+-	print "atomsGenerator"
+-	print map(str,solv.atomsGenerator() )
+-
+-	print "SolventAtomIterator"
++	print(solv.coordinates)
++
++	print("atomsGenerator")
++	print(list(map(str,solv.atomsGenerator() )))
++
++	print("SolventAtomIterator")
+ 	for atom in solv:
+-		print atom, ": ", solv.atom_attributes(atom)
+-
+-	print "bonds"
+-	print solv.bonds()
++		print(atom, ": ", solv.atom_attributes(atom))
++
++	print("bonds")
++	print(solv.bonds())
+--- ./lib/chemicalGraph/molecule/solvent/THF.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/THF.py	(refactored)
+@@ -117,9 +117,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando THF"
++	print("Probando THF")
+ 	m = THF()
+-	print m
++	print(m)
+ 	m.writePSF("THF.psf")
+ 	m.writePDB("THF.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/WATER.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/WATER.py	(refactored)
+@@ -60,7 +60,7 @@
+ 		self.add_atom(atr,[1])
+ 
+ 		if WATER._FORCE_FIELD == None: 
+-			print "WATER generating FF"
++			print("WATER generating FF")
+ 			WATER._FORCE_FIELD = ForceField(self, NANOCAD_FORCE_FIELDS + "/WATER.prm")
+ 		#print "WATER1", WATER._FORCE_FIELD._BONDS
+ 		self.setForceField(WATER._FORCE_FIELD )
+@@ -71,11 +71,11 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando WATER"
++	print("Probando WATER")
+ 	m = WATER( )
+-	print m
++	print(m)
+ 	for node in m:
+-		print m.getAtomAttributes(node)
++		print(m.getAtomAttributes(node))
+ 	m.writePSF("caca.psf")
+ 	m.writePDB("caca.pdb")
+ 
+--- ./lib/chemicalGraph/molecule/solvent/Xylene.py	(original)
++++ ./lib/chemicalGraph/molecule/solvent/Xylene.py	(refactored)
+@@ -48,9 +48,9 @@
+ 
+ #==========================================================================
+ if __name__ == '__main__':
+-	print "Probando Xylene"
++	print("Probando Xylene")
+ 	m = Xylene()
+-	print m
++	print(m)
+ 	m.writePSF("Xylene.psf")
+ 	m.writePDB("Xylene.pdb")
+ 
+--- ./lib/communication/RemoteHost.py	(original)
++++ ./lib/communication/RemoteHost.py	(refactored)
+@@ -50,7 +50,7 @@
+ 		self.logArea.write("RemoteHost.killAllNamd killing processes ...\n")
+ 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['killall namd2'])
+ 		#print "retrieveNamdUsers ", resp
+-		return not (len(resp) > 1 and resp.split('\n')[-2] <> "namd2: no process found")
++		return not (len(resp) > 1 and resp.split('\n')[-2] != "namd2: no process found")
+ 	
+ 	def probe(self):
+ 		self.status      = RemoteHost.testConnection(self.remoteHost, self.username, self.password,logArea=self.logArea)
+@@ -86,7 +86,7 @@
+ 		returnCode = CONNECTED
+ 		logArea.write("RemoteHost.testConnection Checking namd ...\n")
+ 		(resp, err) = RemoteHost._sendCommand(remoteHost, username, password, ['whereis', 'namd2'])
+-		if len(resp) > 1 and resp.split('\n')[-2] <> "namd2:":
++		if len(resp) > 1 and resp.split('\n')[-2] != "namd2:":
+ 			logArea.write("RemoteHost.testConnection NAMD confirmed: " + resp.split('\n')[-2] + "\n")
+ 		else:
+ 			logArea.write("RemoteHost.testConnection ERROR: namd2 is not in the remote host's search path. \n")
+@@ -132,7 +132,7 @@
+ 		self.maxGpus = 0
+ 		self.logArea.write( "RemoteHost.retrieveGPUs Checking number of cpu cores ...\n")
+ 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['cat /proc/driver/nvidia/version'])
+-		if err.find("No such file or directory") <> -1:
++		if err.find("No such file or directory") != -1:
+ 			self.logArea.write( "RemoteHost.retrieveGPUs did not find NVIDIA drivers\n")
+ 		else:
+ 			(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['lspci | grep -i nvidia | wc -l'])
+@@ -169,8 +169,8 @@
+ 		'''
+ 		#print "RemoteHost.sendFile checking if \"" + self.workingDir + "\" exists ..."
+ 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['ls', '-la', self.workingDir])
+-		if err.find("No such file or directory") > -1 or len(resp) < 2 or resp.split('\n')[1][:4] <> 'drwx':
+-			print "ERROR RemoteHost.sendFile: folder \"" + self.workingDir + "\" does not exists or has incorrect permissions ..."
++		if err.find("No such file or directory") > -1 or len(resp) < 2 or resp.split('\n')[1][:4] != 'drwx':
++			print("ERROR RemoteHost.sendFile: folder \"" + self.workingDir + "\" does not exists or has incorrect permissions ...")
+ 			return
+ 		
+ 		#print "RemoteHost.sendFile detecting files that are about to be overwritten in \"" + self.workingDir + "\" ..."
+--- ./lib/communication/imd/imd.py	(original)
++++ ./lib/communication/imd/imd.py	(refactored)
+@@ -84,8 +84,7 @@
+ 	
+ 	def packetType(self): return self.ptype
+ 
+-class IMDData():
+-	__metaclass__ = ABCMeta
++class IMDData(metaclass=ABCMeta):
+ 	@abstractmethod
+ 	def __init__(self):
+ 	    pass
+@@ -191,7 +190,7 @@
+ 		self.reset()
+ 		self.rawCoords.fromstring(imdData)
+ 		if len(self.rawCoords) % 3 != 0:
+-		    print "ERROR: Ammount of coordinates in data (", len(self.rawCoords), ")not divisible by 3."
++		    print("ERROR: Ammount of coordinates in data (", len(self.rawCoords), ")not divisible by 3.")
+ 		    raise ValueError
+ 		return self
+ 
+@@ -209,8 +208,7 @@
+ 	def transmitRate(self): pass# to be implemented
+ 	
+ #===================================================================================
+-class IMDPacket:
+-	__metaclass__ = ABCMeta
++class IMDPacket(metaclass=ABCMeta):
+ 	@abstractmethod
+ 	def __init__(self, sock=None, header=None):
+ 		#print "IMDPacket __init__"
+@@ -270,8 +268,7 @@
+ 		return sock.send(data)
+ 		
+ 
+-class IMDDataPacket(IMDPacket):
+-	__metaclass__ = ABCMeta
++class IMDDataPacket(IMDPacket, metaclass=ABCMeta):
+ 	@abstractmethod
+ 	def __init__(self, sock=None, header=None, data=None):
+ 		IMDPacket.__init__(self,header=IMDHeader(None, packetType=None))
+@@ -311,8 +308,7 @@
+ 		return None
+ 	'''
+ 	
+-class IMDControlPacket(IMDPacket):
+-	__metaclass__ = ABCMeta
++class IMDControlPacket(IMDPacket, metaclass=ABCMeta):
+ 	@abstractmethod
+ 	def __init__(self, sock=None, header=None):
+ 		pass
+@@ -426,8 +422,7 @@
+ 
+ 
+ #===================================================================================
+-class IMDConnection:
+-	__metaclass__ = ABCMeta
++class IMDConnection(metaclass=ABCMeta):
+ 	_TIMEOUT = 30
+ 	def __init__(self, host, port):
+ 		#print "IMDConnection __init__", host, port
+@@ -445,13 +440,13 @@
+ 		
+ 	def close(self):
+ 		# busy wait until connection is verified
+-		print "IMDConnection close: waiting for connection to be established", self.connected , self.packet, self.__class__.__name__
++		print("IMDConnection close: waiting for connection to be established", self.connected , self.packet, self.__class__.__name__)
+ 		for i in range(int(IMDConnection._TIMEOUT)):
+ 			if self.connected or self.sock == None: break
+ 			time.sleep(1)  
+ 			 
+ 		if self.connected: 
+-			print "IMDConnection close: connection established. Now it will be closed!",self.connected , self.packet, self.__class__.__name__
++			print("IMDConnection close: connection established. Now it will be closed!",self.connected , self.packet, self.__class__.__name__)
+ 			self.sock.shutdown(socket.SHUT_RDWR)
+ 			#try: self.sock.shutdown(socket.SHUT_RDWR)
+ 			#except: pass
+@@ -469,10 +464,10 @@
+ 				header=IMDHeader(None, packetType=IMDType.IMD_KILL), 
+ 				data=None).send(self.sock)
+ 		'''
+-		if self.sock <> None:
++		if self.sock != None:
+ 			IMDKillPacket().send(self.sock)
+ 	
+-	def next(self):
++	def __next__(self):
+ 		if not self.connected:
+ 			raise StopIteration
+ 		else:
+@@ -511,7 +506,7 @@
+ 		    count += 1
+ 		    
+ 		if not self.connected:
+-			print "IMDClientConnection __init__ "+ str(self.server_address) + " did not connect: ", e
++			print("IMDClientConnection __init__ "+ str(self.server_address) + " did not connect: ", e)
+ 			raise socket.timeout
+ 		
+ 		self.sock.settimeout(5.)
+@@ -544,7 +539,7 @@
+ 
+ #===================================================================================
+ import threading, sys, os, time, random
+-from Queue import Queue, Empty
++from queue import Queue, Empty
+ 
+ class IMDThread(threading.Thread):
+ 	def __init__(self, remoteHost=None, port=3000):
+@@ -605,7 +600,7 @@
+ 		Runs the thread. Called by self.start.
+ 		"""
+ 		
+-		print "IMDThread run"
++		print("IMDThread run")
+ 		self.imd = IMDClientConnection(self.remoteHost, self.port)
+ 		self.imd.connect()
+ 		
+@@ -644,7 +639,7 @@
+ 			#	print en.data.rawCoords
+ 			#print "IMDThread run: packet received: ", p.__class__.__name__
+ 			#time.sleep(1)  
+-		print "IMDThread.run finished"
++		print("IMDThread.run finished")
+ 		
+ 	
+ 
+@@ -659,21 +654,21 @@
+ 	s.bind( ('', port) )
+ 	s.listen(1)
+ 	s.settimeout(10)
+-	print "fakeServer1: Waiting"
++	print("fakeServer1: Waiting")
+ 	c,a = s.accept()
+-	print "fakeServer1: connected"
++	print("fakeServer1: connected")
+ 	IMDHandshakePacket().send(c)
+ 	p = IMDPacket.recv(c)
+ 	assert isinstance(p,IMDGoPacket)
+-	print "fakeServer1: Go"
++	print("fakeServer1: Go")
+ 	e = IMDEnergies()
+ 	e.T = 298
+-	print "fakeServer1: sending T"
++	print("fakeServer1: sending T")
+ 	IMDEnergiesPacket(e).send(c)
+ 	p = IMDPacket.recv(c)
+ 	assert isinstance(p,IMDKillPacket)
+ 	IMDDisconnectPacket().send(c)
+-	print "fakeServer1: Killed! ... closing"
++	print("fakeServer1: Killed! ... closing")
+ 	c.close()
+ 	s.close()
+ 	
+@@ -683,67 +678,67 @@
+ 	s.connect( (host, port) )
+ 	p = IMDPacket.recv(s)
+ 	assert isinstance(p,IMDHandshakePacket)
+-	print "client: handshake"
++	print("client: handshake")
+ 	IMDGoPacket().send(s)
+ 	p = IMDPacket.recv(s)
+-	print "client: T received"
++	print("client: T received")
+ 	assert isinstance(p,IMDEnergiesPacket)
+-	print "client: T=", p.getEnergies().T
++	print("client: T=", p.getEnergies().T)
+ 	IMDKillPacket().send(s)
+ 	p = IMDPacket.recv(s)
+ 	assert isinstance(p,IMDDisconnectPacket)
+-	print "client: IMDDisconnectPacket received, closing"
++	print("client: IMDDisconnectPacket received, closing")
+ 	s.close()
+ 	
+ def fakeServer2():
+ 	c = IMDServerConnection(port)
+-	print "fakeServer2: IMDServerConnection"
++	print("fakeServer2: IMDServerConnection")
+ 	c.connect()
+-	print "fakeServer2: connected"
++	print("fakeServer2: connected")
+ 	e = IMDEnergies()
+ 	e.T = 298 
+-	print "fakeServer2: sending T"
++	print("fakeServer2: sending T")
+ 	c.send(IMDEnergiesPacket(e))
+ 	p = c.recv()
+ 	assert isinstance(p,IMDKillPacket)
+ 	c.send(IMDDisconnectPacket())
+-	print "fakeServer2: Killed! ... closing"
++	print("fakeServer2: Killed! ... closing")
+ 	c.close()
+ 	
+ def client2():
+ 	c = IMDClientConnection(host, port)
+ 	c.connect()
+-	print "client2: connected"
++	print("client2: connected")
+ 	p = c.recv()
+ 	assert isinstance(p,IMDEnergiesPacket)
+-	print "client2: T=", p.getEnergies().T
++	print("client2: T=", p.getEnergies().T)
+ 	c.send(IMDKillPacket())
+ 	p = c.recv()
+ 	assert isinstance(p,IMDDisconnectPacket)
+-	print "client2: IMDDisconnectPacket received, closing"
++	print("client2: IMDDisconnectPacket received, closing")
+ 	c.close()
+ 	
+ def fakeServer3():
+ 	c = IMDServerConnection(port)
+ 	c.connect()
+-	print "fakeServer3: connected"
++	print("fakeServer3: connected")
+ 	e = IMDEnergies()
+ 	for t in range(298,303):
+ 		e.T = t
+-		print "fakeServer3: sending T=", t
++		print("fakeServer3: sending T=", t)
+ 		c.send(IMDEnergiesPacket(e))
+ 	c.send(IMDDisconnectPacket())
+-	print "fakeServer3: closing"
++	print("fakeServer3: closing")
+ 	c.close()
+ 	
+ def client3():
+ 	c = IMDClientConnection(host, port)
+ 	c.connect()
+-	print "client3: connected"
++	print("client3: connected")
+ 	for p in c:
+ 		if isinstance(p,IMDEnergiesPacket):
+-			print "client3: T=", p.getEnergies().T
+-	print "client3: closing"
++			print("client3: T=", p.getEnergies().T)
++	print("client3: closing")
+ 	c.close()
+ 	
+ from random import random
+@@ -756,10 +751,10 @@
+ 		time.sleep(int(random()*5))
+ 		# ###############################
+ 		a.setFromIterable([random(),random(),random()])
+-		print "fakeServer4: ", a.coordinates()[0]
++		print("fakeServer4: ", a.coordinates()[0])
+ 		c.send(IMDCoordPacket(a))
+ 	c.send(IMDDisconnectPacket())
+-	print "fakeServer4: closing"
++	print("fakeServer4: closing")
+ 	c.close()
+ 	
+ def client4():
+@@ -769,19 +764,19 @@
+ 		# time spent on other computations
+ 		time.sleep(int(random()*5))
+ 		# ###############################
+-		print "client4: polling"
++		print("client4: polling")
+ 		while True:
+ 			try: c = t.getCoordinatesQ().get_nowait()
+ 			except Empty: break
+ 			#try: e = t.getEnergiesQ().get_nowait()
+ 			#except Empty: break
+-			print "client4: ", c.coordinates()[0]
++			print("client4: ", c.coordinates()[0])
+ 	t.cancel()
+-	print "client4: closing"
++	print("client4: closing")
+ 
+ 
+ def coordsF(c):
+-	print "coordsF5: ", c[0]
++	print("coordsF5: ", c[0])
+ 	
+ def client5():
+ 	t = IMDThread(host, port)
+@@ -792,7 +787,7 @@
+ 		time.sleep(int(random()*5))
+ 		# ###############################
+ 	t.cancel()
+-	print "client5: closing"
++	print("client5: closing")
+ 
+ 	
+ def test(server, client):
+@@ -811,23 +806,23 @@
+ 	#imd = IMDConnection('molecula.uprh.edu', 3545)
+ 	imd = IMDConnection('localhost', 3546)
+ 	
+-	print 'starting up on %s port %s' % imd.server_address
++	print('starting up on %s port %s' % imd.server_address)
+ 	#time.sleep(5)  
+ 	imd.go()
+ 	
+ 	i=0
+ 	while True:
+ 		en = imd.recv()
+-		print "recibi tipo ",en.packetType()
++		print("recibi tipo ",en.packetType())
+ 		if en.packetType() == IMDType.IMD_DISCONNECT: break
+ 		#(en, cocr) = imd.recv()
+ 		
+ 		if en.packetType() == IMDType.IMD_ENERGIES:
+-			print "IMD_ENERGIES ", en.data.tstep, en.data.T, en.data.Etot, en.data.Epot, en.data.Evdw, en.data.Eelec, en.data.Ebond, en.data.Eangle, en.data.Edihe, en.data.Eimpr
++			print("IMD_ENERGIES ", en.data.tstep, en.data.T, en.data.Etot, en.data.Epot, en.data.Evdw, en.data.Eelec, en.data.Ebond, en.data.Eangle, en.data.Edihe, en.data.Eimpr)
+ 		if en.packetType() == IMDType.IMD_FCOORDS:
+-			print "IMD_FCOORDS ", en.data.rawCoords[:6]
++			print("IMD_FCOORDS ", en.data.rawCoords[:6])
+ 		i+=1
+-		print "IMD_FCOORDS ", i
++		print("IMD_FCOORDS ", i)
+ 		if i % 1000 == 0:
+ 			break
+ 		#c = imd.recv()
+--- ./lib/communication/namd/Configuration.py	(original)
++++ ./lib/communication/namd/Configuration.py	(refactored)
+@@ -148,7 +148,7 @@
+ 	    if self.useLang.isChecked():
+ 	        conf.write("\n\n###LANGEVIN DYNAMICS###\n   langevin   on")
+ 	        if self.langTemp == 0:
+-	            print "You did not set a temperature for langevin calculations!\nTemperature will be set to 1 to avoid error."
++	            print("You did not set a temperature for langevin calculations!\nTemperature will be set to 1 to avoid error.")
+ 	            conf.write("\n   langevinTemp   1")
+ 	        else:
+ 	            conf.write("\n   langevinTemp   " + str(self.langTemp.value()))
+@@ -163,7 +163,7 @@
+ 	    if self.tempCoup.isChecked():
+ 	        conf.write("\n\n###Temperature Coupling###\ntCouple   on")
+ 	        if self.tempBath.value() == 0:
+-	            print "No values given to tCoupleTemp! \nGiving it a default value of 1."
++	            print("No values given to tCoupleTemp! \nGiving it a default value of 1.")
+ 	            conf.write("\ntCoupleTemp   1.00")
+ 	        else:
+ 	            conf.write("\ntCoupleTemp   " + str(self.tempBath.value()))
+@@ -175,7 +175,7 @@
+ 	    if self.timeTRes.value() != 0:
+ 	        conf.write("\n\n###Temperature Rescaling###\nrescaleFreq   " + str(self.timeTRes.value()))
+ 	        if self.tempEq.value() == 0:
+-	            print "No value given to rescaleTemp! \n Giving it a default value of 1."
++	            print("No value given to rescaleTemp! \n Giving it a default value of 1.")
+ 	            conf.write("\nrescaleTemp   1")
+ 	        else:
+ 	            conf.write("\nrescaleTemp   " + str(self.tempEq.value()))
+@@ -188,7 +188,7 @@
+ 	            conf.write("\nreassignTemp   " + str(self.tempResEq.value()))
+ 	        conf.write("\nreassignIncr   " + str(self.tempInc.value()))
+ 	        if self.resHold.value() == 0:
+-	            print "No value given to reassignHold! \n Giving it a default value of 1."
++	            print("No value given to reassignHold! \n Giving it a default value of 1.")
+ 	            conf.write("\nreassignHold   1")
+ 	        else:
+ 	            conf.write("\nreassignHold   " + str(self.resHold.value()))
+@@ -207,17 +207,17 @@
+ 	    if self.useBeren.isChecked() != False:
+ 	        conf.write("\n\n###Berendsen Pressure Bath Coupling###\n   BerendsenPressure   on")
+ 	        if self.targPress.value() == 0:
+-	            print "No value given to target pressure for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
++	            print("No value given to target pressure for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
+ 	            conf.write("\n   BerendsenPressureTarget   1")
+ 	        else:
+ 	            conf.write("\n   BerendsenPressureTarget   " + str(self.targPress.value()))
+ 	        if self.berenComp.value() == 0:
+-	            print "No value given to compressibility for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
++	            print("No value given to compressibility for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
+ 	            conf.write("\n   BerendsenPressureCompressibility   1")
+ 	        else:
+ 	            conf.write("\n   BerendsenPressureCompressibility   " + str(self.berenComp.value()))
+ 	        if self.berenRelx.value() == 0:
+-	            print "No value given to relaxation time for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
++	            print("No value given to relaxation time for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
+ 	            conf.write("\n   BerendsenPressureRelaxationTime   1")
+ 	        else:
+ 	            conf.write("\n   BerendsenPressureRelaxationTime   " + str(self.berenRelx.value()))
+@@ -264,7 +264,7 @@
+ 	    if self.smd.isChecked():
+ 	        conf.write("\n\n###Steered molecular dynamics###\nSMD   on")
+ 	        if self.smdFile.text() == "default":
+-	            print "Hey, you forgot to name the file for SMD constraints! \nExit"
++	            print("Hey, you forgot to name the file for SMD constraints! \nExit")
+ 	            return
+ 	        else:
+ 	            conf.write("\nSMDFile   " + self.smdFile.text())
+--- ./lib/communication/namd/SimThread.py	(original)
++++ ./lib/communication/namd/SimThread.py	(refactored)
+@@ -60,8 +60,8 @@
+ 		        self.coordinateFileName = conf.getBuildDirectory() + "\\" + conf.getMixtureName() + ".coor"
+ 		    else:
+ 		    	if useLogFile:
+-		    		print "SimThread.__init__ executing \"", str(namdLocation + " " + conf.getFilename() + " > " + conf.getMixtureName() + ".log"
+-), "\""
++		    		print("SimThread.__init__ executing \"", str(namdLocation + " " + conf.getFilename() + " > " + conf.getMixtureName() + ".log"
++), "\"")
+ 		        	self.pipe = Popen(str(namdLocation + " " + conf.getFilename() + " > " + conf.getMixtureName() + ".log"
+ ), stdout=PIPE, bufsize=0, shell=True , preexec_fn=os.setsid)
+ 		        else:
+@@ -90,16 +90,16 @@
+ 	    the timers, killing the pipe(?) and stopping the simRun thread
+ 	    
+ 	    '''
+-	    print "SimThread cancel"
++	    print("SimThread cancel")
+ 	    try: 
+ 	        self.pipe.poll()
+ 	    except AttributeError:
+-	        print "cancel: No pipe"   
++	        print("cancel: No pipe")   
+ 	
+ 	    try: 
+ 	        os.killpg(self.pipe.pid,signal.SIGKILL)
+ 	    except:
+-	        print "cancel: Nothing to kill"            
++	        print("cancel: Nothing to kill")            
+ 
+ 		threading.Thread.cancel(self)
+ 	
+@@ -185,7 +185,7 @@
+ 			#print "SimThread.run self.pipe.returncode = ", self.pipe.returncode
+ 			self.pipe.poll()
+ 		self.resetModifiationTime()
+-		print "SimThread.run termino"
++		print("SimThread.run termino")
+ 	
+ 	
+ 	def stop(self):
+@@ -204,7 +204,7 @@
+ 		'''
+ 		Constructor
+ 		'''
+-		print "ImdSimThread __init__", namdLocation, remoteHost, port, remoteLocation
++		print("ImdSimThread __init__", namdLocation, remoteHost, port, remoteLocation)
+ 		super(ImdSimThread,self).__init__(conf, namdLocation, remoteHost, remoteLocation, useLogFile)
+ 		if remoteHost == None:
+ 			self.imdProc = imd.IMDThread(port=port)
+@@ -215,7 +215,7 @@
+ 		'''
+ 		Stops the simulation 
+ 		'''
+-		print "ImdSimThread cancel"
++		print("ImdSimThread cancel")
+ 		self.imdProc.cancel()
+ 		super(ImdSimThread,self).cancel()
+ 		
+@@ -250,7 +250,7 @@
+ 		self.imdProc.setCallback(f, imd.IMDType.IMD_ENERGIES)
+ 		
+ 	def run(self):
+-		print "ImdSimThread run"
++		print("ImdSimThread run")
+ 		self.imdProc.start()
+ 		SimThread.run(self)
+ 		#self.imdProc.join()
+@@ -294,13 +294,13 @@
+     def __init__(self,nombreArchivo, remoteHost=None):
+ 		self.archivo = nombreArchivo 
+ 		self.remoteHost = remoteHost
+-		if self.remoteHost <> None:
++		if self.remoteHost != None:
+ 			self.remoteHostFile = nombreArchivo
+ 		self.readNext()
+     
+     
+     def readNext(self):
+-		if self.remoteHost <> None:
++		if self.remoteHost != None:
+ 			self.fh, tempFileName = tempfile.mkstemp()
+ 			(resp, err) = self.remoteHost.getFile(self.remoteHostFile, tempFileName)
+ 			#print "NAMDcell readNext", resp, err
+@@ -311,11 +311,11 @@
+ 		    f = open(self.archivo, 'r')
+ 		    lines = f.readlines()
+ 		    f.close()
+-		    if self.remoteHost <> None: 
++		    if self.remoteHost != None: 
+ 		    	os.close(self.fh)
+ 		    	os.remove(self.archivo)
+ 		except:
+-			print "Warning. NAMDcell could not open or read cell file ", self.archivo
++			print("Warning. NAMDcell could not open or read cell file ", self.archivo)
+ 		    
+ 		try:
+ 		    valores = lines[2].split(' ')
+@@ -327,7 +327,7 @@
+ 		    self.oy = float(valores[11])
+ 		    self.oz = float(valores[12])
+ 		except:
+-		    print "Warning. NAMDcell could not process cell in ", self.archivo
++		    print("Warning. NAMDcell could not process cell in ", self.archivo)
+ 		    self.dx = self.dy = self.dz = self.ox = self.oy = self.oz = None
+             
+      
+--- ./lib/fbp/Network.py	(original)
++++ ./lib/fbp/Network.py	(refactored)
+@@ -1,7 +1,7 @@
+ 
+ 
+ from PyQt4 import QtCore
+-import libraryComponents
++from . import libraryComponents
+ import sys
+ from lib.fbp.libraryComponents import FBP_NO_WRAP_FUNCTIONS
+ 
+@@ -24,9 +24,9 @@
+ 		for (a1, a2) in mol.bonds():
+ 			lengths.append(mol.getAtomAttributes(a1).distanceTo(mol.getAtomAttributes(a2)))
+ 
+-	print "RESULTADO DEL NETWORK ===========================" 
+-	print max(lengths)
+-	print "=================================================" 
++	print("RESULTADO DEL NETWORK ===========================") 
++	print(max(lengths))
++	print("=================================================") 
+ 	return lengths
+ 	
+ 	
+@@ -37,7 +37,7 @@
+ 		mol = mix.getMolecule(molname)
+ 		for (a1, a2) in mol.bonds():
+ 			if mol.getAtomAttributes(a1).distanceTo(mol.getAtomAttributes(a2)) > maxBondLength:
+-				if not longBonds.has_key(molname): longBonds[molname] = list()
++				if molname not in longBonds: longBonds[molname] = list()
+ 				longBonds[molname].append( (a1,a2) )
+ 	return longBonds
+ 
+@@ -64,7 +64,7 @@
+ 	dcd = DCDReader("/home/jse/inv/Simulaciones/CarbonActivado/diamondTest/diamondTest.dcd")
+ 	
+ 	for X,Y,Z in dcd:
+-		print "DCDLoader updating frame"
++		print("DCDLoader updating frame")
+ 		mixture.updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
+ 		produceGraph(  bondLengthsFromMixture(mixture)  )
+ 		time.sleep(2)
+@@ -77,7 +77,7 @@
+ def removeEdgesAndRestart(state, wolffia,shownMolecules):
+ 	mix = state.getMixture()
+ 	molBonds = longBonds(mix)
+-	print "removeEdgesAndRestart rompera enlaces en ", len(molBonds), " moleculas"
++	print("removeEdgesAndRestart rompera enlaces en ", len(molBonds), " moleculas")
+ 	if len(molBonds) > 0:
+ 		wolffia.simTab.on_cancelButton_pressed()
+ 		#while wolffia.simRunning == True:
+@@ -85,7 +85,7 @@
+ 			#wolffia.simTab.on_cancelButton_pressed()
+ 			#time.sleep(1)
+ 		for mol in molBonds:
+-			print "removeEdgesAndRestart rompiendo ", len(molBonds[mol]) , "enlaces ", molBonds[mol], " en ", mol
++			print("removeEdgesAndRestart rompiendo ", len(molBonds[mol]) , "enlaces ", molBonds[mol], " en ", mol)
+ 			state.getMixture().removeBonds(mol,molBonds[mol],shownMolecules)
+ 		wolffia.simTab.on_runButton_pressed()
+ 	
+@@ -187,18 +187,18 @@
+ 			while not self.wolffiaStateQ.empty():
+ 				self.wolffiaStateQ.get(True,1)
+ 				
+-			print "Network run components ======================\n", self.components,"components end ======================\n"
+-			print "Network run wrapperFunctions ======================\n", self.wrapperFunctions(),"wrapperFunctions end ======================\n"
+-			print "Network run networkCode ======================\n", self.networkCode(),"networkCode end ======================\n"
++			print("Network run components ======================\n", self.components,"components end ======================\n")
++			print("Network run wrapperFunctions ======================\n", self.wrapperFunctions(),"wrapperFunctions end ======================\n")
++			print("Network run networkCode ======================\n", self.networkCode(),"networkCode end ======================\n")
+ 
+ 
+ 			#exec self.components + self.networkCode()
+ 			self.storeComponents()
+-			exec self.wrapperFunctions()
++			exec(self.wrapperFunctions())
+ 			#from multiprocessing import Process, Queue
+ 			#from lib.fbp.libraryComponents import *
+-			exec self.networkCode()
+-			print "Network run  Llego de exec"
++			exec(self.networkCode())
++			print("Network run  Llego de exec")
+ 			#runNetwork()
+ 			#print "Network run  Llego de runNetwork"
+ 			
+@@ -215,12 +215,12 @@
+ 	def quit(self):
+ 		self.wolffiaStateQ.put(libraryComponents.FBP_CONSTANTS.END_TOKEN)
+ 		if self.processes != None:
+-			print "Network.quit() terminating ", len(self.processes), " processes."
++			print("Network.quit() terminating ", len(self.processes), " processes.")
+ 			for p in self.processes: 
+-				print "Network.quit() terminating process ", p.pid
++				print("Network.quit() terminating process ", p.pid)
+ 				p.terminate()
+ 		else:
+-			print "Network.quit() no process to terminate"
++			print("Network.quit() no process to terminate")
+ 			
+ 		super(Network, self).quit()
+ 		
+@@ -242,8 +242,8 @@
+ 						self.adjTable[name] = [a.strip(' ') for a in adjacencies]
+ 					self.procNames[name] = function
+ 				except:
+-					print "Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable."
+-					print sys.exc_info()[0]
++					print("Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable.")
++					print(sys.exc_info()[0])
+ 			i += 1
+ 		#print "\n\nadjacenciesTable table ", table
+ 		self.procNames["wolffiaState"] = "wolffiaState"
+@@ -264,15 +264,15 @@
+ 
+ 
+ 	def adjacenciesTable(self,network):
+-		print "\n\nadjacenciesTable network ", network
++		print("\n\nadjacenciesTable network ", network)
+ 		table = dict()
+ 		procNames = dict()
+ 		lines = str(network).split("\n")
+ 		i = 1
+-		print "\n\nadjacenciesTable lines ", lines
++		print("\n\nadjacenciesTable lines ", lines)
+ 		for line in lines:
+ 			if not (line.isspace() or line == ''):
+-				print "networkCode", line
++				print("networkCode", line)
+ 				try:
+ 					node, adj = line.split(":")
+ 					name, function = node.split(",")
+@@ -281,8 +281,8 @@
+ 						table[name] = [a.strip(' ') for a in adjacencies]
+ 					procNames[name] = function
+ 				except:
+-					print "Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable."
+-					print sys.exc_info()[0]
++					print("Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable.")
++					print(sys.exc_info()[0])
+ 			i += 1
+ 		#print "\n\nadjacenciesTable table ", table
+ 		return [table,procNames]
+@@ -314,7 +314,7 @@
+ 
+ 
+ 	def networkCode(self):
+-		print "# entro a networkCode" 
++		print("# entro a networkCode") 
+ 		table = self.adjTable
+ 		procNames = self.procNames
+ 		#print "networkCode table ", table
+@@ -396,11 +396,11 @@
+ if __name__ == '__main__':
+ 	import sys
+ 	net = Network()
+-	print "# Network file: ", sys.argv[1]
++	print("# Network file: ", sys.argv[1])
+ 	net.setAdjacenciesTable(open(sys.argv[1], "r").read())
+-	print "# Components file: ", sys.argv[2]
++	print("# Components file: ", sys.argv[2])
+ 	net.setComponents(open(sys.argv[2], "r").read())
+ 	net.storeComponents()
+-	print net.wrapperFunctions()
+-	print net.networkCode()
+-	print "for p in lp: p.join()"
++	print(net.wrapperFunctions())
++	print(net.networkCode())
++	print("for p in lp: p.join()")
+--- ./lib/fbp/libraryComponents.py	(original)
++++ ./lib/fbp/libraryComponents.py	(refactored)
+@@ -7,11 +7,11 @@
+ 
+ def beacon(out):
+ 	while out.empty():
+-		print "beacon sending signal"
++		print("beacon sending signal")
+ 		out.put(BEACON_SIGNAL)
+ 
+ def split(values, queueList):
+-	print "entro a splitter"
++	print("entro a splitter")
+ 	value = values.get()
+ 	while value != FBP_CONSTANTS.END_TOKEN:
+ 		for queue in queueList:
+@@ -23,7 +23,7 @@
+ 
+ 
+ def collate(queueList, out):
+-	print "entro a lumper"
++	print("entro a lumper")
+ 	while True:
+ 		values = []
+ 		for queue in queueList:
+@@ -40,9 +40,9 @@
+ def wolffiaState(inQ, outQ):
+ 	inItem = inQ.get()
+ 	while inItem != FBP_CONSTANTS.END_TOKEN:
+-		print "wolffiaState recibio"
++		print("wolffiaState recibio")
+ 		outQ.put([inItem])
+ 		inItem = inQ.get()
+-	print "wolffiaState termino"
++	print("wolffiaState termino")
+ 	outQ.put(FBP_CONSTANTS.END_TOKEN)
+ 
+--- ./lib/io/CoordinateFile.py	(original)
++++ ./lib/io/CoordinateFile.py	(refactored)
+@@ -52,7 +52,7 @@
+ 		self.fileType = fileType
+ 		self.fileName = mixtureFile
+ 		self.mixtureName = mixtureName
+-		print "CoordinateFile ", fileType
++		print("CoordinateFile ", fileType)
+ 
+ 		if psfFile == None: self.psf = None
+ 		else: self.psf = PSF(psfFile)
+@@ -61,7 +61,7 @@
+ 		
+ 	def __iter__(self):
+ 		if self.fileType == "cc1":
+-			import cc1
++			from . import cc1
+ 			self.molIterator = cc1.readfile(self.fileName)
+ 		else:
+ 			self.molIterator = pybel.readfile(self.fileType, self.fileName)
+@@ -77,7 +77,7 @@
+ 		Raises whichever exception that pybel throws (probably StopIteration).
+ 		"""
+ 		
+-		mol = self.molIterator.next()
++		mol = next(self.molIterator)
+ 		chemicalGraphMixed = ChemicalGraph()
+ 		etable			 = openbabel.OBElementTable()
+ 
+@@ -93,11 +93,11 @@
+ 			#print "_processFirstFrame: '" + psfType + "'"
+ 			charge = atom.partialcharge
+ 			mass	 = atom.atomicmass	
+-			if self.psf <> None:
++			if self.psf != None:
+ 				psfType = self.psf.getType(n)
+ 				charge = self.psf.getCharge(n)
+ 				mass	 = self.psf.getMass(n)
+-				print "CoordinateFile _processFirstFrame charge  ", charge
++				print("CoordinateFile _processFirstFrame charge  ", charge)
+ 		
+ 		
+ 			ai  = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
+@@ -106,8 +106,8 @@
+ 			n += 1
+ 		
+ 		# add edges
+-		print '_processFirstFrame add edges'
+-		if self.psf <> None:
++		print('_processFirstFrame add edges')
++		if self.psf != None:
+ 			for b in self.psf.bonds:
+ 				try:  # avoids adding an edge twice
+ 					chemicalGraphMixed.add_edge(b)
+@@ -144,8 +144,8 @@
+ 		Raises whichever exception that pybel throws (probably StopIteration).
+ 		"""
+ 		self.currentMolecule = Mixture(self.currentMolecule)  # copy mixture
+-		mol = self.molIterator.next()
+-		print "_processNextFrame", mol
++		mol = next(self.molIterator)
++		print("_processNextFrame", mol)
+ 		coordinates = []
+ 		for atom in mol.atoms:
+ 			coordinates.append(atom.coords)
+@@ -153,7 +153,7 @@
+ 		return self.currentMolecule
+ 
+ 		
+-	def next(self):
++	def __next__(self):
+ 		"""
+ 		Returns next frame if present.
+ 		Raises whichever exception that pybel throws (probably StopIteration).
+@@ -187,14 +187,14 @@
+ 		self.mixFile = open(mixtureFile, "r")
+ 		self.mixture = mixture
+ 		
+-	def next(self):
++	def __next__(self):
+ 		"""
+ 		Update the coordinates of the mixture.  It is meant to load results from simumations.
+ 
+ 		"""
+ 		num = 0
+ 		line = self.mixFile.readline()
+-		while line <> "" and line[:3] <> "END":
++		while line != "" and line[:3] != "END":
+ 			if line[:4] == "ATOM":
+ 				try:
+ 					# print "updateCoordinates ", num
+@@ -204,7 +204,7 @@
+ 					self.mixture.atomOrder[num].setCoord([x, y, z])
+ 					num += 1
+ 				except (IndexError, ValueError):
+-					print "CoordinatesUpdateFile.updateCoordinates failed to update atom ", num
++					print("CoordinatesUpdateFile.updateCoordinates failed to update atom ", num)
+ 					break
+ 			line = self.mixFile.readline()
+ 		return len(line) > 0
+--- ./lib/io/cc1.py	(original)
++++ ./lib/io/cc1.py	(refactored)
+@@ -1,7 +1,7 @@
+ if __name__ == '__main__':
+ 	import sys, os
+ 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
+-	print os.path.dirname(os.path.realpath(__file__))+'/../../'
++	print(os.path.dirname(os.path.realpath(__file__))+'/../../')
+ 	
+ from lib.chemicalGraph.Mixture import Mixture
+ from lib.chemicalGraph.molecule.AtomAttributes import *
+@@ -30,12 +30,12 @@
+ 		
+ 		ai  = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
+ 		atr = AtomAttributes(ai, coords, [])
+-		print atr
++		print(atr)
+ 		chemicalGraphMixed.add_node(i + 1, attrs=[atr])
+ 		adjLists[i+1] = list()
+ 		for e in line[9:]:
+ 			adjLists[i+1].append(e)
+-	print adjLists
++	print(adjLists)
+ 	for n in adjLists:
+ 		for e in adjLists[n]:
+ 			chemicalGraphMixed.add_edge([n,e])
+@@ -49,7 +49,7 @@
+ if __name__ == '__main__':
+ 	import sys, os
+ 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
+-	print os.path.dirname(os.path.realpath(__file__))+'/../../'
++	print(os.path.dirname(os.path.realpath(__file__))+'/../../')
+ 	
+ 	r = readfile("/home/jse/inv/Cuchifritos/bazaar/Wolffia/data/coordinates/Fullerenes/C60-Ih.cc1")
+-	print r
++	print(r)
+--- ./lib/io/dcd.py	(original)
++++ ./lib/io/dcd.py	(refactored)
+@@ -3,7 +3,7 @@
+ if __name__ == '__main__':
+ 	import sys, os
+ 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
+-	print os.path.dirname(os.path.realpath(__file__))+'/../../'
++	print(os.path.dirname(os.path.realpath(__file__))+'/../../')
+ 	
+ 
+ 
+@@ -54,7 +54,7 @@
+ 		self.dcdfile . read  (9*INT_SIZE)                        # skip 9 integers
+ 
+ 		assert(unpack('i', self.dcdfile.read(INT_SIZE))[0] == 84)# should be 84
+-		print self.nset,self.istart,self.stepInt,self.namnf,self.ts,self.wPBC
++		print(self.nset,self.istart,self.stepInt,self.namnf,self.ts,self.wPBC)
+ 
+ 		# == TITLE block ==
+ 		tsize = unpack('i', self.dcdfile.read(INT_SIZE))[0]      # size of title block
+@@ -64,7 +64,7 @@
+ 		self.title = [self.dcdfile.read(80) for i in range(tlines)]
+ 		self.dcdfile . read  (INT_SIZE)                          # ending size
+ 
+-		print self.title
++		print(self.title)
+ 
+ 		assert(unpack('i', self.dcdfile.read(INT_SIZE))[0] == 4) # should be 4
+ 		self.numAtoms = unpack('i', self.dcdfile.read(INT_SIZE))[0]   # num atoms
+@@ -79,7 +79,7 @@
+ 	def __iter__(self): return self
+ 
+ 
+-	def next(self):
++	def __next__(self):
+ 		if self.currentFrame == self.nset:
+ 			self.dcdfile.close()
+ 			raise StopIteration
+@@ -90,7 +90,7 @@
+ 			self.dcdfile . read  (INT_SIZE)                          # size of arrays
+ 			pbc = [unpack('d', self.dcdfile.read(DOUBLE_SIZE))[0] for i in range(6)]
+ 			self.dcdfile . read  (INT_SIZE)                          # size of arrays
+-			print "PBC=",pbc
++			print("PBC=",pbc)
+ 		else: pbc = None
+ 
+ 		if self.currentFrame == 1 or self.namnf == 0:  # always True in NAMD
+@@ -161,7 +161,7 @@
+ 		i=0
+ 		result=[]
+ 		for X,Y,Z in r:
+-			result.append(zip(X,Y,Z))
++			result.append(list(zip(X,Y,Z)))
+ 			i += 1
+ 			if i == n: break
+ 		return result
+@@ -173,28 +173,28 @@
+ 		self.restart()  # eventually this will be handled by "seek"  operation
+ 		result=deque([],n)
+ 		for X,Y,Z in r:
+-			result.append(zip(X,Y,Z))
++			result.append(list(zip(X,Y,Z)))
+ 		return list(result)
+ 		
+ #==========================================================================
+ if __name__ == '__main__':
+ 	import sys, os
+ 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
+-	print os.path.dirname(os.path.realpath(__file__))+'/../../'
++	print(os.path.dirname(os.path.realpath(__file__))+'/../../')
+ 	
+ 	r = Trajectory("/home/jse/inv/Simulaciones/CarbonActivado/ActCarbPS/ActCarbPS.dcd")
+ 
+ 
+-	print "=========TODOS================"
++	print("=========TODOS================")
+ 	for X,Y,Z in r:
+ 		#print X,Y,Z
+-		tuples = zip(X,Y,Z)
+-		print tuples[:2]
++		tuples = list(zip(X,Y,Z))
++		print(tuples[:2])
+ 		#print [item for sublist in tuples for item in tuples]
+ 
+-	print "=============================="	
++	print("==============================")	
+ 	h=r.tail(3)
+ 	for c in h:
+-		print c[:2]
+-
+-
++		print(c[:2])
++
++

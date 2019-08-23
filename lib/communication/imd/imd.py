@@ -84,8 +84,7 @@ class IMDHeader:
 	
 	def packetType(self): return self.ptype
 
-class IMDData():
-	__metaclass__ = ABCMeta
+class IMDData(metaclass=ABCMeta):
 	@abstractmethod
 	def __init__(self):
 	    pass
@@ -191,7 +190,7 @@ class IMDCoords(IMDData):
 		self.reset()
 		self.rawCoords.fromstring(imdData)
 		if len(self.rawCoords) % 3 != 0:
-		    print "ERROR: Ammount of coordinates in data (", len(self.rawCoords), ")not divisible by 3."
+		    print("ERROR: Ammount of coordinates in data (", len(self.rawCoords), ")not divisible by 3.")
 		    raise ValueError
 		return self
 
@@ -209,8 +208,7 @@ class IMDTrate(IMDData):
 	def transmitRate(self): pass# to be implemented
 	
 #===================================================================================
-class IMDPacket:
-	__metaclass__ = ABCMeta
+class IMDPacket(metaclass=ABCMeta):
 	@abstractmethod
 	def __init__(self, sock=None, header=None):
 		#print "IMDPacket __init__"
@@ -270,8 +268,7 @@ class IMDPacket:
 		return sock.send(data)
 		
 
-class IMDDataPacket(IMDPacket):
-	__metaclass__ = ABCMeta
+class IMDDataPacket(IMDPacket, metaclass=ABCMeta):
 	@abstractmethod
 	def __init__(self, sock=None, header=None, data=None):
 		IMDPacket.__init__(self,header=IMDHeader(None, packetType=None))
@@ -311,8 +308,7 @@ class IMDDataPacket(IMDPacket):
 		return None
 	'''
 	
-class IMDControlPacket(IMDPacket):
-	__metaclass__ = ABCMeta
+class IMDControlPacket(IMDPacket, metaclass=ABCMeta):
 	@abstractmethod
 	def __init__(self, sock=None, header=None):
 		pass
@@ -426,8 +422,7 @@ IMDTypeToClass = {
 
 
 #===================================================================================
-class IMDConnection:
-	__metaclass__ = ABCMeta
+class IMDConnection(metaclass=ABCMeta):
 	_TIMEOUT = 30
 	def __init__(self, host, port):
 		#print "IMDConnection __init__", host, port
@@ -445,13 +440,13 @@ class IMDConnection:
 		
 	def close(self):
 		# busy wait until connection is verified
-		print "IMDConnection close: waiting for connection to be established", self.connected , self.packet, self.__class__.__name__
+		print("IMDConnection close: waiting for connection to be established", self.connected , self.packet, self.__class__.__name__)
 		for i in range(int(IMDConnection._TIMEOUT)):
 			if self.connected or self.sock == None: break
 			time.sleep(1)  
 			 
 		if self.connected: 
-			print "IMDConnection close: connection established. Now it will be closed!",self.connected , self.packet, self.__class__.__name__
+			print("IMDConnection close: connection established. Now it will be closed!",self.connected , self.packet, self.__class__.__name__)
 			self.sock.shutdown(socket.SHUT_RDWR)
 			#try: self.sock.shutdown(socket.SHUT_RDWR)
 			#except: pass
@@ -469,10 +464,10 @@ class IMDConnection:
 				header=IMDHeader(None, packetType=IMDType.IMD_KILL), 
 				data=None).send(self.sock)
 		'''
-		if self.sock <> None:
+		if self.sock != None:
 			IMDKillPacket().send(self.sock)
 	
-	def next(self):
+	def __next__(self):
 		if not self.connected:
 			raise StopIteration
 		else:
@@ -511,7 +506,7 @@ class IMDClientConnection(IMDConnection):
 		    count += 1
 		    
 		if not self.connected:
-			print "IMDClientConnection __init__ "+ str(self.server_address) + " did not connect: ", e
+			print("IMDClientConnection __init__ "+ str(self.server_address) + " did not connect: ", e)
 			raise socket.timeout
 		
 		self.sock.settimeout(5.)
@@ -544,7 +539,7 @@ class IMDServerConnection(IMDConnection):
 
 #===================================================================================
 import threading, sys, os, time, random
-from Queue import Queue, Empty
+from queue import Queue, Empty
 
 class IMDThread(threading.Thread):
 	def __init__(self, remoteHost=None, port=3000):
@@ -605,7 +600,7 @@ class IMDThread(threading.Thread):
 		Runs the thread. Called by self.start.
 		"""
 		
-		print "IMDThread run"
+		print("IMDThread run")
 		self.imd = IMDClientConnection(self.remoteHost, self.port)
 		self.imd.connect()
 		
@@ -644,7 +639,7 @@ class IMDThread(threading.Thread):
 			#	print en.data.rawCoords
 			#print "IMDThread run: packet received: ", p.__class__.__name__
 			#time.sleep(1)  
-		print "IMDThread.run finished"
+		print("IMDThread.run finished")
 		
 	
 
@@ -659,21 +654,21 @@ def fakeServer1():
 	s.bind( ('', port) )
 	s.listen(1)
 	s.settimeout(10)
-	print "fakeServer1: Waiting"
+	print("fakeServer1: Waiting")
 	c,a = s.accept()
-	print "fakeServer1: connected"
+	print("fakeServer1: connected")
 	IMDHandshakePacket().send(c)
 	p = IMDPacket.recv(c)
 	assert isinstance(p,IMDGoPacket)
-	print "fakeServer1: Go"
+	print("fakeServer1: Go")
 	e = IMDEnergies()
 	e.T = 298
-	print "fakeServer1: sending T"
+	print("fakeServer1: sending T")
 	IMDEnergiesPacket(e).send(c)
 	p = IMDPacket.recv(c)
 	assert isinstance(p,IMDKillPacket)
 	IMDDisconnectPacket().send(c)
-	print "fakeServer1: Killed! ... closing"
+	print("fakeServer1: Killed! ... closing")
 	c.close()
 	s.close()
 	
@@ -683,67 +678,67 @@ def client1():
 	s.connect( (host, port) )
 	p = IMDPacket.recv(s)
 	assert isinstance(p,IMDHandshakePacket)
-	print "client: handshake"
+	print("client: handshake")
 	IMDGoPacket().send(s)
 	p = IMDPacket.recv(s)
-	print "client: T received"
+	print("client: T received")
 	assert isinstance(p,IMDEnergiesPacket)
-	print "client: T=", p.getEnergies().T
+	print("client: T=", p.getEnergies().T)
 	IMDKillPacket().send(s)
 	p = IMDPacket.recv(s)
 	assert isinstance(p,IMDDisconnectPacket)
-	print "client: IMDDisconnectPacket received, closing"
+	print("client: IMDDisconnectPacket received, closing")
 	s.close()
 	
 def fakeServer2():
 	c = IMDServerConnection(port)
-	print "fakeServer2: IMDServerConnection"
+	print("fakeServer2: IMDServerConnection")
 	c.connect()
-	print "fakeServer2: connected"
+	print("fakeServer2: connected")
 	e = IMDEnergies()
 	e.T = 298 
-	print "fakeServer2: sending T"
+	print("fakeServer2: sending T")
 	c.send(IMDEnergiesPacket(e))
 	p = c.recv()
 	assert isinstance(p,IMDKillPacket)
 	c.send(IMDDisconnectPacket())
-	print "fakeServer2: Killed! ... closing"
+	print("fakeServer2: Killed! ... closing")
 	c.close()
 	
 def client2():
 	c = IMDClientConnection(host, port)
 	c.connect()
-	print "client2: connected"
+	print("client2: connected")
 	p = c.recv()
 	assert isinstance(p,IMDEnergiesPacket)
-	print "client2: T=", p.getEnergies().T
+	print("client2: T=", p.getEnergies().T)
 	c.send(IMDKillPacket())
 	p = c.recv()
 	assert isinstance(p,IMDDisconnectPacket)
-	print "client2: IMDDisconnectPacket received, closing"
+	print("client2: IMDDisconnectPacket received, closing")
 	c.close()
 	
 def fakeServer3():
 	c = IMDServerConnection(port)
 	c.connect()
-	print "fakeServer3: connected"
+	print("fakeServer3: connected")
 	e = IMDEnergies()
 	for t in range(298,303):
 		e.T = t
-		print "fakeServer3: sending T=", t
+		print("fakeServer3: sending T=", t)
 		c.send(IMDEnergiesPacket(e))
 	c.send(IMDDisconnectPacket())
-	print "fakeServer3: closing"
+	print("fakeServer3: closing")
 	c.close()
 	
 def client3():
 	c = IMDClientConnection(host, port)
 	c.connect()
-	print "client3: connected"
+	print("client3: connected")
 	for p in c:
 		if isinstance(p,IMDEnergiesPacket):
-			print "client3: T=", p.getEnergies().T
-	print "client3: closing"
+			print("client3: T=", p.getEnergies().T)
+	print("client3: closing")
 	c.close()
 	
 from random import random
@@ -756,10 +751,10 @@ def fakeServer4():
 		time.sleep(int(random()*5))
 		# ###############################
 		a.setFromIterable([random(),random(),random()])
-		print "fakeServer4: ", a.coordinates()[0]
+		print("fakeServer4: ", a.coordinates()[0])
 		c.send(IMDCoordPacket(a))
 	c.send(IMDDisconnectPacket())
-	print "fakeServer4: closing"
+	print("fakeServer4: closing")
 	c.close()
 	
 def client4():
@@ -769,19 +764,19 @@ def client4():
 		# time spent on other computations
 		time.sleep(int(random()*5))
 		# ###############################
-		print "client4: polling"
+		print("client4: polling")
 		while True:
 			try: c = t.getCoordinatesQ().get_nowait()
 			except Empty: break
 			#try: e = t.getEnergiesQ().get_nowait()
 			#except Empty: break
-			print "client4: ", c.coordinates()[0]
+			print("client4: ", c.coordinates()[0])
 	t.cancel()
-	print "client4: closing"
+	print("client4: closing")
 
 
 def coordsF(c):
-	print "coordsF5: ", c[0]
+	print("coordsF5: ", c[0])
 	
 def client5():
 	t = IMDThread(host, port)
@@ -792,7 +787,7 @@ def client5():
 		time.sleep(int(random()*5))
 		# ###############################
 	t.cancel()
-	print "client5: closing"
+	print("client5: closing")
 
 	
 def test(server, client):
@@ -811,23 +806,23 @@ if __name__ == '__main__':
 	#imd = IMDConnection('molecula.uprh.edu', 3545)
 	imd = IMDConnection('localhost', 3546)
 	
-	print 'starting up on %s port %s' % imd.server_address
+	print('starting up on %s port %s' % imd.server_address)
 	#time.sleep(5)  
 	imd.go()
 	
 	i=0
 	while True:
 		en = imd.recv()
-		print "recibi tipo ",en.packetType()
+		print("recibi tipo ",en.packetType())
 		if en.packetType() == IMDType.IMD_DISCONNECT: break
 		#(en, cocr) = imd.recv()
 		
 		if en.packetType() == IMDType.IMD_ENERGIES:
-			print "IMD_ENERGIES ", en.data.tstep, en.data.T, en.data.Etot, en.data.Epot, en.data.Evdw, en.data.Eelec, en.data.Ebond, en.data.Eangle, en.data.Edihe, en.data.Eimpr
+			print("IMD_ENERGIES ", en.data.tstep, en.data.T, en.data.Etot, en.data.Epot, en.data.Evdw, en.data.Eelec, en.data.Ebond, en.data.Eangle, en.data.Edihe, en.data.Eimpr)
 		if en.packetType() == IMDType.IMD_FCOORDS:
-			print "IMD_FCOORDS ", en.data.rawCoords[:6]
+			print("IMD_FCOORDS ", en.data.rawCoords[:6])
 		i+=1
-		print "IMD_FCOORDS ", i
+		print("IMD_FCOORDS ", i)
 		if i % 1000 == 0:
 			break
 		#c = imd.recv()

@@ -30,7 +30,7 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 from conf.Wolffia_conf import WOLFFIA_GRAPHICS
-from QClasses import *
+from .QClasses import *
 from PyQt4.QtGui import QToolTip
 from PyQt4.QtCore import QPoint
 #from ui_LogWindow import Ui_LogWindow

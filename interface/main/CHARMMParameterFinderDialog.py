@@ -115,7 +115,7 @@ class CHARMMParameterFinderDialog(QtGui.QDialog):
     def on_timer(self):
         if self.thread.is_alive():
             if self.thread.getPairing() != None:
-                print "on_startButton_pressed matches", self.thread.getPairing().getMatches()
+                print("on_startButton_pressed matches", self.thread.getPairing().getMatches())
             #print "on_startButton_pressed  timer ", self.timeLimit - (time.clock() - self.startTime)
             self.ui.timeLeftClock.setValue(max(0,int(self.timeLimit - (time.clock() - self.startTime))))
             self.ui.timeLeftClock.step()

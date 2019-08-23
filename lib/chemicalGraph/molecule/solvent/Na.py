@@ -58,9 +58,9 @@ class Na(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando Na"
+	print("Probando Na")
 	m = Na()
-	print m
+	print(m)
 	m.writePSF("Na.psf")
 	m.writePDB("Na.pdb")
 

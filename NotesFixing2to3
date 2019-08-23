@@ -1,0 +1,15 @@
+# Installing dependencies with pip
+pip install PyQt5
+pip install networkx
+pip install numpy
+pip install pybel
+
+
+
+# Notes after compilation
+
+ModuleNotFoundError: No module named 'sets'
+Sets included in Python3
+
+openbabel hard to install at first
+sudo apt install libopenbabel-dev

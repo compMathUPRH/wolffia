@@ -111,7 +111,7 @@ class PSS(Polymer):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando PSS"
+    print("Probando PSS")
     m = PSS(2,2,3)
     #m = PSS.MONOMERS_MOLS['Oe']
     #print [m.getAtomAttributes(a) for a in m.atoms()]

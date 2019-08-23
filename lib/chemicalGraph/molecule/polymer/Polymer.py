@@ -38,7 +38,7 @@ class Polymer(Molecule):
    momomerAtoms = []  # lists of atom counts made by constructPDB()
 
    def __init__(self, chain, molname=None):
-   		print "Polymer"
+   		print("Polymer")
 		if type(self) == Polymer:
 		   raise Molecule.MoleculeError("Polymer is an abstract class.  Should not be directly instantiated.")
 		
@@ -75,7 +75,7 @@ class Polymer(Molecule):
 				lastSegment = set(self.atoms()) - lastSegment
 
    def chainOldStyle(self, chain):
-   		print "chainOldStyle"
+   		print("chainOldStyle")
 		if len(chain) == 1:
 		   self.load(self.ONE_MONOMER_PDB[chain[0]])
 		   return

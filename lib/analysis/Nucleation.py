@@ -118,7 +118,7 @@ class Nucleation():
 		totals = list()
 		i      = 2
 		subTotal = numpy.sum(numpy.equal(self.tags,i))
-		while subTotal <> 0:
+		while subTotal != 0:
 			totals.append(subTotal)
 			i += 1
 			subTotal = numpy.sum(numpy.equal(self.tags,i))
@@ -164,12 +164,12 @@ class NucleationDialog(QtGui.QDialog):
 	    self.maxCurve	= Qwt.QwtPlotCurve("Maximum")
 	    self.maxCurve.attach(self.ui.maximosQwtPlot)
 	    self.ui.maximosQwtPlot.setTitle("Maxima")
-	    self.maxCurve.setData(range(100), range(100))
+	    self.maxCurve.setData(list(range(100)), list(range(100)))
 	    
 	    self.sumCurve = Qwt.QwtPlotCurve("Sum")
 	    self.sumCurve.attach(self.ui.SumasQwtPlot)
 	    self.ui.SumasQwtPlot.setTitle("Sumas")
-	    self.sumCurve.setData(range(100),range(100))
+	    self.sumCurve.setData(list(range(100)),list(range(100)))
 
 	    
 	    
@@ -201,7 +201,7 @@ class NucleationDialog(QtGui.QDialog):
 	def on_runButton_pressed(self):#4
 		wfyFile, corridaFile = self.getPaths()
 		self.cellValue = self.ui.cellSizeSpinBox.value()
-		print "self.cellValur = " + str(self.cellValue)
+		print("self.cellValur = " + str(self.cellValue))
 		#print "runButton_pressed" + "wfyFile:"+wfyFile + "corridaFile:"+corridaFile
 		
 		#prueba= ["/home/kaori/Investigacion/PruebaNucleationGui/DispersionCNTclf.wfy",
@@ -211,28 +211,28 @@ class NucleationDialog(QtGui.QDialog):
 		prueba= [wfyFile,corridaFile,None,
 				 "/home/kaori/Investigacion/PruebaNucleationGui/liquido.pdb"]
 
-		print "Void Volumes ", prueba
+		print("Void Volumes ", prueba)
 		state = NanoCADState(filename=prueba[0])
 		#if prueba[2] <> None: state.getDrawer().readNAMD(prueba[2])
 		ufile = CoordinatesUpdateFile(prueba[1],state.getMixture())
 		i=1
 		maximos = list()
 		sumas = list()
-		while ufile.next():
+		while next(ufile):
 			n = Nucleation(state.getMixture(), state.getDrawer(),self.cellValue,0)
 			cells = n.voidsCells()
 
 #----------------------------------------------------------------
 			if cells == []: 
-				print i,0,0
+				print(i,0,0)
 				maximos.append(0)
 				sumas.append(0)
 			else: 
-				print i,max(cells), sum(cells)
+				print(i,max(cells), sum(cells))
 				maximos.append(max(cells))
 				sumas.append(sum(cells))
-			self.maxCurve.setData(range(i), maximos)
-			self.sumCurve.setData(range(i), sumas)
+			self.maxCurve.setData(list(range(i)), maximos)
+			self.sumCurve.setData(list(range(i)), sumas)
 			self.ui.maximosQwtPlot.setAxisScale(Qwt.QwtPlot.xBottom, 0, i, 0)
 			self.ui.SumasQwtPlot.setAxisScale(Qwt.QwtPlot.xBottom, 0, i, 0)
 			self.ui.maximosQwtPlot.replot()
@@ -247,12 +247,12 @@ class NucleationDialog(QtGui.QDialog):
 			i += 1
 	
 		#liquid = n.filledVoids()
-		print "Termine ciclo"
+		print("Termine ciclo")
 		liquid.writePDB(prueba[3])
-		print "Termine escribir"
+		print("Termine escribir")
 		
 		os.system("vmd -m -pdb "+ prueba[1] + " -pdb "+ prueba[3])
-		print "Termine "
+		print("Termine ")
 
 	def on_cancelButton_pressed(self):
 		self.close()

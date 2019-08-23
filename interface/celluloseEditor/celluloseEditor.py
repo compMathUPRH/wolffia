@@ -431,4 +431,4 @@ class Ui_HomopolyEditor(object):
         self.okButton.setText(_translate("HomopolyEditor", "Save", None))
         self.cancelButton.setText(_translate("HomopolyEditor", "Cancel", None))
 
-import polymer_images_rc
+from . import polymer_images_rc

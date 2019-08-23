@@ -27,9 +27,9 @@
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from polymer.PMMA import PMMA
-from allotrope.Tube import Tube
-from allotrope.Graphene import Graphene
+from .polymer.PMMA import PMMA
+from .allotrope.Tube import Tube
+from .allotrope.Graphene import Graphene
 
 #----------------------------------------------------------------------
 # Molecules data structure

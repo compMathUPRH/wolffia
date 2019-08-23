@@ -48,9 +48,9 @@ class Xylene(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando Xylene"
+	print("Probando Xylene")
 	m = Xylene()
-	print m
+	print(m)
 	m.writePSF("Xylene.psf")
 	m.writePDB("Xylene.pdb")
 

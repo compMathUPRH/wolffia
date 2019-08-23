@@ -83,7 +83,7 @@ class Drawer:
 		try:
 			cell = NAMDcell(archivo)
 			box = cell.getBox()
-			print "readNAMD ", box
+			print("readNAMD ", box)
 			self.setCellBasisVectors([[box[0][0][0], 0.0, 0.0],
 									[0.0, box[0][1][1], 0.0],
 									[0.0, 0.0, box[0][2][2]]])
@@ -194,7 +194,7 @@ class Drawer:
 		#print "colisiones... ", len(collisions)
 		toRemove  = set(collisions).difference(set(originalMolecules))
 		if gui:	progress.setValue(2)
-		print "removeCollisions removiendo... ", len(toRemove)
+		print("removeCollisions removiendo... ", len(toRemove))
 		self._history.currentState().removeMoleculesFrom(toRemove)
 		
 		if gui:	progress.hide()

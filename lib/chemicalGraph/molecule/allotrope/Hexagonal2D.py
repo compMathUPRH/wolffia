@@ -193,9 +193,9 @@ class  Hexagonal2D(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando Hexagonal2D"
+	print("Probando Hexagonal2D")
 	m = Hexagonal2D(10,10,200)
-	print m
+	print(m)
 	m.writePDB("prueba.pdb")
 	m.writePSF("prueba.psf")
 

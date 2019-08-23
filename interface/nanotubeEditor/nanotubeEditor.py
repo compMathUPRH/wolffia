@@ -94,7 +94,7 @@ class NanotubeBuilder(QtGui.QDialog):
 		try:
 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
 		except:
-			print "WARNING: Could not read style specifications"
+			print("WARNING: Could not read style specifications")
 		self.tubePreview.update()
 
 	def generateTubes(self):
@@ -152,12 +152,12 @@ class NanotubeBuilder(QtGui.QDialog):
 			self.isAdded = True
 			self.close()
 		else:
-			from NanotubeSaveDialog import NanotubeSaveDialog
+			from .NanotubeSaveDialog import NanotubeSaveDialog
 			ntDialog = NanotubeSaveDialog(self.getMixture(),files=self.files, parent=self)
 			ntDialog.show()
 			ntDialog.exec_()
 			self.files = ntDialog.getFileNames()
-			print self.files
+			print(self.files)
 
 	@QtCore.pyqtSlot()
 	def on_previewButton_pressed(self):

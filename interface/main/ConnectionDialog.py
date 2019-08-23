@@ -55,7 +55,7 @@ class ConnectionDialog(QtGui.QDialog):
 		self.ui.cancelButton.setFlat(False)
 		self.ui.cancelButton.setIcon(QtGui.QIcon().fromTheme("computer"	))
 		
-		if self.connection <> None:
+		if self.connection != None:
 			self.ui.hostnameEdit.setText(self.connection.getHostName())
 			self.ui.usernameEdit.setText(self.connection.getUserName())
 			self.ui.passwordEdit.setText("***")
@@ -87,11 +87,11 @@ class ConnectionDialog(QtGui.QDialog):
 				#self.connection.setPassword(str(self.ui.passwordEdit.text()))
 				self.connection.probe()
 				
-		except Exception, e:
+		except Exception as e:
 		    self.ui.statusLabel.setText("Connection failed."+str(e))
 		    self.ui.okButton.setEnabled(False)
 		    self.connection = None
-		    print "on_probeButton_pressed exception", e
+		    print("on_probeButton_pressed exception", e)
 		    return
 		
 		if self.connection.isConnected():

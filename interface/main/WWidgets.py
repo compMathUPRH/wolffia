@@ -65,9 +65,9 @@ class PreviewButton(QtGui.QPushButton):
 
     
     def mousePressEvent (self, QMouseEvent):
-        from BuildTab import ShownSolvent
+        from .BuildTab import ShownSolvent
         self.show = not self.show
-        print "mousePressEvent:self.show**************************************",self.show
+        print("mousePressEvent:self.show**************************************",self.show)
 		
 	'''
 		if self.objectName()[:8] == "SOLVENT(":
@@ -151,7 +151,7 @@ class FixedButton(QtGui.QPushButton):
 
    
     def mousePressEvent (self, QMouseEvent):
-        from BuildTab import ShownSolvent
+        from .BuildTab import ShownSolvent
 	self.fixed = not self.fixed
 		#print "FixedButton mousePressEvent:self.fixed",self.fixed
 	'''

@@ -1,7 +1,7 @@
 
 
 from PyQt4 import QtCore
-import libraryComponents
+from . import libraryComponents
 import sys
 from lib.fbp.libraryComponents import FBP_NO_WRAP_FUNCTIONS
 
@@ -24,9 +24,9 @@ def bondLengthsFromMixture(mix):
 		for (a1, a2) in mol.bonds():
 			lengths.append(mol.getAtomAttributes(a1).distanceTo(mol.getAtomAttributes(a2)))
 
-	print "RESULTADO DEL NETWORK ===========================" 
-	print max(lengths)
-	print "=================================================" 
+	print("RESULTADO DEL NETWORK ===========================") 
+	print(max(lengths))
+	print("=================================================") 
 	return lengths
 	
 	
@@ -37,7 +37,7 @@ def longBonds(mix):
 		mol = mix.getMolecule(molname)
 		for (a1, a2) in mol.bonds():
 			if mol.getAtomAttributes(a1).distanceTo(mol.getAtomAttributes(a2)) > maxBondLength:
-				if not longBonds.has_key(molname): longBonds[molname] = list()
+				if molname not in longBonds: longBonds[molname] = list()
 				longBonds[molname].append( (a1,a2) )
 	return longBonds
 
@@ -64,7 +64,7 @@ def test():
 	dcd = DCDReader("/home/jse/inv/Simulaciones/CarbonActivado/diamondTest/diamondTest.dcd")
 	
 	for X,Y,Z in dcd:
-		print "DCDLoader updating frame"
+		print("DCDLoader updating frame")
 		mixture.updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
 		produceGraph(  bondLengthsFromMixture(mixture)  )
 		time.sleep(2)
@@ -77,7 +77,7 @@ def bondHistogramComponent(state):
 def removeEdgesAndRestart(state, wolffia,shownMolecules):
 	mix = state.getMixture()
 	molBonds = longBonds(mix)
-	print "removeEdgesAndRestart rompera enlaces en ", len(molBonds), " moleculas"
+	print("removeEdgesAndRestart rompera enlaces en ", len(molBonds), " moleculas")
 	if len(molBonds) > 0:
 		wolffia.simTab.on_cancelButton_pressed()
 		#while wolffia.simRunning == True:
@@ -85,7 +85,7 @@ def removeEdgesAndRestart(state, wolffia,shownMolecules):
 			#wolffia.simTab.on_cancelButton_pressed()
 			#time.sleep(1)
 		for mol in molBonds:
-			print "removeEdgesAndRestart rompiendo ", len(molBonds[mol]) , "enlaces ", molBonds[mol], " en ", mol
+			print("removeEdgesAndRestart rompiendo ", len(molBonds[mol]) , "enlaces ", molBonds[mol], " en ", mol)
 			state.getMixture().removeBonds(mol,molBonds[mol],shownMolecules)
 		wolffia.simTab.on_runButton_pressed()
 	
@@ -187,18 +187,18 @@ class Network(QtCore.QObject):
 			while not self.wolffiaStateQ.empty():
 				self.wolffiaStateQ.get(True,1)
 				
-			print "Network run components ======================\n", self.components,"components end ======================\n"
-			print "Network run wrapperFunctions ======================\n", self.wrapperFunctions(),"wrapperFunctions end ======================\n"
-			print "Network run networkCode ======================\n", self.networkCode(),"networkCode end ======================\n"
+			print("Network run components ======================\n", self.components,"components end ======================\n")
+			print("Network run wrapperFunctions ======================\n", self.wrapperFunctions(),"wrapperFunctions end ======================\n")
+			print("Network run networkCode ======================\n", self.networkCode(),"networkCode end ======================\n")
 
 
 			#exec self.components + self.networkCode()
 			self.storeComponents()
-			exec self.wrapperFunctions()
+			exec(self.wrapperFunctions())
 			#from multiprocessing import Process, Queue
 			#from lib.fbp.libraryComponents import *
-			exec self.networkCode()
-			print "Network run  Llego de exec"
+			exec(self.networkCode())
+			print("Network run  Llego de exec")
 			#runNetwork()
 			#print "Network run  Llego de runNetwork"
 			
@@ -215,12 +215,12 @@ class Network(QtCore.QObject):
 	def quit(self):
 		self.wolffiaStateQ.put(libraryComponents.FBP_CONSTANTS.END_TOKEN)
 		if self.processes != None:
-			print "Network.quit() terminating ", len(self.processes), " processes."
+			print("Network.quit() terminating ", len(self.processes), " processes.")
 			for p in self.processes: 
-				print "Network.quit() terminating process ", p.pid
+				print("Network.quit() terminating process ", p.pid)
 				p.terminate()
 		else:
-			print "Network.quit() no process to terminate"
+			print("Network.quit() no process to terminate")
 			
 		super(Network, self).quit()
 		
@@ -242,8 +242,8 @@ class Network(QtCore.QObject):
 						self.adjTable[name] = [a.strip(' ') for a in adjacencies]
 					self.procNames[name] = function
 				except:
-					print "Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable."
-					print sys.exc_info()[0]
+					print("Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable.")
+					print(sys.exc_info()[0])
 			i += 1
 		#print "\n\nadjacenciesTable table ", table
 		self.procNames["wolffiaState"] = "wolffiaState"
@@ -264,15 +264,15 @@ class Network(QtCore.QObject):
 
 
 	def adjacenciesTable(self,network):
-		print "\n\nadjacenciesTable network ", network
+		print("\n\nadjacenciesTable network ", network)
 		table = dict()
 		procNames = dict()
 		lines = str(network).split("\n")
 		i = 1
-		print "\n\nadjacenciesTable lines ", lines
+		print("\n\nadjacenciesTable lines ", lines)
 		for line in lines:
 			if not (line.isspace() or line == ''):
-				print "networkCode", line
+				print("networkCode", line)
 				try:
 					node, adj = line.split(":")
 					name, function = node.split(",")
@@ -281,8 +281,8 @@ class Network(QtCore.QObject):
 						table[name] = [a.strip(' ') for a in adjacencies]
 					procNames[name] = function
 				except:
-					print "Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable."
-					print sys.exc_info()[0]
+					print("Warning: line " + str(i) + " of the network could not be understood in adjacenciesTable.")
+					print(sys.exc_info()[0])
 			i += 1
 		#print "\n\nadjacenciesTable table ", table
 		return [table,procNames]
@@ -314,7 +314,7 @@ class Network(QtCore.QObject):
 
 
 	def networkCode(self):
-		print "# entro a networkCode" 
+		print("# entro a networkCode") 
 		table = self.adjTable
 		procNames = self.procNames
 		#print "networkCode table ", table
@@ -396,11 +396,11 @@ class Network(QtCore.QObject):
 if __name__ == '__main__':
 	import sys
 	net = Network()
-	print "# Network file: ", sys.argv[1]
+	print("# Network file: ", sys.argv[1])
 	net.setAdjacenciesTable(open(sys.argv[1], "r").read())
-	print "# Components file: ", sys.argv[2]
+	print("# Components file: ", sys.argv[2])
 	net.setComponents(open(sys.argv[2], "r").read())
 	net.storeComponents()
-	print net.wrapperFunctions()
-	print net.networkCode()
-	print "for p in lp: p.join()"
+	print(net.wrapperFunctions())
+	print(net.networkCode())
+	print("for p in lp: p.join()")

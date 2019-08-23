@@ -64,8 +64,8 @@ class SDBS(Mixture):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando SBDS"
+    print("Probando SBDS")
     m = SDBS()
-    print m
+    print(m)
     m.writePSF("SBDS.psf")
     m.writePDB("SBDS.pdb")

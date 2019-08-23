@@ -51,7 +51,7 @@ class PSF(object):
 		    atomBase = atomcount - 1
 		    natoms = int(line[:8])
 		    for i in range(0, natoms):
-		       line = f.next()
+		       line = next(f)
 		       self.atoms.append("%8d" % (atomcount) + line[8:])
 		       #print "%8d" % (atomcount) + line[8:]
 		       atomcount = atomcount+1
@@ -59,33 +59,33 @@ class PSF(object):
 		 if line.find('!NBOND') > -1:
 		    nbonds = int(line[:8])
 		    for i in range(0, nbonds/4):
-		       line = f.next()
+		       line = next(f)
 		       self.bonds.append([int(line[:8])+atomBase, int(line[9:16])+atomBase])
 		       self.bonds.append([int(line[17:24])+atomBase, int(line[25:32])+atomBase])
 		       self.bonds.append([int(line[33:40])+atomBase, int(line[41:48])+atomBase])
 		       self.bonds.append([int(line[49:56])+atomBase, int(line[57:64])+atomBase])
-		    line = f.next()
+		    line = next(f)
 		    for i in range(0, nbonds % 4):
 		       self.bonds.append([int(line[i*16+1: i*16+8])+atomBase, int(line[i*16+9: i*16+16])+atomBase])
 
 		 if line.find('!NTHETA') > -1:
 		    nangles = int(line[:8])
 		    for i in range(0, nangles/3):
-		       line = f.next()
+		       line = next(f)
 		       self.angles.append([int(line[:8])+atomBase, int(line[9:16])+atomBase,int(line[17:24])+atomBase])
 		       self.angles.append([int(line[25:32])+atomBase, int(line[33:40])+atomBase, int(line[41:48])+atomBase])
 		       self.angles.append([int(line[49:56])+atomBase, int(line[57:64])+atomBase, int(line[65:72])+atomBase])
-		    line = f.next()
+		    line = next(f)
 		    for i in range(0, nangles % 3):
 		       self.angles.append([int(line[i*24+1: i*24+8])+atomBase, int(line[i*24+9: i*24+16])+atomBase, int(line[i*24+17: i*24+24])+atomBase])
 
 		 if line.find('!NPHI') > -1:
 		    ndihedrals = int(line[:8])
 		    for i in range(0, ndihedrals/2):
-		       line = f.next()
+		       line = next(f)
 		       self.dihedrals.append([int(line[:8])+atomBase, int(line[9:16])+atomBase,int(line[17:24])+atomBase,int(line[25:32])+atomBase])
 		       self.dihedrals.append([int(line[33:40])+atomBase, int(line[41:48])+atomBase,int(line[49:56])+atomBase, int(line[57:64])+atomBase])
-		    line = f.next()
+		    line = next(f)
 		    for i in range(0, ndihedrals % 2):
 		       self.dihedrals.append([int(line[i*32+1: i*32+8])+atomBase, int(line[i*32+9: i*32+16])+atomBase, int(line[i*32+17: i*32+24])+atomBase, int(line[i*32+25: i*32+32])+atomBase])
 	      f.close()
@@ -115,15 +115,15 @@ class PSF(object):
 							#print radical, (n2, atom, n1), "radical"
 							#print ff._ANGLES
 							if awesome in ff._ANGLES:
-								print "Append: '" + awesome + "' <<< awesome", ([n1,atom,n2])
+								print("Append: '" + awesome + "' <<< awesome", ([n1,atom,n2]))
 								angles.append([n1,atom,n2])
 								#print ff._ANGLES[awesome]
 							elif radical in ff._ANGLES:
-								print "Append: '" + radical + "' <<< radical", ([n1,atom,n2])
+								print("Append: '" + radical + "' <<< radical", ([n1,atom,n2]))
 								angles.append([n1,atom,n2])
 								#print ff._ANGLES[radical]
 							else:
-								print "NoAppd:", ([n1,atom,n2]), awesome, ";", radical
+								print("NoAppd:", ([n1,atom,n2]), awesome, ";", radical)
 				#print "This.Type: ", self._types[atom]
 		#print "Angles:", angles
 		#print "Tipos:", self._types
@@ -263,9 +263,9 @@ if __name__ == '__main__':
 
 	mol = PolyCYT(1)
 	ff = mol.getForceField()
-	print mol.__dict__.keys()
+	print(list(mol.__dict__.keys()))
 	m.inferAngles(mol)
-	print "FF Angles:\n", ff._ANGLES, "\n======================================"
+	print("FF Angles:\n", ff._ANGLES, "\n======================================")
 	assert(m.hasAngle([1, 2, 3]))
 	
 	assert(True)

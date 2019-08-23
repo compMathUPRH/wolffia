@@ -3,7 +3,7 @@
 if __name__ == '__main__':
 	import sys, os
 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
-	print os.path.dirname(os.path.realpath(__file__))+'/../../'
+	print(os.path.dirname(os.path.realpath(__file__))+'/../../')
 	
 
 
@@ -54,7 +54,7 @@ class DCDReader(object):
 		self.dcdfile . read  (9*INT_SIZE)                        # skip 9 integers
 
 		assert(unpack('i', self.dcdfile.read(INT_SIZE))[0] == 84)# should be 84
-		print self.nset,self.istart,self.stepInt,self.namnf,self.ts,self.wPBC
+		print(self.nset,self.istart,self.stepInt,self.namnf,self.ts,self.wPBC)
 
 		# == TITLE block ==
 		tsize = unpack('i', self.dcdfile.read(INT_SIZE))[0]      # size of title block
@@ -64,7 +64,7 @@ class DCDReader(object):
 		self.title = [self.dcdfile.read(80) for i in range(tlines)]
 		self.dcdfile . read  (INT_SIZE)                          # ending size
 
-		print self.title
+		print(self.title)
 
 		assert(unpack('i', self.dcdfile.read(INT_SIZE))[0] == 4) # should be 4
 		self.numAtoms = unpack('i', self.dcdfile.read(INT_SIZE))[0]   # num atoms
@@ -79,7 +79,7 @@ class DCDReader(object):
 	def __iter__(self): return self
 
 
-	def next(self):
+	def __next__(self):
 		if self.currentFrame == self.nset:
 			self.dcdfile.close()
 			raise StopIteration
@@ -90,7 +90,7 @@ class DCDReader(object):
 			self.dcdfile . read  (INT_SIZE)                          # size of arrays
 			pbc = [unpack('d', self.dcdfile.read(DOUBLE_SIZE))[0] for i in range(6)]
 			self.dcdfile . read  (INT_SIZE)                          # size of arrays
-			print "PBC=",pbc
+			print("PBC=",pbc)
 		else: pbc = None
 
 		if self.currentFrame == 1 or self.namnf == 0:  # always True in NAMD
@@ -161,7 +161,7 @@ class Trajectory(DCDTrajectoryReader):
 		i=0
 		result=[]
 		for X,Y,Z in r:
-			result.append(zip(X,Y,Z))
+			result.append(list(zip(X,Y,Z)))
 			i += 1
 			if i == n: break
 		return result
@@ -173,28 +173,28 @@ class Trajectory(DCDTrajectoryReader):
 		self.restart()  # eventually this will be handled by "seek"  operation
 		result=deque([],n)
 		for X,Y,Z in r:
-			result.append(zip(X,Y,Z))
+			result.append(list(zip(X,Y,Z)))
 		return list(result)
 		
 #==========================================================================
 if __name__ == '__main__':
 	import sys, os
 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
-	print os.path.dirname(os.path.realpath(__file__))+'/../../'
+	print(os.path.dirname(os.path.realpath(__file__))+'/../../')
 	
 	r = Trajectory("/home/jse/inv/Simulaciones/CarbonActivado/ActCarbPS/ActCarbPS.dcd")
 
 
-	print "=========TODOS================"
+	print("=========TODOS================")
 	for X,Y,Z in r:
 		#print X,Y,Z
-		tuples = zip(X,Y,Z)
-		print tuples[:2]
+		tuples = list(zip(X,Y,Z))
+		print(tuples[:2])
 		#print [item for sublist in tuples for item in tuples]
 
-	print "=============================="	
+	print("==============================")	
 	h=r.tail(3)
 	for c in h:
-		print c[:2]
+		print(c[:2])
 
 

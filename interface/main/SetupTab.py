@@ -229,7 +229,7 @@ class SetupTab(QtGui.QFrame):
 		progress.setWindowModality(QtCore.Qt.WindowModal)
 				
 		prefix = "SOLVENT(" + self.SOLVENT_TO_CLASS[self._solvent]
-		print "on_removeButton_pressed ",prefix
+		print("on_removeButton_pressed ",prefix)
 		pos = len(prefix)
 		i = 1
 		toRemove = list()
@@ -337,7 +337,7 @@ class SetupTab(QtGui.QFrame):
 		vol = self.getBoxVolume()
 		#print "vol",vol
 
-		from SolventDialog import SolventDialog
+		from .SolventDialog import SolventDialog
 		dialog = SolventDialog(self._history.currentState(), vol)
 		dialog.show()
 		dialog.exec_()
@@ -347,7 +347,7 @@ class SetupTab(QtGui.QFrame):
 			#self.preview.update()
 				
 	def on_addButton_pressed(self):
-		print "on_addButton_pressed init ", len(self._history.currentState().getMixture())
+		print("on_addButton_pressed init ", len(self._history.currentState().getMixture()))
 		originalMolecules = set(self._history.currentState().getMixture().molecules())
 		self.fillBox(self._solvent, self._amount)
 		#originalMolecules = originalMolecules.intersection(set(self._history.currentState().getMixture().molecules()))
@@ -360,7 +360,7 @@ class SetupTab(QtGui.QFrame):
 		'''
 		if str(self._solvent) == "Selected Molecule":
 			self.wolffia.buildTab.remove()  #remueve la molecula selleccionada que se va a usar de solvente mas abajo
-		print "on_addButton_pressed end ", len(self._history.currentState().getMixture())
+		print("on_addButton_pressed end ", len(self._history.currentState().getMixture()))
 
 		'''
 		#self.preview.update()
@@ -570,7 +570,7 @@ class SetupTab(QtGui.QFrame):
 				self.ui.widthSlider.setValue    (dimension[1][1])
 				self.ui.heightSlider.setValue   (dimension[2][2])
 			except TypeError as e: # recovers from NaNs
-				print "SetupTab.setAllSliders() recovering from: ", e
+				print("SetupTab.setAllSliders() recovering from: ", e)
 				self._history.currentState().getDrawer().clear()
 		else:
 			#print "setAllSliders no Cell"
@@ -600,7 +600,7 @@ class SetupTab(QtGui.QFrame):
 		boxmin = self._history.currentState().getDrawer().getCellOrigin()
 		boxmax =[ boxmin[0]+totalDim[0], boxmin[1]+totalDim[1], boxmin[2]+totalDim[2] ]
 		
-		exec "from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *"
+		exec("from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *")
 		solv = eval(self.SOLVENT_TO_CLASS[str(self._solvent)] + "()")
 		
 		#calculate the volume for a single solvent molecule
@@ -723,9 +723,9 @@ class SetupTab(QtGui.QFrame):
 			#self.wolffia.buildTab.remove()  #remueve la molecula selleccionada que se va a usar de solvente mas abajo
 		else:
 			if str(self._solvent) == "Argon":
-				exec "from lib.chemicalGraph.molecule.gas." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *"
+				exec("from lib.chemicalGraph.molecule.gas." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *")
 			else:
-				exec "from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *"
+				exec("from lib.chemicalGraph.molecule.solvent." + self.SOLVENT_TO_CLASS[str(self._solvent)] + " import *")
 				
 			solv = eval(self.SOLVENT_TO_CLASS[str(self._solvent)] + "()")
 

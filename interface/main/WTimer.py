@@ -23,7 +23,7 @@ class WTimer(object):
 
 
     def report(self):
-        print "Timer(", self.id,"): ", time.clock()-self.start, " from ", self.caller, " called from ", self.callersCaller
+        print("Timer(", self.id,"): ", time.clock()-self.start, " from ", self.caller, " called from ", self.callersCaller)
     
 #--------------------------------------------------------------------------------
 

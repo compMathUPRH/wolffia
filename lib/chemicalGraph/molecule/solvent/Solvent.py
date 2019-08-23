@@ -38,7 +38,7 @@ from lib.chemicalGraph.molecule.AtomAttributes import AtomAttributes
 class Solvent(Molecule):
 	#def __init__(self, moleculeClass, ident="Unknown"):
 	def __init__(self, molecule, ident="Unknown"):
-		print "Solvent.__init__(): ", molecule.__class__
+		print("Solvent.__init__(): ", molecule.__class__)
 		#super(Solvent, self).__init__(molecule=moleculeClass())
 		#self.solventClass = moleculeClass
 		super(Solvent, self).__init__(molecule=molecule)
@@ -65,7 +65,7 @@ class Solvent(Molecule):
 
 	def atomsGenerator(self):
 		#attributes = list(super(Solvent, self).atomsGenerator())
-		print "Solvent.atomsGenerator: "
+		print("Solvent.atomsGenerator: ")
 		try: # back compatibility
 			attributes = list(self.solventClass().atomsGenerator())
 		except:
@@ -140,7 +140,7 @@ class Solvent(Molecule):
 			return 0
 
 	def __iter__(self):
-		return iter(range(self.order()))
+		return iter(list(range(self.order())))
 
 '''
 class SolventAtomIterator:
@@ -187,24 +187,24 @@ class SolventAtomAttributes(AtomAttributes):
 
 #==========================================================================
 if __name__ == '__main__':
-	from THF import THF
+	from .THF import THF
 
 	solv = Solvent(THF)
-	print type(solv.molname())
+	print(type(solv.molname()))
 	t = THF()
-	print type(t.molname())
+	print(type(t.molname()))
 	solv = Solvent(t.__class__)
-	print solv.molname()
+	print(solv.molname())
 	solv.addCoordinates(t)
 	solv.addCoordinates(t)
-	print solv.coordinates
+	print(solv.coordinates)
 
-	print "atomsGenerator"
-	print map(str,solv.atomsGenerator() )
+	print("atomsGenerator")
+	print(list(map(str,solv.atomsGenerator() )))
 
-	print "SolventAtomIterator"
+	print("SolventAtomIterator")
 	for atom in solv:
-		print atom, ": ", solv.atom_attributes(atom)
+		print(atom, ": ", solv.atom_attributes(atom))
 
-	print "bonds"
-	print solv.bonds()
+	print("bonds")
+	print(solv.bonds())

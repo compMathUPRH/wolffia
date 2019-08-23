@@ -107,14 +107,14 @@ class HomopolyEditor(QtGui.QDialog):
 		try:
 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
 		except:
-			print "WARNING: Could not read style specifications"
+			print("WARNING: Could not read style specifications")
 		self.homopolPreview.update()
 
 
 	def generateHomopol(self):
 		n = self.ui.nSpinBox.value()
 		self.homopol = Mixture()
-		exec "from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type)
+		exec("from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type))
 		self.poly = eval(str(self.type) + "(n)")
 		self.homopol.add(self.poly)
 

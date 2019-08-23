@@ -89,7 +89,7 @@ class HomopolyEditor(QtGui.QDialog):
 		self.ui.headerLabel.setText(str(self.type) + " Editor")
 		n = self.ui.nSpinBox.value()
 		self.homopol = Mixture()
-		exec "from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type)
+		exec("from chemicalGraph.molecule.polymer." + str(self.type) + " import " + str(self.type))
 		self.homopol.add(eval(str(self.type) + "(n)"))
 		self.homopolPreview.setMixture(self.homopol)
 

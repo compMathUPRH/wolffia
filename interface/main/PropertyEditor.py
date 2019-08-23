@@ -125,7 +125,7 @@ class PropertyEditor(QtGui.QWidget):
         # update resistry
         presentMolecules = self.history.currentState().getMixture().molecules()
         #print "PropertyEditor update  ",presentMolecules, self.registry
-        regKeys = self.registry.keys()
+        regKeys = list(self.registry.keys())
         for regKey in regKeys:
             if not regKey in presentMolecules:
                 if self.mixture.hasMoleculeID(regKey): self.mixture.remove(regKey)
@@ -159,9 +159,9 @@ class PropertyEditor(QtGui.QWidget):
         '''
         Returns True if the molecule ends up selected, False otherwise..
         '''
-        from BuildTab import ShownSolvent
+        from .BuildTab import ShownSolvent
         #print "PropertyEditor setMolecule new", ident,  self.registry
-        if not self.registry.has_key(ident):
+        if ident not in self.registry:
             if ShownSolvent.isSolvent(ident):
                 mixture = self.history.currentState().getMixture()
                 mixtureNames = mixture.molecules()
@@ -203,7 +203,7 @@ class PropertyEditor(QtGui.QWidget):
 
 
     def removeSelection(self, molecule, ident):
-        if self.registry.has_key(ident):
+        if ident in self.registry:
             self.mixture.remove(self.mixture.getMoleculeID(molecule))
             self.registry.pop(ident)
             #print "PropertyEditor removeSelection removed:",ident
@@ -216,14 +216,14 @@ class PropertyEditor(QtGui.QWidget):
 
     def selectedMolecules(self):
     	#print "selectedMolecules ", self.registry
-        return self.registry.values()
+        return list(self.registry.values())
 
     def selectedNames(self):
     	#print "selectedMolecules ",self.registry
-        return self.registry.keys()
+        return list(self.registry.keys())
 
     def __str__(self):
-        return str(self.registry.keys())
+        return str(list(self.registry.keys()))
 
     def __len__(self):
         return len(self.registry)

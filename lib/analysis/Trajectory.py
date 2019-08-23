@@ -18,7 +18,7 @@ class Trajectory:
 		self.position = -1
 		return self
 	
-	def next(self):	
+	def __next__(self):	
 		self.position += 1
 		if self.position > len(self.frames):
 			raise StopIteration

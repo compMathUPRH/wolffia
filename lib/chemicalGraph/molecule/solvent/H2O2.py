@@ -74,11 +74,11 @@ class H2O2(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando H2O2"
+	print("Probando H2O2")
 	m = H2O2("H2O2 prueba" )
-	print m
+	print(m)
 	for node in m:
-		print m.getAtomAttributes(node)
+		print(m.getAtomAttributes(node))
 	m.writePSF("caca.psf")
 	m.writePDB("caca.pdb")
 

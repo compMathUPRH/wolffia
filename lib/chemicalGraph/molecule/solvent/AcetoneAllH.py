@@ -50,9 +50,9 @@ class AcetoneAllH(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando AcetoneAllH"
+	print("Probando AcetoneAllH")
 	m = AcetoneAllH()
-	print m
+	print(m)
 	m.writePSF("AcetoneAllH.psf")
 	m.writePDB("Acetone-All-H.pdb")
 

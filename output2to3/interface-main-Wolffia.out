@@ -1,0 +1,145 @@
+--- /home/jordancaraballo/Documents/Software-Development/wolffia/interface/main/Wolffia.py	(original)
++++ /home/jordancaraballo/Documents/Software-Development/wolffia/interface/main/Wolffia.py	(refactored)
+@@ -41,17 +41,17 @@
+ wolfiadir = os.path.dirname(os.path.realpath(__file__))
+ sys.path.append(wolfiadir+'/../../')
+ 
+-from History import History
+-from Settings import Settings
+-from SettingsDialog import SettingsDialog
++from .History import History
++from .Settings import Settings
++from .SettingsDialog import SettingsDialog
+ from interface.main.WFileDialogs import WFileNameDialog, WFileDialog
+ from interface.main.WTimer import WTimer
+ 
+ from ui_Wolffia import Ui_Wolffia
+-from MixtureBrowser import MixtureBrowser
+-from MixtureViewer import MixtureViewer 
+-from PreviewerToolbar import PreviewerToolbar
+-from EnergyPlot import EnergyPlot, KineticsPlot
++from .MixtureBrowser import MixtureBrowser
++from .MixtureViewer import MixtureViewer 
++from .PreviewerToolbar import PreviewerToolbar
++from .EnergyPlot import EnergyPlot, KineticsPlot
+ from conf.Wolffia_conf import WOLFFIA_GRAPHICS, WOLFFIA_STYLESHEET, WOLFFIA_VERSION,C_MOLECULE_CATALOG
+ 
+ 
+@@ -116,7 +116,7 @@
+ 	    try:
+ 	        self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
+ 	    except:
+-	        print "WARNING: Could not read style specifications"
++	        print("WARNING: Could not read style specifications")
+ 	
+ 	    splash.showMessage(self.__TITLE__ + ": Main window.")
+ 	
+@@ -164,13 +164,13 @@
+ 	
+ 	    # create and show main GUI
+ 	    splash.showMessage(self.__TITLE__ + ": Importing modules.")
+-	    from BuildTab import BuildTab
+-	    from SetupTab import SetupTab
+-	    from ForceTab import ForceTab
+-	    from SimTab import SimTab
+-	    from MinTab import MinTab
+-	    from LogWindow import LogWindow
+-	    from Analysis import Analysis
++	    from .BuildTab import BuildTab
++	    from .SetupTab import SetupTab
++	    from .ForceTab import ForceTab
++	    from .SimTab import SimTab
++	    from .MinTab import MinTab
++	    from .LogWindow import LogWindow
++	    from .Analysis import Analysis
+ 	
+ 	
+ 	    #self.logWindow = LogWindow(self, self.ui.actionLog)
+@@ -211,7 +211,7 @@
+ 	
+ 	@QtCore.pyqtSlot()
+ 	def on_actionLoad_triggered(self, checked = True):
+-	    print "on_actionLoad_triggered", checked
++	    print("on_actionLoad_triggered", checked)
+ 	    if not checked:  return
+ 	    if self.simRunning:
+ 	        QtGui.QMessageBox.information(self, "Stop!", "This action is not allowed while a simulation/minimization is running.", QtGui.QMessageBox.Ok)
+@@ -229,7 +229,7 @@
+ 	            folder = self.history.currentState().getBuildDirectory()  # remember current folder
+ 	            mName = self.history.currentState().getMixture().getMixtureName()
+ 	            self.history.currentState().load(filename)
+-	            print "on_actionLoad_triggered ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
++	            print("on_actionLoad_triggered ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder)
+ 	            self.history.currentState().setBuildDirectory(folder)
+ 	            self.history.currentState().getMixture().setMixtureName(mName)
+ 	            self.history.currentState().save()
+@@ -304,7 +304,7 @@
+ 	    
+ 	    :param saveState:
+ 	    '''
+-	    print "on_saveWFY_triggered "
++	    print("on_saveWFY_triggered ")
+ 	    if not saveState: return
+ 	    if self.simRunning:
+ 	        QtGui.QMessageBox.information(self, "Warning", "This action is not allowed while a simulation/minimization is running.", QtGui.QMessageBox.Ok)
+@@ -315,7 +315,7 @@
+ 	        d = WFileNameDialog(self, 'Save current data', self.settings.currentMixtureLocation(), "Wolffia file (*.wfy)")
+ 	        if d.isReady():
+ 	            filename = d.fullFilename()
+-	            print "on_saveWFY_triggered ","\'"+filename[-4:]+"\'"
++	            print("on_saveWFY_triggered ","\'"+filename[-4:]+"\'")
+ 	            if filename[-4:] != ".wfy" and QtGui.QMessageBox.question (self, "Wolffia's message", "File does not end with .wfy. Add extension?", "Yes", "No") == 0:
+ 	                filename += ".wfy"
+ 	                if os.path.exists(filename) and QtGui.QMessageBox.question (self, "Wolffia's message", "File exists.", "Overwrite", "Cancel") != 0:
+@@ -369,7 +369,7 @@
+ 	                except:
+ 	                    self.minTab.stopMin()
+ 	    self.saveWolffiaState()
+-	    print "closeEvent", event
++	    print("closeEvent", event)
+ 	    event.accept()
+ 	
+ 	
+@@ -381,7 +381,7 @@
+ 		folder = self.history.currentState().getBuildDirectory()  # remember current folder
+ 		mName = self.history.currentState().getMixture().getMixtureName()
+ 		self.history.reset()
+-		print "Wolffia.reset ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
++		print("Wolffia.reset ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder)
+ 		self.history.currentState().setBuildDirectory(folder)
+ 		self.history.currentState().getMixture().setMixtureName(mName)
+ 		self.history.currentState().save()
+@@ -401,7 +401,7 @@
+ 	    self.history.currentState().setSimTabValues(self.simTab.getValues())
+ 	    self.history.currentState().minTabValues = self.minTab.getValues()
+ 	    
+-	    print "saveWolffiaState ",baseFilename , self.configurationFilesBasename()
++	    print("saveWolffiaState ",baseFilename , self.configurationFilesBasename())
+ 	    self.history.currentState().save(filename=baseFilename + ".wfy")
+ 	    self.settings.save()
+ 	
+@@ -427,13 +427,13 @@
+ 	        try:
+ 	            tab.setDefaultValues()
+ 	        except:
+-	            print "Wolffia.py:setDefaultTabs: Tab has no setDefaultValues"
++	            print("Wolffia.py:setDefaultTabs: Tab has no setDefaultValues")
+ 	            
+ 	def update(self):
+ 	
+ 	    #timer = WTimer("Wolffia")
+ 	    if self.allowUpdate:
+-	        print "wolffia.update, updating Wolffia"
++	        print("wolffia.update, updating Wolffia")
+ 	        self.allowUpdate = False
+ 	        self.setTitle()
+ 	        for tab in self.tabs:
+@@ -457,7 +457,7 @@
+     app.processEvents()
+ 
+     gui = Wolffia()
+-    print "cargado"
++    print("cargado")
+     screen = QtGui.QDesktopWidget().screenGeometry()
+     gui.setGeometry(screen & gui.geometry())
+     gui.show()

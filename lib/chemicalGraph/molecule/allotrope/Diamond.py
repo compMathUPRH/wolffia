@@ -168,7 +168,7 @@ class Diamond(Molecule):
 				molecule.removeAtom(i+1)
 			molecule.removeAtom(idxNa)	
 		
-		Molecule.__init__(self, "Diamond", G.moleculeGenerator().next())
+		Molecule.__init__(self, "Diamond", next(G.moleculeGenerator()))
 		
 		# Fix atom types
 		for atom in self:
@@ -263,7 +263,7 @@ class DiamondJSE(Molecule):
 #==========================================================================
 if __name__ == '__main__':
 	d = Diamond(3,3,3)
-	print d.edges()
+	print(d.edges())
 	d.writePDB("/home/jse/Desktop/Diamantito.pdb")
 	
 	m = Mixture()

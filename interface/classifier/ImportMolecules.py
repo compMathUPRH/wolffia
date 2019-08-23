@@ -55,7 +55,7 @@ class ImportMolecules(QtGui.QDialog):
             try:
                 self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
             except:
-                print "WARNING: Could not read style specifications"
+                print("WARNING: Could not read style specifications")
 
     #--------------------------------- Methods ------------------------------------------
     
@@ -81,7 +81,7 @@ class ImportMolecules(QtGui.QDialog):
 
     @QtCore.pyqtSlot()
     def on_ok_pressed(self):
-        print "pdb Is checked?",self.uiImportMolecules.pdbRButton.isChecked()
+        print("pdb Is checked?",self.uiImportMolecules.pdbRButton.isChecked())
         #Specifies the user that has to write a valid filename
         moleculeName = self.uiImportMolecules.IDlineEdit.text()
         fileCode = str(moleculeName.replace(' ','-'))
@@ -99,9 +99,9 @@ class ImportMolecules(QtGui.QDialog):
                 ext           =  "/sdf"    
                 self.fileType = "sdf"
                 
-            import httplib
-            print "on_ok_pressed", host+url+fileCode+ext
-            conn = httplib.HTTPSConnection(host,timeout=10)
+            import http.client
+            print("on_ok_pressed", host+url+fileCode+ext)
+            conn = http.client.HTTPSConnection(host,timeout=10)
             conn.request("GET", url+fileCode+ext)
             r1 = conn.getresponse()
             if r1.reason == 'OK':
@@ -109,10 +109,10 @@ class ImportMolecules(QtGui.QDialog):
                 self.proceedValue = True
                 self.close()
             else: 
-                print "ERRORRR!!!!!"
+                print("ERRORRR!!!!!")
                 QtGui.QMessageBox.warning(self, 'Error '+str(r1.status), r1.reason)
                 
-            print r1.status, r1.reason
+            print(r1.status, r1.reason)
             conn.close()
 
                 

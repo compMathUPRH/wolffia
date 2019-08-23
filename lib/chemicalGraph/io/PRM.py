@@ -97,7 +97,7 @@ class PRM(dict):
 
 		for line in f:
 			#print  "linea: ", line[:4]
-			if line[:4] in self.keys():
+			if line[:4] in list(self.keys()):
 				mode = line[:4]
 			elif mode == 'MASS':  #FORMAT(A2,2X,F10.2x,f10.2)unpack("6sx8sx9sx6sx2sx30sx6sx6sx6sx2s", line.strip())
 				self['MASS'].append(struct.unpack('2s2x10.2fx10.2f', line))
@@ -131,7 +131,7 @@ class PRM(dict):
 		try:
 			f = open(filename)
 		except:
-			print "Error in PRM.loadCHARMM: could not open \'" + str(filename) + "\'"
+			print("Error in PRM.loadCHARMM: could not open \'" + str(filename) + "\'")
 			sys.exit(0)
 
 		mode = None
@@ -144,12 +144,12 @@ class PRM(dict):
 				#print "linea: ", line, ": Cont ", line[-2:-1]
 				while line[-2:-1] == '-':
 					line = line[:-2]
-					line += f.next()
+					line += next(f)
 
 				if len(line.strip()) == 0 or line.strip()[0] == '*' or line.strip()[0] == '!':
 					#print " blank line and comments"
 					pass # ignore blank lines and comments
-				elif line[:3] in self.keys() or line[:4] in self.keys():
+				elif line[:3] in list(self.keys()) or line[:4] in list(self.keys()):
 					mode = line[:4]
 					#print "Cambio modo a ", mode
 				elif mode == 'MASS': 
@@ -199,7 +199,7 @@ class PRM(dict):
 
 	#-----------------------------------------------------------------------------------------
 	def __tr__(self, elt):
-		if self.trad == None or not self.trad.has_key(elt):
+		if self.trad == None or elt not in self.trad:
 			return elt
 		else:
 			return self.trad[elt]
@@ -221,37 +221,37 @@ class PRM(dict):
 		f.write("*>>>>>> CHARMM parameter file for " + self.molname + " <<<<<<<<<\n")
 		f.write("*>>>>>> Produced by Wolfia, wolffia.uprh.edu <<<<<<<<<\n")
 
-		if len(self['NONB'].keys()) > 0:
+		if len(list(self['NONB'].keys())) > 0:
 			f.write("\nNONB     ! " + self.molname + "\n")
 			if self.trad == None:
-				for elttype in self['NONB'].keys():
+				for elttype in list(self['NONB'].keys()):
 					f.write("{:<4} {:10.6f} {:10.6f}   {:10.6f}\n".format(self.__tr__(elttype), 0.0, self['NONB'][elttype][0], self['NONB'][elttype][1])) 
 			else:
-				for elttype in self.trad.keys():
+				for elttype in list(self.trad.keys()):
 					if not elttype in self['NONB']:
 						raise PRMError("Element type " + elttype + " does not have Lennard-Jones parameter values.")
 					f.write("{:<4} {:10.6f} {:10.6f}   {:10.6f}\n".format(self.__tr__(elttype), 0.0, self['NONB'][elttype][0], self['NONB'][elttype][1])) 
 
-		if len(self['BOND'].keys()) > 0:
+		if len(list(self['BOND'].keys())) > 0:
 			f.write("\nBOND   ! " + self.molname + "\n")
-			for elts in self['BOND'].keys():
+			for elts in list(self['BOND'].keys()):
 				[elt1, elt2] = elts
-				if self.trad == None or (elt1 in self.trad.keys() and elt2 in self.trad.keys()):
+				if self.trad == None or (elt1 in list(self.trad.keys()) and elt2 in list(self.trad.keys())):
 					f.write("{:<4} {:<4} {:8.3f}   {:8.4f}\n".format(self.__tr__(elt1), self.__tr__(elt2), self['BOND'][elts][0], self['BOND'][elts][1])) 
 
-		if len(self['ANGL'].keys()) > 0:
+		if len(list(self['ANGL'].keys())) > 0:
 			f.write("\nANGL   ! " + self.molname + "\n")
 
-			for elts in self['ANGL'].keys():
+			for elts in list(self['ANGL'].keys()):
 				[elt1, elt2, elt3] = elts
-				if self.trad == None or (elt1 in self.trad.keys() and elt2 in self.trad.keys() and elt3 in self.trad.keys()):
+				if self.trad == None or (elt1 in list(self.trad.keys()) and elt2 in list(self.trad.keys()) and elt3 in list(self.trad.keys())):
 					f.write("{:<4} {:<4} {:<4} {:8.3f}   {:8.4f}\n".format(self.__tr__(elt1), self.__tr__(elt2), self.__tr__(elt3), self['ANGL'][elts][0], self['ANGL'][elts][1])) 
 
-		if len(self['DIHE'].keys()) > 0:
+		if len(list(self['DIHE'].keys())) > 0:
 			f.write("\nDIHE   ! " + self.molname + "\n")
-			for elts in self['DIHE'].keys():
+			for elts in list(self['DIHE'].keys()):
 				[elt1, elt2, elt3, elt4] = elts
-				if self.trad == None or (elt1 in self.trad.keys() and elt2 in self.trad.keys() and elt3 in self.trad.keys() and elt4 in self.trad.keys()):
+				if self.trad == None or (elt1 in list(self.trad.keys()) and elt2 in list(self.trad.keys()) and elt3 in list(self.trad.keys()) and elt4 in list(self.trad.keys())):
 					f.write("{:<4} {:<4} {:<4} {:<4} {:10.4f}  {:1}  {:7.2f}\n".format(self.__tr__(elt1), self.__tr__(elt2), self.__tr__(elt3), self.__tr__(elt4), self['DIHE'][elts][0], int(self['DIHE'][elts][1]), self['DIHE'][elts][2])) 
 
 	@staticmethod

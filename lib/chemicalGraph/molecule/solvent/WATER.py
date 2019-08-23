@@ -60,7 +60,7 @@ class WATER(Molecule):
 		self.add_atom(atr,[1])
 
 		if WATER._FORCE_FIELD == None: 
-			print "WATER generating FF"
+			print("WATER generating FF")
 			WATER._FORCE_FIELD = ForceField(self, NANOCAD_FORCE_FIELDS + "/WATER.prm")
 		#print "WATER1", WATER._FORCE_FIELD._BONDS
 		self.setForceField(WATER._FORCE_FIELD )
@@ -71,11 +71,11 @@ class WATER(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando WATER"
+	print("Probando WATER")
 	m = WATER( )
-	print m
+	print(m)
 	for node in m:
-		print m.getAtomAttributes(node)
+		print(m.getAtomAttributes(node))
 	m.writePSF("caca.psf")
 	m.writePDB("caca.pdb")
 

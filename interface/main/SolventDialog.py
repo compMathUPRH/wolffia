@@ -130,7 +130,7 @@ class SolventDialog(QtGui.QDialog):
 		V = self._vol / 1E23
 		if V == 0: return 0
 		
-		print "computeMolecules ", D,V,MM,D * V * MM * _AVOGRADRO_CONSTANT_
+		print("computeMolecules ", D,V,MM,D * V * MM * _AVOGRADRO_CONSTANT_)
 		n = int(D * V * MM * _AVOGRADRO_CONSTANT_)
 
 		return n
@@ -142,7 +142,7 @@ class SolventDialog(QtGui.QDialog):
 		global _AVOGRADRO_CONSTANT_
 		V = self._vol / 1E23
 		MM = self.DENSITY[self._solvent][self.MI]
-		print "computeDensity ", self._amount, V,MM, self._amount / V * MM * _AVOGRADRO_CONSTANT_
+		print("computeDensity ", self._amount, V,MM, self._amount / V * MM * _AVOGRADRO_CONSTANT_)
 		return self._amount / V / MM / _AVOGRADRO_CONSTANT_
 	
 
@@ -178,7 +178,7 @@ class SolventDialog(QtGui.QDialog):
 
 	def closeEvent(self, e):
 		if not self._keepAmmount: self._amount = 0
-		print "closeEvent ", e.type()
+		print("closeEvent ", e.type())
 		#super(SolventDialog, self).closeEvent(e)
 	#----------------------------------------------------------------
 	def on_okButton_pressed(self):

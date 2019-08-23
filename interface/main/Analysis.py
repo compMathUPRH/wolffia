@@ -55,25 +55,25 @@ class TextField(QtGui.QTextEdit):
 #-----------------------------------------------------
 
 	def dragEnterEvent(self, e):
-		print "PRIMERdrag"
+		print("PRIMERdrag")
 		dropUrl = e.mimeData().urls()[0]
 		if not dropUrl.isLocalFile():
 			return 
 
 		if e.mimeData().hasFormat('text/plain'):
-			print "mimeData.hasFormat (text Plain)"
+			print("mimeData.hasFormat (text Plain)")
 			fileName    = str(dropUrl.toLocalFile())
 			extension   = os.path.splitext(fileName)
-			print "filename:" + fileName
-			print "extension:" + str(extension[1])
+			print("filename:" + fileName)
+			print("extension:" + str(extension[1]))
 				
 			e.accept()
-			print "aceptado"
-			print "PRIMERif"
+			print("aceptado")
+			print("PRIMERif")
 
 	def dropEvent(self, e):
 		text = open(str(e.mimeData().urls()[0].toLocalFile())).read()
-		print "PRIMERdrop"
+		print("PRIMERdrop")
 		
 		self.setText(text)
 
@@ -209,7 +209,7 @@ class Analysis(QtGui.QFrame):
 		
 		
 		# redirect stdout, execute, display result and restore stdout
-		from cStringIO import StringIO
+		from io import StringIO
 		old_stdout = sys.stdout
 		redirected_output = sys.stdout = StringIO()
 		thr = RunScriptThread(self,self.network,state, self.components)
@@ -234,7 +234,7 @@ class Analysis(QtGui.QFrame):
 		pass
 
 	def update(self):
-		print "Analysis.update"
+		print("Analysis.update")
 		if self.analysisClass != None:
 			self.analysisClass.update()
 		#from lib.fbp.Network import removeEdgesAndRestart

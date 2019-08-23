@@ -93,7 +93,7 @@ class DiamondBuilder(QtGui.QDialog):
 		try:
 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
 		except:
-			print "WARNING: Could not read style specifications"
+			print("WARNING: Could not read style specifications")
 
 	def generateDimond(self):
 		n			= self.ui.nSpinBox.value()
@@ -136,7 +136,7 @@ class DiamondBuilder(QtGui.QDialog):
 			ntDialog.show()
 			ntDialog.exec_()
 			self.files = ntDialog.getFileNames()
-			print self.files
+			print(self.files)
 
 	@QtCore.pyqtSlot()
 	def on_previewButton_pressed(self):

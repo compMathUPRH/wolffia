@@ -131,9 +131,9 @@ class PEDOT(Polymer):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando PEDOT"
+    print("Probando PEDOT")
     m = PEDOT(2,2,2)
-    print m
+    print(m)
     #m.writePDB("/home/wensy/invewstigacion/prueba/chito.pdb")
     #m.writePSF("/home/wensy/invewstigacion/prueba/chito.psf")
 

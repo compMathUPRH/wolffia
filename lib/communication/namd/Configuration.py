@@ -148,7 +148,7 @@ class Configuration(object):
 	    if self.useLang.isChecked():
 	        conf.write("\n\n###LANGEVIN DYNAMICS###\n   langevin   on")
 	        if self.langTemp == 0:
-	            print "You did not set a temperature for langevin calculations!\nTemperature will be set to 1 to avoid error."
+	            print("You did not set a temperature for langevin calculations!\nTemperature will be set to 1 to avoid error.")
 	            conf.write("\n   langevinTemp   1")
 	        else:
 	            conf.write("\n   langevinTemp   " + str(self.langTemp.value()))
@@ -163,7 +163,7 @@ class Configuration(object):
 	    if self.tempCoup.isChecked():
 	        conf.write("\n\n###Temperature Coupling###\ntCouple   on")
 	        if self.tempBath.value() == 0:
-	            print "No values given to tCoupleTemp! \nGiving it a default value of 1."
+	            print("No values given to tCoupleTemp! \nGiving it a default value of 1.")
 	            conf.write("\ntCoupleTemp   1.00")
 	        else:
 	            conf.write("\ntCoupleTemp   " + str(self.tempBath.value()))
@@ -175,7 +175,7 @@ class Configuration(object):
 	    if self.timeTRes.value() != 0:
 	        conf.write("\n\n###Temperature Rescaling###\nrescaleFreq   " + str(self.timeTRes.value()))
 	        if self.tempEq.value() == 0:
-	            print "No value given to rescaleTemp! \n Giving it a default value of 1."
+	            print("No value given to rescaleTemp! \n Giving it a default value of 1.")
 	            conf.write("\nrescaleTemp   1")
 	        else:
 	            conf.write("\nrescaleTemp   " + str(self.tempEq.value()))
@@ -188,7 +188,7 @@ class Configuration(object):
 	            conf.write("\nreassignTemp   " + str(self.tempResEq.value()))
 	        conf.write("\nreassignIncr   " + str(self.tempInc.value()))
 	        if self.resHold.value() == 0:
-	            print "No value given to reassignHold! \n Giving it a default value of 1."
+	            print("No value given to reassignHold! \n Giving it a default value of 1.")
 	            conf.write("\nreassignHold   1")
 	        else:
 	            conf.write("\nreassignHold   " + str(self.resHold.value()))
@@ -207,17 +207,17 @@ class Configuration(object):
 	    if self.useBeren.isChecked() != False:
 	        conf.write("\n\n###Berendsen Pressure Bath Coupling###\n   BerendsenPressure   on")
 	        if self.targPress.value() == 0:
-	            print "No value given to target pressure for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
+	            print("No value given to target pressure for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
 	            conf.write("\n   BerendsenPressureTarget   1")
 	        else:
 	            conf.write("\n   BerendsenPressureTarget   " + str(self.targPress.value()))
 	        if self.berenComp.value() == 0:
-	            print "No value given to compressibility for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
+	            print("No value given to compressibility for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
 	            conf.write("\n   BerendsenPressureCompressibility   1")
 	        else:
 	            conf.write("\n   BerendsenPressureCompressibility   " + str(self.berenComp.value()))
 	        if self.berenRelx.value() == 0:
-	            print "No value given to relaxation time for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
+	            print("No value given to relaxation time for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
 	            conf.write("\n   BerendsenPressureRelaxationTime   1")
 	        else:
 	            conf.write("\n   BerendsenPressureRelaxationTime   " + str(self.berenRelx.value()))
@@ -264,7 +264,7 @@ class Configuration(object):
 	    if self.smd.isChecked():
 	        conf.write("\n\n###Steered molecular dynamics###\nSMD   on")
 	        if self.smdFile.text() == "default":
-	            print "Hey, you forgot to name the file for SMD constraints! \nExit"
+	            print("Hey, you forgot to name the file for SMD constraints! \nExit")
 	            return
 	        else:
 	            conf.write("\nSMDFile   " + self.smdFile.text())

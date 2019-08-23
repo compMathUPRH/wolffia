@@ -93,7 +93,7 @@ class GrapheneBuilder(QtGui.QDialog):
 		try:
 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
 		except:
-			print "WARNING: Could not read style specifications"
+			print("WARNING: Could not read style specifications")
 			
 		self.graphenePreview.update()
 
@@ -125,13 +125,13 @@ class GrapheneBuilder(QtGui.QDialog):
 			self.isAdded = True
 			self.close()
 		else:
-			from GrapheneSaveDialog import GrapheneSaveDialog
+			from .GrapheneSaveDialog import GrapheneSaveDialog
 			self.generateGraphene()
 			ntDialog = GrapheneSaveDialog(self.graphene,files=self.files, parent=self)
 			ntDialog.show()
 			ntDialog.exec_()
 			self.files = ntDialog.getFileNames()
-			print self.files
+			print(self.files)
 
 	@QtCore.pyqtSlot()
 	def on_previewButton_pressed(self):

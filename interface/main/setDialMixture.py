@@ -82,13 +82,13 @@ class setDialMixture(QtGui.QDialog):
             self.wolffia.reset()
             self.settings.workingFolder = str(self.newFolder)
             self.settings.setCurrentMixture("Unnamed") #piensa en darle la opcion, de darle un nombre, al usuario
-            print self.settings.workingFolder
-            print self.settings.currentMixtureLocation()
+            print(self.settings.workingFolder)
+            print(self.settings.currentMixtureLocation())
             self.close()
         else:
             mixN = self.settings.currentMixtureName 
             dirName = self.newFolder + mixN 
-            print self.newFolder, dirName
+            print(self.newFolder, dirName)
             try:
                 shutil.copytree(self.settings.workingFolder + mixN,dirName)
             except OSError:

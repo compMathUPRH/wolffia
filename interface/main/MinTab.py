@@ -37,11 +37,11 @@ import sys, os, time, platform
 from PyQt4 import QtCore, QtGui
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
 from conf.Wolffia_conf import _WOLFFIA_OS,WOLFFIA_GRAPHICS, WOLFFIA_USES_IMD
-from QClasses import * #@UnusedWildImport
+from .QClasses import * #@UnusedWildImport
 from ui_MinTab import Ui_minTab
 from subprocess import signal, Popen, PIPE #@UnusedImport
 from lib.communication.namd.Configuration import Configuration, ConfigurationError
-from namdMinParm import parmDict
+from .namdMinParm import parmDict
 import logging
 from chemicalGraph.io.PRM import PRMError
 
@@ -122,7 +122,7 @@ class MinTab(QtGui.QFrame):
 		
 		#Uses the parmDict dictionary to initialize all the objects, 
 		#give them values and add them on the widgetTree
-		for defaults in  parmDict.iterkeys():
+		for defaults in  parmDict.keys():
 		    if parmDict[defaults][1] == "InputFile":
 		        vars(self)[defaults] = InputFile(self.minTree)
 		        vars(self)[defaults].setEnabled(parmDict[defaults][2])
@@ -200,7 +200,7 @@ class MinTab(QtGui.QFrame):
         [inputWidgetObjectName] [value]
         '''
         picklesan = dict()
-        for elements in parmDict.keys():
+        for elements in list(parmDict.keys()):
             picklesan[elements] = vars(self)[elements].value()
         return picklesan
     
@@ -211,7 +211,7 @@ class MinTab(QtGui.QFrame):
         :param initVal: dictionary that contains the values of all the boxes in minTab
         '''
         if initVal != None:
-            for elements in parmDict.keys():
+            for elements in list(parmDict.keys()):
                 vars(self)[elements].setValues(initVal[elements])
 
     def setDefaultValues(self):
@@ -219,7 +219,7 @@ class MinTab(QtGui.QFrame):
         Sets the default values in the input widgets 
         using the default parameter dictionary
         '''
-        for elements in parmDict.keys():
+        for elements in list(parmDict.keys()):
                 vars(self)[elements].setValues(parmDict[elements][0])
 
 
@@ -233,14 +233,14 @@ class MinTab(QtGui.QFrame):
         self.ui.stopButton.setEnabled(False)
 
         if self.simRun != None:
-            print "stopMin canceling"
+            print("stopMin canceling")
             self.simRun.cancel()
-            print "stopMin stopping timers"
+            print("stopMin stopping timers")
             self.minTimer.stop()
             self.minCoordTimer.stop()
-            print "stopMin updating coords"
+            print("stopMin updating coords")
             self.updateCoordinates()
-            print "stopMin logging"
+            print("stopMin logging")
             logging.getLogger(self.__class__.__name__).info("Minimization has stopped.")
         
         self.parent.simRunning = False
@@ -315,7 +315,7 @@ class MinTab(QtGui.QFrame):
 		self.minTimer.stop()
 		namdOutput = self.simRun.getOutput()
 		if namdOutput != None:
-			print "SimTab on_minTimer", namdOutput
+			print("SimTab on_minTimer", namdOutput)
 			self.checkError(namdOutput)
 			if WOLFFIA_USES_IMD:
 			    self.energyPlot1.addValuesFromIMD(self.simRun.getEnergies())
@@ -340,7 +340,7 @@ class MinTab(QtGui.QFrame):
 		               
 		
 		except:
-			print "SimTab on_minTimer exception occured", sys.exc_info()[0]
+			print("SimTab on_minTimer exception occured", sys.exc_info()[0])
 			pass
 
             
@@ -445,7 +445,7 @@ class MinTab(QtGui.QFrame):
             self.minCoordTimer.stop() 
             
         except:
-            print "MinTab reset: algo fallo"
+            print("MinTab reset: algo fallo")
             pass    
         
         
@@ -480,7 +480,7 @@ class MinTab(QtGui.QFrame):
         try:
 			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.history.currentState().getMixture().getMixtureName()))
             #conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.settings.currentMixtureName))
-        except ConfigurationError, e:
+        except ConfigurationError as e:
             Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
             Error.exec_()
             return
@@ -492,7 +492,7 @@ class MinTab(QtGui.QFrame):
         #print "MinTab runSim", self.history.currentState().getMixture().getMolecule(self.history.currentState().getMixture().molecules()[0]).getForceField()._ANGLES
         try:
             self.history.currentState().writeFiles(self.settings.currentMixtureLocation() + str(self.history.currentState().getMixture().getMixtureName()))
-        except Exception,  e:
+        except Exception as  e:
 			Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
 			Error.exec_()
 			progress.cancel()

@@ -46,9 +46,9 @@ class SDSplusNA(Molecule):
 		self.setForceField(_FORCE_FIELD )			
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando SDSplusNA"
+	print("Probando SDSplusNA")
 	m = SDSplusNA()
-	print m
+	print(m)
 	m.writePSF("SDSplusNA.psf")
 	m.writePDB("SDSplusNA.pdb")
 

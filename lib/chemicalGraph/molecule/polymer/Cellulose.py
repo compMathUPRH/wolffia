@@ -43,7 +43,7 @@ import math
 class Cellulose(Polymer):
 	ALL_MONOMERS = Mixture()
 	ALL_MONOMERS.loadWFM(WOLFFIA_WFY_DIR + "/Cellulose.wfm")
-	print ALL_MONOMERS.molecules()
+	print(ALL_MONOMERS.molecules())
 
 	IMAGE                = "/Cellulose.png"
 	
@@ -95,7 +95,7 @@ class Cellulose(Polymer):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando Cellulose"
+    print("Probando Cellulose")
     m = Cellulose(7)
     #m = Cellulose.MONOMERS_MOLS['Oe']
     #print [m.getAtomAttributes(a) for a in m.atoms()]

@@ -31,7 +31,7 @@
 """
 
 import os, sys
-wolfiadir = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(wolfiadir+'/../../conf')
+wolffiadir = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(wolffiadir+'/../../conf')
 
 import interface.main.Wolffia

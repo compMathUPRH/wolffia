@@ -75,9 +75,9 @@ class Polystyrene(Homopolymer):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando Polystyrene"
+    print("Probando Polystyrene")
     m = Polystyrene(6)
-    print m
+    print(m)
     m.writePDB("/home/jse/Desktop/Polystyrene.pdb")
     m.writePSF("/home/jse/Desktop/Polystyrene.psf")
 

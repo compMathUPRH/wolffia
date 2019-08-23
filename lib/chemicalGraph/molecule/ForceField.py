@@ -34,7 +34,7 @@ import threading
 import sys,os, time
 if __name__ == '__main__':
 	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
-	print sys.path
+	print(sys.path)
 from conf.Wolffia_conf import CHARMM_FORCE_FIELDS
 from lib.chemicalGraph.io.PRM import PRM
 from chemicalGraph.io.PRM import PRMError
@@ -129,7 +129,7 @@ class ForceField(object):
 	    
 	
 	def __tr__(self, elt):
-	    if self.trad == None or not self.trad.has_key(elt):
+	    if self.trad == None or elt not in self.trad:
 	        return elt
 	    else:
 	        return self.trad[elt]
@@ -138,36 +138,36 @@ class ForceField(object):
 	def addZeroAngles(self, angles):
 	    for [t1,t2,t3] in angles:
 		if t1 < t3:
-		    if not (t1, t2, t3) in self._ANGLES.keys():
+		    if not (t1, t2, t3) in list(self._ANGLES.keys()):
 		        self._ANGLES[(t1, t2, t3)] = [0.,0.]
 		else:
-		    if not (t3, t2, t1) in self._ANGLES.keys():
+		    if not (t3, t2, t1) in list(self._ANGLES.keys()):
 		        self._ANGLES[(t3, t2, t1)] = [0.,0.]
 	
 	def addZeroParameters(self, molecule):
 	    aTypes = molecule.atomTypes()
 	    for t in aTypes:
-	        if not t in self._NONBONDED.keys():
+	        if not t in list(self._NONBONDED.keys()):
 	            self._NONBONDED[t] = [0.,0.,0.]
 	        #print "FF addZeroParameters self._NONBONDED.keys() ",t,id(self._NONBONDED[t])
 	    aTypes = molecule.bondTypes()
 	    for t in aTypes:
-	        if not t in self._BONDS.keys():
+	        if not t in list(self._BONDS.keys()):
 	            self.setBond((t[0],t[1]), 0.,0)
 	            self.setBond((t[0],t[1]), 0.,1)
 	    #print "FF addZeroParameters self._BONDS.keys() ",self._BONDS.keys()
 	    aTypes = molecule.atomTypes()
 	    for t in aTypes:
-	        if not t in self._MASS.keys():
+	        if not t in list(self._MASS.keys()):
 	            self._MASS[t] = 0.
 	    aTypes = molecule.angleTypes()
 	    for t in aTypes:
-	        if not t in self._ANGLES.keys():
+	        if not t in list(self._ANGLES.keys()):
 	            self.setAngle((t[0],t[1],t[2]), 0.,0)
 	            self.setAngle((t[0],t[1],t[2]), 0.,1)
 	    aTypes = molecule.dihedralTypes()
 	    for t in aTypes:
-	        if not t in self._DIHEDRALS.keys():
+	        if not t in list(self._DIHEDRALS.keys()):
 	            self.setDihedral((t[0],t[1],t[2],t[3]), 0.,0)
 	            self.setDihedral((t[0],t[1],t[2],t[3]), 0 ,1)
 	            self.setDihedral((t[0],t[1],t[2],t[3]), 0.,2)
@@ -210,17 +210,17 @@ class ForceField(object):
 		This is a temporary fix for removing unused types from the data fields.
 		'''
 		#types = [t.typeName() for t in typesObj]
-		for t in self._NONBONDED.keys():
+		for t in list(self._NONBONDED.keys()):
 		    if not t in types: del self._NONBONDED[t]
 		
-		for b in self._BONDS.keys():
+		for b in list(self._BONDS.keys()):
 			#print "FF clean bond",b
 			if not(b[0] in types or b[1] in types): del self._BONDS[b]
 		
-		for a in self._ANGLES.keys():
+		for a in list(self._ANGLES.keys()):
 			if not(a[0] in types or a[1] in types or a[2] in types): del self._ANGLES[a]
 			
-		for d in self._DIHEDRALS.keys():
+		for d in list(self._DIHEDRALS.keys()):
 			if not(d[0] in types or d[1] in types or d[2] in types or d[3] in types): 
 				del self._DIHEDRALS[d]
 		
@@ -242,7 +242,7 @@ class ForceField(object):
 	def dihedral(self, t1, t2, t3, t4):
 	    types = self.sortDihedral(t1, t2, t3, t4)
 	    #print "FF dihedral",types,self._DIHEDRALS.keys()
-	    if types in self._DIHEDRALS.keys():
+	    if types in list(self._DIHEDRALS.keys()):
 	        return self._DIHEDRALS[types]
 	    '''
 	    count = 0
@@ -266,7 +266,7 @@ class ForceField(object):
 	
 	
 	def getTypes(self):
-	    return self._NONBONDED.keys()
+	    return list(self._NONBONDED.keys())
 	
 	
 	def guess(self, molecule, timeLimit=float("inf"), options=_CHARMM_FILES_, includeHydrogens=True):
@@ -284,7 +284,7 @@ class ForceField(object):
 	    timeSlot = timeLimit
 	    for fftype in options:
 	        fn       = _CHARMM_PARAMETER_FILES_[_CHARMM_FILES_.index(fftype)]
-	        print "ForceField guess", fftype, fn
+	        print("ForceField guess", fftype, fn)
 	        charmFF  = ForceField(None, filename=CHARMM_FORCE_FIELDS+fn)
 	        pareoMin.append(FFPairings(molecule,charmFF, timeLimit=timeSlot, includeHydrogens=includeHydrogens))
 	        
@@ -304,7 +304,7 @@ class ForceField(object):
 	    return pairings
 	
 	def isDefined(self, k):
-	    return self._NONBONDED.has_key(k)
+	    return k in self._NONBONDED
 	
 	
 	def hasType(self,t):
@@ -398,13 +398,13 @@ class ForceField(object):
 	            "_HBONDS"     ]
 	    
 	    #print "ForceField merge typesToMerge", typesToMerge
-	    if typesToMerge == None: typesToMerge = ff._NONBONDED.keys()
+	    if typesToMerge == None: typesToMerge = list(ff._NONBONDED.keys())
 	    #print "ForceField merge typesToMerge2", typesToMerge
 	    
 	    for pType in pars:
 		#print "ForceField merge", pType, self.__dict__[pType]
 		#print "ForceField merff", pType, ff.__dict__[pType]
-		for k in ff.__dict__[pType].keys():
+		for k in list(ff.__dict__[pType].keys()):
 		    copyOK =True
 		    for aType in k:
 		        #print "for aType in k.split(' '): ", aType
@@ -424,10 +424,10 @@ class ForceField(object):
 	
 			
 	def renameTypes(self, nameTable):
-	    print "renameTypes  ", nameTable, self._NONBONDED.keys()
+	    print("renameTypes  ", nameTable, list(self._NONBONDED.keys()))
 	    resultDict = dict()
-	    for nonb in self._NONBONDED.keys():
-	        if nameTable.has_key(nonb):
+	    for nonb in list(self._NONBONDED.keys()):
+	        if nonb in nameTable:
 	            #resultDict[nameTable[nonb]] = nameTable.getForceField()._NONBONDED[nameTable[nonb]]
 	            resultDict[nameTable[nonb]] = self._NONBONDED[nonb]
 	        else:
@@ -435,9 +435,9 @@ class ForceField(object):
 	            resultDict[nonb] = self._NONBONDED[nonb]
 	    self._NONBONDED = resultDict
 	    
-	    print "renameTypes2 ", nameTable, self._NONBONDED.keys()
+	    print("renameTypes2 ", nameTable, list(self._NONBONDED.keys()))
 	    resultDict = dict()
-	    for bond in self._BONDS.keys():
+	    for bond in list(self._BONDS.keys()):
 	        t1, t2 = bond
 	        try:
 	        	resultDict[(nameTable[t1], nameTable[t2])] = self._BONDS[bond]
@@ -446,7 +446,7 @@ class ForceField(object):
 	    self._BONDS = resultDict
 	    
 	    resultDict = dict()
-	    for angle in self._ANGLES.keys():
+	    for angle in list(self._ANGLES.keys()):
 	        t1, t2, t3 = angle
 	        try:
 	        	resultDict[(nameTable[t1], nameTable[t2], nameTable[t3])] = self._ANGLES[angle]
@@ -455,7 +455,7 @@ class ForceField(object):
 	    self._ANGLES = resultDict
 	    
 	    resultDict = dict()
-	    for dih in self._DIHEDRALS.keys():
+	    for dih in list(self._DIHEDRALS.keys()):
 	        t1, t2, t3, t4 = dih
 	        try:
 	        	resultDict[(nameTable[t1], nameTable[t2], nameTable[t3], nameTable[t4])] = self._DIHEDRALS[dih]
@@ -468,7 +468,7 @@ class ForceField(object):
 		assert(isinstance(t,tuple))
 		if t[2] < t[0]:
 		    t = (t[2], t[1], t[0])
-		if not self._ANGLES.has_key(t):
+		if t not in self._ANGLES:
 		    self._ANGLES[t] = [0,0]
 		self._ANGLES[t][pos] = val
 		
@@ -480,7 +480,7 @@ class ForceField(object):
 		assert(isinstance(t,tuple))
 		if t[1] < t[0]:
 		    t = (t[1],t[0])
-		if not self._BONDS.has_key(t):
+		if t not in self._BONDS:
 		    self._BONDS[t] = [0,0]
 		self._BONDS[t][pos] = val
 		
@@ -499,7 +499,7 @@ class ForceField(object):
 	def setDihedral(self, t, val, pos):
 		assert(isinstance(t,tuple))
 		t = self.sortDihedral(t[0], t[1], t[2], t[3])
-		if not self._DIHEDRALS.has_key(t):
+		if t not in self._DIHEDRALS:
 		    self._DIHEDRALS[t] = [0,0,0]
 		self._DIHEDRALS[t][pos] = val
 		
@@ -508,7 +508,7 @@ class ForceField(object):
 	
 	
 	def setNonBond(self, t, val, pos):
-	    if not self._NONBONDED.has_key(t):
+	    if t not in self._NONBONDED:
 	        self._NONBONDED[t] = [0,0,0]
 	    self._NONBONDED[t][pos] = val
 	    #print "setNonBond ", t, val, pos, id(self), id(self._NONBONDED[t])
@@ -575,7 +575,7 @@ class ForceField(object):
 		try: 
 			prm.writeCHARMM(filename, mode, trad)
 		except : 
-			print "writeCHARMM"
+			print("writeCHARMM")
 			raise
 
 
@@ -612,13 +612,13 @@ class FFPairings(threading.Thread):
         
     def run(self):
 		#print "FFPairings run A ",   self.tiposMol, self.tiposFF.keys()
-		self.__pareaListas(self.tiposMol, self.tiposFF.keys())
+		self.__pareaListas(self.tiposMol, list(self.tiposFF.keys()))
 		if self.parMin != None:
 			self.resultFF  = ForceField(self.molecule)
 			self.resultFF.merge(self.molecule.getForceField())
 			#print "FFPairings run before ",   self.resultFF._NONBONDED.keys()
 			self.resultFF.renameTypes(self.parMin)
-			self.resultFF.merge(self.FFcharm, self.resultFF._NONBONDED.keys())
+			self.resultFF.merge(self.FFcharm, list(self.resultFF._NONBONDED.keys()))
 			#print "FFPairings run",   self.resultFF._NONBONDED.keys()
 			#self.resultFF.merge(self.FFcharm, self.molecule.atomTypes())
     '''        
@@ -634,14 +634,14 @@ class FFPairings(threading.Thread):
         #print "FFPairings getPairedForceField, self.resultFF._NONBONDED",  self.resultFF._NONBONDED
         newFF = ForceField()
         
-        for nonb  in self.parMin.keys():
+        for nonb  in list(self.parMin.keys()):
             #print "FFPairings getPairedForceField self.parMin[nonb]", nonb,self.parMin[nonb],oldFF._NONBONDED.has_key(nonb),oldFF._NONBONDED.keys()
             newFF._NONBONDED[nonb] = list(self.resultFF._NONBONDED[self.parMin[nonb]])
             #if keepCharges and oldFF._NONBONDED.has_key(nonb): 
             #    newFF._NONBONDED[nonb][NonBond._CHARGE] = oldFF._NONBONDED[nonb][NonBond._CHARGE]
 
 		#print "FFPairings getPairedForceField,oldFF._BONDS.keys()",  oldFF._BONDS.keys()
-        for bond  in oldFF._BONDS.keys():
+        for bond  in list(oldFF._BONDS.keys()):
 			t1, t2 = bond
 			try:
 			    vals   = [val for val in self.resultFF.bond(self.parMin[t1], self.parMin[t2])]
@@ -650,7 +650,7 @@ class FFPairings(threading.Thread):
 			except KeyError:
 			    pass
         #print "FFPairings getPairedForceField,oldFF._ANGLES.keys()",  oldFF._ANGLES.keys()
-        for angle in oldFF._ANGLES.keys():
+        for angle in list(oldFF._ANGLES.keys()):
             t1, t2, t3 = angle
             try:
                 vals   = [val for val in self.resultFF.angle(self.parMin[t1], self.parMin[t2], self.parMin[t3])]
@@ -659,7 +659,7 @@ class FFPairings(threading.Thread):
             except KeyError:
                 pass
 
-        for dih in oldFF._DIHEDRALS.keys():
+        for dih in list(oldFF._DIHEDRALS.keys()):
             t1, t2, t3, t4 = dih
             try:
                 vals   = [val for val in self.resultFF.dihedral(self.parMin[t1], self.parMin[t2], self.parMin[t3], self.parMin[t4])]
@@ -731,7 +731,7 @@ class FFPairings(threading.Thread):
         for bond in self.molecule.bonds():
             t1 = self.molecule.getAtomAttributes(bond[0]).getInfo().getType()
             t2 = self.molecule.getAtomAttributes(bond[1]).getInfo().getType()
-            if pareo.has_key(t1) and pareo.has_key(t2):
+            if t1 in pareo and t2 in pareo:
             	#print " molOK ",
                 t1 = pareo[t1]
                 t2 = pareo[t2]
@@ -784,7 +784,7 @@ class FFPairings(threading.Thread):
 		            #print "\n-----> ", pareo
 		            #print "\n-----> pot ", pot, " NEW", (pot  < self.minPot)
 		            if pot  < self.minPot:
-		                print "-----> ", pareo, pot
+		                print("-----> ", pareo, pot)
 		                #print "%8.2f\033[12D", pot
 		                self.minPot = pot
 		                self.parMin = dict(pareo)
@@ -815,7 +815,7 @@ class FFPairings(threading.Thread):
 				                self.minPot = pot
 				                self.parMin = dict(pareo)
 				                subMatch = True
-		                		print "sub--> ", -pot, len(pareo), pareo
+		                		print("sub--> ", -pot, len(pareo), pareo)
 		                #porProbar2.append(t2)
 		            pareo.pop(t1)
 		        #print "\033[8D        \033[8D",
@@ -828,11 +828,11 @@ if __name__ == '__main__':
 #    print "Probando ForceField"
     m = ForceField("Probando ForceField")
     m.load("../../data/forceFields/PMMA.prm")
-    print "FF__main__: ", m._ANGLES
+    print("FF__main__: ", m._ANGLES)
     trad={'HT': 'ht', 'CZ':'XX'}
     
     m.writeCHARMM("/tmp/prueba.prm", trad=trad)
-    print "FF__main__: ", m._ANGLES
+    print("FF__main__: ", m._ANGLES)
     #print " Probando ForceFieldWriter"
     #r = ForceFieldWriter()
     #r.load("/home_inv/frances/Desktop/CLF.prm" )

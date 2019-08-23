@@ -87,7 +87,7 @@ class DMF(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando DMF"
+	print("Probando DMF")
 	m = DMF()
-	print m
+	print(m)
 

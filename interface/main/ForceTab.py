@@ -117,7 +117,7 @@ class ChargesTable(QtGui.QTableWidget):
         list all molecules in the Structure Manager
         '''
         # count nonb in all molecules
-        print "insertChargesTable start"
+        print("insertChargesTable start")
         #timer = WTimer("ForceTab.insertChargesTable")
         row = 0
         rows = 0
@@ -136,7 +136,7 @@ class ChargesTable(QtGui.QTableWidget):
             charVals = dict()
             molecule = self.history.currentState().mixture.getMolecule(molName)
             if not molecule.molname() in displayedMols:
-                print "insertChargesTable ", molecule.molname()
+                print("insertChargesTable ", molecule.molname())
                 #self.allForceField[molName] = {"nonBonded" : [], "Bonds" : [] , "Angles": [], "Dihedrals": []}
                 displayedMols.append(molecule.molname() )
                 
@@ -435,7 +435,7 @@ class AnglesTable(QtGui.QTableWidget):
         item = self.horizontalHeaderItem(1)
         item.setText("Ktheta")
         item = self.horizontalHeaderItem(2)
-        item.setText(u"Ⲑ0")
+        item.setText("Ⲑ0")
 
         # https://stackoverflow.com/questions/38098763/pyside-pyqt-how-to-make-set-qtablewidget-column-width-as-proportion-of-the-a#38129829
         header = self.horizontalHeader()
@@ -684,7 +684,7 @@ class ForceTab(QtGui.QFrame):
     @QtCore.pyqtSlot()
     def on_aboutTab_pressed(self):
         #self.messageAboutTab()
-        from AboutFT import AboutFT
+        from .AboutFT import AboutFT
         about = AboutFT(self)
         about.show()
         about.exec_()
@@ -703,7 +703,7 @@ class ForceTab(QtGui.QFrame):
 
     
     def on_chargesTable_itemChanged(self, wi):
-    	print "on_chargesTable_itemChanged"
+    	print("on_chargesTable_itemChanged")
         self.history.push()
         self._changeAtomType(wi)
         self.update()
@@ -728,7 +728,7 @@ class ForceTab(QtGui.QFrame):
 		If there are more than one bond of certain type, the average bond length is set.
 		'''
  		selected = self.parent.buildTab.editor.selectedMolecules()
-		print "on_bondButton_pressed ", selected
+		print("on_bondButton_pressed ", selected)
 		if len(selected) != 1 or selected[0].molname() != self.selectedMolecule:
 			errorgui = QtGui.QErrorMessage(self)
 			errorgui.setModal(True) 
@@ -754,7 +754,7 @@ class ForceTab(QtGui.QFrame):
             return
     
         self.history.push()
-        from CHARMMParameterFinderDialog import CHARMMParameterFinderDialog
+        from .CHARMMParameterFinderDialog import CHARMMParameterFinderDialog
         #print "on_findCHARMMButton_pressed ", self.selectedMolecule
 
         #  find first molecule with name as self.selectedMolecule
@@ -772,7 +772,7 @@ class ForceTab(QtGui.QFrame):
             pairing = charmm.getPairing()
             ff = charmm.getForceField()
             if pairing != None:
-                print "on_findCHARMMButton_pressed obtained  " , pairing.getPairing()
+                print("on_findCHARMMButton_pressed obtained  " , pairing.getPairing())
                 for molName in currentMixture:
                     mol = currentMixture.getMolecule(molName) 
                     if mol.molname() == self.selectedMolecule: 
@@ -812,7 +812,7 @@ class ForceTab(QtGui.QFrame):
 
 
     def on_nonBondTable_itemChanged(self, wi):
-    	print "on_nonBondTable_itemChanged"
+    	print("on_nonBondTable_itemChanged")
         if len(str(wi.text())) > 0:
             self.history.push()
             self._changeType(wi)
@@ -821,11 +821,11 @@ class ForceTab(QtGui.QFrame):
 
 
     def on_nonBondTable_itemClicked(self, item):
-        print "on_nonBondTable_itemClicked ", item.text()
+        print("on_nonBondTable_itemClicked ", item.text())
         self._selectMolecule(item)
 
     def on_saveButton_pressed(self):     
-        print "on_saveButton_pressed self.selectedMolecule =", self.selectedMolecule
+        print("on_saveButton_pressed self.selectedMolecule =", self.selectedMolecule)
         if self.selectedMolecule == None:
             errorgui = QtGui.QErrorMessage(self)
             errorgui.setModal(True) # blocks Wolffia
@@ -847,7 +847,7 @@ class ForceTab(QtGui.QFrame):
 
 
     def on_typesButton_pressed(self):
-    	print "on_typesButton_pressed ", self.selectedMolecule
+    	print("on_typesButton_pressed ", self.selectedMolecule)
         if self.selectedMolecule == None:
             errorgui = QtGui.QErrorMessage(self)
             errorgui.setModal(True) 
@@ -870,7 +870,7 @@ class ForceTab(QtGui.QFrame):
             typeAssignments = molecule.redefineTypes()
             if typeAssignments != None:
                 report = "The following types were defined:\n\ttype\tatoms\n"
-                for type in typeAssignments.keys():
+                for type in list(typeAssignments.keys()):
                     report += "\t" + type + "\t" + str(len(typeAssignments[type])) + "\n"
                 
                 msgBox = QtGui.QMessageBox.information (self, "Detect Atom Type", report, buttons=QtGui.QMessageBox.Ok, defaultButton=QtGui.QMessageBox.Cancel)
@@ -923,12 +923,12 @@ class ForceTab(QtGui.QFrame):
     def hideEvent(self,e):
         if self.valueChanged:
             self.history.push()
-        print "ForceTab hideEvent"
+        print("ForceTab hideEvent")
     #    self.wolffia.update()
         
 
     def on_anglesTable_showEvent(self,e):
-        print "ForceTab on_anglesTable_showEvent"
+        print("ForceTab on_anglesTable_showEvent")
 
 
     def setChargesInMolecule(self, molname, aType, charge):
@@ -958,7 +958,7 @@ class ForceTab(QtGui.QFrame):
         self.equivalences =  self.history.currentState().getMixture().equivalenceClasses()
 
     def update(self):
-        print "ForceTab.update "
+        print("ForceTab.update ")
         timer = WTimer("ForceTab")
         self._updateEquivalences()
 
@@ -982,7 +982,7 @@ class ForceTab(QtGui.QFrame):
         self.ui.saveButton.setEnabled(selecteed)
         self.ui.typesButton.setEnabled(selecteed)
         timer.report()
-        print "ForceTab.update fin"
+        print("ForceTab.update fin")
 
 
     def updateTAB(self):
@@ -990,27 +990,27 @@ class ForceTab(QtGui.QFrame):
 
 
     def _changeAtomType(self, wi):
-        print "ForceTab _changeAtomType  row-col ", wi.row(), wi.column()
+        print("ForceTab _changeAtomType  row-col ", wi.row(), wi.column())
         if wi.column() == 1:
 			row = wi.row()
 			nameRow = row
-			print "ForceTab _changeAtomType  ", wi.row(),self.ui.chargesTable.rowSpan(wi.row(),2)
+			print("ForceTab _changeAtomType  ", wi.row(),self.ui.chargesTable.rowSpan(wi.row(),2))
 			while self.ui.chargesTable.item(nameRow,0).toolTip() != "Click to select.":
 				nameRow -= 1
 				
-			print "ForceTab _changeAtomType  ", nameRow, row
+			print("ForceTab _changeAtomType  ", nameRow, row)
 			if nameRow == row: return
 			
 			molName = self.ui.chargesTable.item(nameRow,0).text()
 			atom    = int(self.ui.chargesTable.item(row,0).text())
-			print "ForceTab _changeAtomType  ", nameRow,molName
+			print("ForceTab _changeAtomType  ", nameRow,molName)
 			molecules = self.history.currentState().getMixture().molecules()
 			for mol in molecules:
 				molecule = self.history.currentState().getMixture().getMolecule(mol)
 				if molName == molecule.molname():
 					types = molecule.atomTypes()
 					oldType = types[row - nameRow - 1]
-					print "ForceTab _changeAtomType  ", mol,oldType
+					print("ForceTab _changeAtomType  ", mol,oldType)
 					if len(wi.text()) == 0 or len(wi.text()) > 3:  # check if new name is good (write a method for this)
 						wi.setText(oldType)
 						return
@@ -1046,7 +1046,7 @@ class ForceTab(QtGui.QFrame):
 
 
     def _selectMolecule(self, item):
-        print "_selectMolecule ", item.text(),item.flags() != (QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
+        print("_selectMolecule ", item.text(),item.flags() != (QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled))
         
         # act only when item has a molecule name
         if item.flags() != (QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled):
@@ -1098,10 +1098,10 @@ class ForceSpinBox(QtGui.QDoubleSpinBox):
     def change(self):
         import inspect
         if self.ff != None:
-            print 'ForceSpinBox self.value(): ', self.value()
+            print('ForceSpinBox self.value(): ', self.value())
             for force in self.ff:
 				#print 'ForceSpinBox change changecaller name:', inspect.stack()
-				print "ForceSpinBox valueChanged  " , "force.", self.method, self.value(), force
+				print("ForceSpinBox valueChanged  " , "force.", self.method, self.value(), force)
 				self.method(self.type,self.value(),self.pos)
             if self.value() == 0 :
                self.setStyleSheet('background: '+self.color)
@@ -1139,7 +1139,7 @@ class ChargeSpinBox(QtGui.QDoubleSpinBox):
         import inspect
         if self.molecules != None:
             for molecule in self.molecules:
-				print "ChargeSpinBox valueChanged  " , self.value(), molecule
+				print("ChargeSpinBox valueChanged  " , self.value(), molecule)
 				molecule.getAtomAttributes(self.atom).getInfo().setCharge(self.value())
             self.paint()
                

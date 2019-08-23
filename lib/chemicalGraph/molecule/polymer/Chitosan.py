@@ -75,9 +75,9 @@ class Chitosan(Homopolymer):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando Chitosan"
+    print("Probando Chitosan")
     m = Chitosan(6)
-    print m
+    print(m)
     #m.writePDB("/home/wensy/invewstigacion/prueba/chito.pdb")
     #m.writePSF("/home/wensy/invewstigacion/prueba/chito.psf")
 

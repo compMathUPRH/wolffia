@@ -38,10 +38,10 @@ from PyQt4 import QtCore, QtGui
 import sys, os
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
 #from conf.Wolffia_conf import NANOCAD_BASE #@UnresolvedImport
-from MixtureViewer import MixtureViewer
+from .MixtureViewer import MixtureViewer
 from lib.chemicalGraph.Mixture import Mixture
 from ui_MixtureBrowser import Ui_MixtureBrowser
-from WFileDialogs import WFileNameDialog
+from .WFileDialogs import WFileNameDialog
 from conf.Wolffia_conf import WOLFFIA_GRAPHICS
 
 class MixtureBrowser(QtGui.QDialog):
@@ -198,7 +198,7 @@ class MixtureBrowser(QtGui.QDialog):
         '''
         Enables the possibility of previewing a mixture before choosing it by loading the mixture onto the viewer.
         '''
-        from History import History
+        from .History import History
         history = History(None, None, None, self.settings.workingFolder + str(self.lastSelectedItem.text()) + "/" + str(self.lastSelectedItem.text()) + ".wfy")
         #print "loaded mixture from", self.settings.workingFolder + str(self.lastSelectedItem.text()) + "/" + str(self.lastSelectedItem.text()) + ".wfy"
         #print "mixture being sent is: ", history.currentState().getMixture()
@@ -277,12 +277,12 @@ class MixtureBrowser(QtGui.QDialog):
         self.loadTable.blockSignals(True)
         mixSet = []
         name = str(widEdit.text()).strip("\/\\")
-        print "on_tableWidget_itemChanged" ,self.lastSelectedItemText, name
+        print("on_tableWidget_itemChanged" ,self.lastSelectedItemText, name)
 
         if not name.isspace() and name:
             #print "on_tableWidget_itemChanged : got in, ", bool(name), bool (not name.isspace()), name
             if not os.path.isdir(self.settings.workingFolder + "/" + name):
-                for mixture in xrange(0, self.loadTable.rowCount()):
+                for mixture in range(0, self.loadTable.rowCount()):
                     mixSet.append(str(self.loadTable.item(mixture,0).text()))
                 #print "on_tableWidget_itemChanged, " , set(mixSet), set(self.mixtures)
                 if bool(set(mixSet) - set(self.mixtures)) :

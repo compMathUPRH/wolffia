@@ -34,13 +34,13 @@
 """
 
 
-import sys, os, math, time, Queue
+import sys, os, math, time, queue
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
 from conf.Wolffia_conf import NANOCAD_BASE,WOLFFIA_GRAPHICS, WOLFFIA_USES_IMD
-from QClasses import *
+from .QClasses import *
 from PyQt4 import QtCore
 from ui_SimTab import Ui_simTab 
-from namdSimParm import parmDict
+from .namdSimParm import parmDict
 from subprocess import signal, Popen, PIPE #@UnusedImport 
 from lib.communication.namd.Configuration import Configuration, ConfigurationError
 from lib.communication.namd.SimThread import SimThread, ImdSimThread
@@ -323,10 +323,10 @@ class SimTab(QtGui.QFrame):
 		smdOutAt                =    self.SMtree.topLevelItem(3).child(4).child(7)
 		
 		#utilizes the dictionary NAMDParmDict to initialize all the parameter variables and add them to the tree
-		for trees in parmDict.keys():
+		for trees in list(parmDict.keys()):
 		    if trees == "PStree": tree = "PStree"
 		    else:    tree = "SMtree"
-		    for defaults in    parmDict[trees].iterkeys():
+		    for defaults in    parmDict[trees].keys():
 		        if parmDict[trees][defaults][1] == "InputFile":
 		            vars(self)[defaults] = InputFile(tree)
 		            vars(self)[defaults].setEnabled(parmDict[trees][defaults][2])
@@ -427,8 +427,8 @@ class SimTab(QtGui.QFrame):
 	    [inputWidgetObjectName] [value]
 	    '''
 	    picklesan = dict()
-	    for elements in parmDict.keys():
-	        for defaults in    parmDict[elements].iterkeys():
+	    for elements in list(parmDict.keys()):
+	        for defaults in    parmDict[elements].keys():
 	            picklesan[defaults] = vars(self)[defaults].value()
 	    return picklesan
 	
@@ -440,8 +440,8 @@ class SimTab(QtGui.QFrame):
 	    '''
 	    #print "SimTab setValues"
 	    if initVal != None:
-	        for elements in parmDict.keys():
-	            for defaults in    parmDict[elements].iterkeys():
+	        for elements in list(parmDict.keys()):
+	            for defaults in    parmDict[elements].keys():
 	                vars(self)[defaults].setValues(initVal[defaults])
 	
 	def setDefaultValues(self):
@@ -449,8 +449,8 @@ class SimTab(QtGui.QFrame):
 	    Sets the default values in the input widgets 
 	    using the default parameter dictionary
 	    '''
-	    for elements in parmDict.keys():
-	        for defaults in    parmDict[elements].iterkeys():
+	    for elements in list(parmDict.keys()):
+	        for defaults in    parmDict[elements].keys():
 	            vars(self)[defaults].setValues(parmDict[elements][defaults][0])
 	
 	def checkScale(self):
@@ -762,8 +762,8 @@ class SimTab(QtGui.QFrame):
 		    confFile            =    self.wolffia.configurationFilesBasename() + ".para"
 		    conf                =    open(confFile, mode="w")
 		
-		    for elements in parmDict.keys():
-		        for defaults in    parmDict[elements].iterkeys():
+		    for elements in list(parmDict.keys()):
+		        for defaults in    parmDict[elements].keys():
 		            conf.write(str(defaults) + " " + str(vars(self)[defaults].value()) + "\n") 
 	
 	@QtCore.pyqtSlot()
@@ -798,7 +798,7 @@ class SimTab(QtGui.QFrame):
 	
 	
 	def on_remoteButton_pressed(self):
-	    from ConnectionDialog import ConnectionDialog
+	    from .ConnectionDialog import ConnectionDialog
 	    connectDialog = ConnectionDialog(self, connection=self.remoteHost, logWidget=self.log)
 	    connectDialog.exec_()
 	    self.remoteHost = connectDialog.connection
@@ -889,7 +889,7 @@ class SimTab(QtGui.QFrame):
 					e = eQ.get_nowait()
 					self.energyPlot1.addValuesFromIMD(e)
 					self.energyPlot2.addValuesFromIMD(e)
-				except Queue.Empty:
+				except queue.Empty:
 					break
 			
 			# without queue
@@ -927,7 +927,7 @@ class SimTab(QtGui.QFrame):
 		        #message.exec_()
 		        return
 		except:
-		    print "on_simTimer problemas para detener"
+		    print("on_simTimer problemas para detener")
 		    pass
 		#print "on_simTimer G"
 		
@@ -967,7 +967,7 @@ class SimTab(QtGui.QFrame):
 	    '''
 	    Compresses the whole mixture folder to whatever location the user specifies
 	    '''
-	    from WFileDialogs import WFileNameDialog
+	    from .WFileDialogs import WFileNameDialog
 	
 	    d = WFileNameDialog(self, 'Save Zipped Files', self.settings.workingFolder, "Zip File (*.zip)")
 	    if d.isReady():
@@ -1009,14 +1009,14 @@ class SimTab(QtGui.QFrame):
 	    if self.simRun != None:
 	    	try: self.simRun.cancel()
 	    	except:
-				print "SimTab.cancelSim: Problem cancelling simulation. Communications lost?"
+				print("SimTab.cancelSim: Problem cancelling simulation. Communications lost?")
 	    self.simTimer.stop()
 	    self.simCoordTimer.stop()
 	    self.wolffia.simRunning = False
 	    self.ui.cancelButton.setEnabled(False)
 	    self.ui.runButton.setEnabled(False)
 	    if self.simRun != None: self.updateCoordinates()
-	    print "cancelSim Simulation has been canceled."
+	    print("cancelSim Simulation has been canceled.")
 	    self.ui.runButton.setText("Run")
 	    self.ui.runButton.setIcon(QtGui.QIcon().fromTheme("media-playback-start",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "media-playback-start.svg")    ))
 	    self.ui.runButton.setEnabled(True)
@@ -1119,14 +1119,14 @@ class SimTab(QtGui.QFrame):
 		progress.setValue(1)
 		QtGui.QApplication.processEvents()
 		
-		if self.remoteHost <> None:
+		if self.remoteHost != None:
 			conf = Configuration(self.__dict__, self.history.currentState().getDrawer(), self.history.currentState().fixedMolecules.hasFixedMolecules(), Configuration.CURRENT_FOLDER)
 		else:
 			conf = Configuration(self.__dict__, self.history.currentState().getDrawer(), self.history.currentState().fixedMolecules.hasFixedMolecules())
 
 		try:
 			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), self.history.currentState().getMixture().getMixtureName())
-		except ConfigurationError, e:
+		except ConfigurationError as e:
 		    Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
 		    Error.exec_()
 		    return
@@ -1136,7 +1136,7 @@ class SimTab(QtGui.QFrame):
 		progress.setLabelText("Writing files...")
 		try:
 		    self.history.currentState().writeFiles(self.wolffia.configurationFilesBasename())
-		except Exception,  e:
+		except Exception as  e:
 			Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
 			Error.exec_()
 			progress.cancel()
@@ -1147,9 +1147,9 @@ class SimTab(QtGui.QFrame):
 		progress.setValue(3)
 		progress.setLabelText("Starting namd...")
 		if WOLFFIA_USES_IMD:
-			if self.remoteHost <> None: 
+			if self.remoteHost != None: 
 				#conf.setBuildDirectory(self.remoteHost.getWorkingDir())
-				print "SimTab runSim", self.wolffia.configurationFilesBasename()
+				print("SimTab runSim", self.wolffia.configurationFilesBasename())
 				zipName = self.wolffia.configurationFilesBasename() + ".zip"
 				self.history.currentState().packFiles(self.wolffia.configurationFilesBasename(), zipName)
 				progress.setValue(4)
@@ -1223,14 +1223,14 @@ class RunThread(QtCore.QThread):
 		
 		self.notifyProgress.emit(20)
 		
-		if self.sim.remoteHost <> None:
+		if self.sim.remoteHost != None:
 			conf = Configuration(self.sim.__dict__, self.sim.history.currentState().getDrawer(), self.sim.history.currentState().fixedMolecules.hasFixedMolecules(), Configuration.CURRENT_FOLDER)
 		else:
 			conf = Configuration(self.sim.__dict__, self.sim.history.currentState().getDrawer(), self.sim.history.currentState().fixedMolecules.hasFixedMolecules())
 	
 		try:
 			conf.writeSimulationConfig(str(self.sim.settings.currentMixtureLocation()), self.sim.history.currentState().getMixture().getMixtureName())
-		except ConfigurationError, e:
+		except ConfigurationError as e:
 		    Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
 		    Error.exec_()
 		    return
@@ -1243,9 +1243,9 @@ class RunThread(QtCore.QThread):
 		
 		#progress.setLabelText("Starting namd...")
 		if WOLFFIA_USES_IMD:
-			if self.sim.remoteHost <> None: 
+			if self.sim.remoteHost != None: 
 				#conf.setBuildDirectory(self.remoteHost.getWorkingDir())
-				print "SimTab runSim", self.sim.wolffia.configurationFilesBasename()
+				print("SimTab runSim", self.sim.wolffia.configurationFilesBasename())
 				zipName = self.sim.wolffia.configurationFilesBasename() + ".zip"
 	
 				self.sim.progressBar.setLabelText("Packing files...")

@@ -50,9 +50,9 @@ class AcetoneNoH(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando AcetoneNoH"
+	print("Probando AcetoneNoH")
 	m = AcetoneNoH()
-	print m
+	print(m)
 	m.writePSF("AcetoneNoH.psf")
 	m.writePDB("AcetoneNoH.pdb")
 

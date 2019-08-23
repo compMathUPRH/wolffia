@@ -74,14 +74,14 @@ class Settings(object):
 	    if _WOLFFIA_OS == "Windows":
 	        self.namdLocation       = check_output(["where", "namd2"])
 	        if self.namdLocation == "":
-	            print "NAMD not found, proceed with caution."
+	            print("NAMD not found, proceed with caution.")
 	    else:
 	        try:
 	            self.namdLocation      = check_output(["whereis", "namd2"]).split(' ')[1].rstrip('\n')
-	            print "Settings.__init__(), NAMD found at ", self.namdLocation
+	            print("Settings.__init__(), NAMD found at ", self.namdLocation)
 	        except:
 	            self.namdLocation = ""
-	            print "NAMD not found, proceed with caution.\nPlease specify the executable in the settings window."
+	            print("NAMD not found, proceed with caution.\nPlease specify the executable in the settings window.")
 	            
 	def reset(self):
 	    '''
@@ -191,7 +191,7 @@ class Settings(object):
 	            self.save(filename)
 	            return
 	
-	    import cPickle as pickle #Tremenda aportación por carlos cortés
+	    import pickle as pickle #Tremenda aportación por carlos cortés
 	
 	
 	    try:
@@ -220,7 +220,7 @@ class Settings(object):
 	    if filename == None:
 	        filename = WOLFFIA_DIR + "/" + "defaultSettings.wfc"
 	
-	    import cPickle as pickle #Tremenda aportación por carlos cortés.
+	    import pickle as pickle #Tremenda aportación por carlos cortés.
 	
 	    f = open(filename, "w")
 	    pickle.dump(self.__dict__, f)

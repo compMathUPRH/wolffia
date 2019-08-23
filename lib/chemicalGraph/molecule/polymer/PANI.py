@@ -92,9 +92,9 @@ class  PANI(Polymer):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando PANI"
+	print("Probando PANI")
 	m = PANI(1,1,4)
-	print m
+	print(m)
 	m.writePDB("prueba.pdb")
 	m.writePSF("prueba.psf")
 

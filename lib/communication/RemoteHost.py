@@ -50,7 +50,7 @@ class RemoteHost:
 		self.logArea.write("RemoteHost.killAllNamd killing processes ...\n")
 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['killall namd2'])
 		#print "retrieveNamdUsers ", resp
-		return not (len(resp) > 1 and resp.split('\n')[-2] <> "namd2: no process found")
+		return not (len(resp) > 1 and resp.split('\n')[-2] != "namd2: no process found")
 	
 	def probe(self):
 		self.status      = RemoteHost.testConnection(self.remoteHost, self.username, self.password,logArea=self.logArea)
@@ -86,7 +86,7 @@ class RemoteHost:
 		returnCode = CONNECTED
 		logArea.write("RemoteHost.testConnection Checking namd ...\n")
 		(resp, err) = RemoteHost._sendCommand(remoteHost, username, password, ['whereis', 'namd2'])
-		if len(resp) > 1 and resp.split('\n')[-2] <> "namd2:":
+		if len(resp) > 1 and resp.split('\n')[-2] != "namd2:":
 			logArea.write("RemoteHost.testConnection NAMD confirmed: " + resp.split('\n')[-2] + "\n")
 		else:
 			logArea.write("RemoteHost.testConnection ERROR: namd2 is not in the remote host's search path. \n")
@@ -132,7 +132,7 @@ class RemoteHost:
 		self.maxGpus = 0
 		self.logArea.write( "RemoteHost.retrieveGPUs Checking number of cpu cores ...\n")
 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['cat /proc/driver/nvidia/version'])
-		if err.find("No such file or directory") <> -1:
+		if err.find("No such file or directory") != -1:
 			self.logArea.write( "RemoteHost.retrieveGPUs did not find NVIDIA drivers\n")
 		else:
 			(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['lspci | grep -i nvidia | wc -l'])
@@ -169,8 +169,8 @@ class RemoteHost:
 		'''
 		#print "RemoteHost.sendFile checking if \"" + self.workingDir + "\" exists ..."
 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['ls', '-la', self.workingDir])
-		if err.find("No such file or directory") > -1 or len(resp) < 2 or resp.split('\n')[1][:4] <> 'drwx':
-			print "ERROR RemoteHost.sendFile: folder \"" + self.workingDir + "\" does not exists or has incorrect permissions ..."
+		if err.find("No such file or directory") > -1 or len(resp) < 2 or resp.split('\n')[1][:4] != 'drwx':
+			print("ERROR RemoteHost.sendFile: folder \"" + self.workingDir + "\" does not exists or has incorrect permissions ...")
 			return
 		
 		#print "RemoteHost.sendFile detecting files that are about to be overwritten in \"" + self.workingDir + "\" ..."

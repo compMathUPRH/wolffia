@@ -51,7 +51,7 @@ class Load(QtGui.QDialog):
     def __init__(self, parent=None, dropedPdb=None):
         super(Load, self).__init__(parent, modal = 1)
         
-        print "Load dropedPdb=", dropedPdb
+        print("Load dropedPdb=", dropedPdb)
         #Dialog settings
         self.uiLoad         = Ui_Load()
         self.uiLoad.setupUi(self)
@@ -60,13 +60,13 @@ class Load(QtGui.QDialog):
         self.history.currentState().reset()
         
         #Viewer
-        print "Load setting viewer"
+        print("Load setting viewer")
         self.previewArea    = MixtureViewer(self.history, self, None)
         self.previewArea.showHelp(False)
         self.uiLoad.moleculeViewerLayout.addWidget(self.previewArea)
         
         #Mixture
-        print "Load setting getting mixture"
+        print("Load setting getting mixture")
         self.myMixture      = self.history.currentState().getMixture()
         self.mixAndRows     = list()
         
@@ -83,14 +83,14 @@ class Load(QtGui.QDialog):
         self.uiLoad.connectDataBaseButton.setIcon(QtGui.QIcon().fromTheme("network-server", QtGui.QIcon(str(NANOCAD_BASE+"\\interface\\graphics\\") +"dialog-information.png")))    
 
         #PDB droped from MixtureViewer
-        print "Load setting pdbDirectory"
+        print("Load setting pdbDirectory")
         self.pdbDirectory = dropedPdb
         if self.pdbDirectory != None:
-            print "Load setting self.pdbDirectory != None"
+            print("Load setting self.pdbDirectory != None")
             self.uiLoad.lineEdit_1.setText(self.pdbDirectory)
-            print "Load animateClick"
+            print("Load animateClick")
             self.uiLoad.loadButton.animateClick()
-        print "Load end"
+        print("Load end")
         
     def update(self):
         self.previewArea.update()
@@ -131,23 +131,23 @@ class Load(QtGui.QDialog):
     
         # Gets paths
         path_1 = str(self.uiLoad.lineEdit_1.displayText())
-        print "Load getLineEditInfo",path_1
+        print("Load getLineEditInfo",path_1)
         self.uiLoad.lineEdit_1.clear()
         path_2 = str(self.uiLoad.lineEdit_2.displayText())
-        print "Load getLineEditInfo",path_2
+        print("Load getLineEditInfo",path_2)
         self.uiLoad.lineEdit_2.clear()
-        print "Load getLineEditInfo loadInfo"
+        print("Load getLineEditInfo loadInfo")
         self.loadInfo(path_1, path_2)
-        print "Load getLineEditInfo end"
+        print("Load getLineEditInfo end")
  
 #--------------------------------------
     def loadInfo(self,path_1='',path_2= ''):       
-        if path_1 <> '' and path_2 == '':
+        if path_1 != '' and path_2 == '':
             try:
                 self.history.currentState().getMixture().load(path_1)
             except:
                 QtGui.QMessageBox.warning(self,"Error 1 !!!","There is a problem loading the file " + path_1 + " in box 1.")
-                print sys.exc_info()
+                print(sys.exc_info())
         elif not(path_2 == '') and path_1 == '':
             try:
                 self.history.currentState().getMixture().load(path_2)
@@ -157,12 +157,12 @@ class Load(QtGui.QDialog):
             if (path_1[len(path_1)-3]+path_1[len(path_1)-2]+path_1[len(path_1)-1]) == 'pdb' and (path_2[len(path_2)-3]+path_2[len(path_2)-2]+path_2[len(path_2)-1]) == 'psf':
                 try: 
                     self.history.currentState().getMixture().load(path_1,path_2)
-                except Exception  as e:
+                except Exception as e:
                     QtGui.QMessageBox.warning(self,"Error 3 !!!","There is a problem with the file."+str(e))
             elif (path_1[len(path_1)-3]+path_1[len(path_1)-2]+path_1[len(path_1)-1]) == 'psf' and (path_2[len(path_2)-3]+path_2[len(path_2)-2]+path_2[len(path_2)-1]) == 'pdb':
                 try:
                     self.history.currentState().getMixture().load(path_2,path_1)
-                except Exception  as e:
+                except Exception as e:
                     QtGui.QMessageBox.warning(self,"Error 4 !!!","There is a problem with the file."+str(e))
             else:QtGui.QMessageBox.warning(self,"Error 5 !!!","There is a problem with the file.")  
             
@@ -503,7 +503,7 @@ class Load(QtGui.QDialog):
             self.uiLoad.lineEdit_2.setText(str(d.fullFilename()))
             
     def on_hint_pressed(self):
-        from AboutLoad import AboutLoad
+        from .AboutLoad import AboutLoad
         about = AboutLoad(self)
         about.show()
         about.exec_()
@@ -511,7 +511,7 @@ class Load(QtGui.QDialog):
     def on_connectDataBaseButton_pressed(self):
         #print"on_connectDataBaseButton_pressed"
         
-        from ImportMolecules import ImportMolecules
+        from .ImportMolecules import ImportMolecules
         
         importMoleculeDialog = ImportMolecules()
         importMoleculeDialog.show()
@@ -522,7 +522,7 @@ class Load(QtGui.QDialog):
             try:
                 #print importMoleculeDialog.getMoleculeFile()
                 self.history.currentState().getMixture().load(None,None,importMoleculeDialog.getMoleculeFile(),importMoleculeDialog.getFileType(),importMoleculeDialog.inputName())
-            except Exception, err:
+            except Exception as err:
             	#print "Load on_connectDataBaseButton_pressed: There is a problem with the file ", importMoleculeDialog.getMoleculeFile()
                 QtGui.QMessageBox.warning(self,"Error 15 !!!","There is a problem with the file."+ err)
             
@@ -542,23 +542,23 @@ class Load(QtGui.QDialog):
         self.close()
 
     def on_loadButton_pressed(self,dropedPdb=None):
-    	print "Load on_loadButton_pressed",dropedPdb
+    	print("Load on_loadButton_pressed",dropedPdb)
         if dropedPdb == None:
-            print "Load on_loadButton_pressed getLineEditInfo"
+            print("Load on_loadButton_pressed getLineEditInfo")
             self.getLineEditInfo()           
-        print "Load on_loadButton_pressed loadTable.clear"
+        print("Load on_loadButton_pressed loadTable.clear")
         self.loadTable.clear()
         self.loadTableRows = 0
         self.mixAndRows    = []
-        print "Load on_loadButton_pressed setTable"
+        print("Load on_loadButton_pressed setTable")
         self.setTable()
     
         if self.uiLoad.SelectAllLayout.isEmpty():
             self.addSelectAllCheckBox()
             self.addShowHideAllCheckBox()
-        print "Load on_loadButton_pressed previewArea.setMixture"
+        print("Load on_loadButton_pressed previewArea.setMixture")
         self.previewArea.setMixture(self.history.currentState().getMixture())    
-        print "Load on_loadButton_pressed end"
+        print("Load on_loadButton_pressed end")
 
     def on_okButton_pressed(self):
         if self.myMixture._len() == 0:

@@ -44,13 +44,13 @@ from conf.Wolffia_conf import WOLFFIA_GRAPHICS, NANOCAD_BASE, C_MOLECULE_CATALOG
 from lib.chemicalGraph.Mixture import Mixture
 from lib.chemicalGraph.molecule.element.Element import *
 import logging
-from WFileDialogs import WFileDialog
-from PropertyEditor import PropertyEditor
+from .WFileDialogs import WFileDialog
+from .PropertyEditor import PropertyEditor
 #from MixtureViewer import * 
-from SettingsDialog import WDirectoryDialog
-from WWidgets import PreviewButton,FixedButton
+from .SettingsDialog import WDirectoryDialog
+from .WWidgets import PreviewButton,FixedButton
 
-from WFileDialogs import WFileNameDialog
+from .WFileDialogs import WFileNameDialog
 
 class BuildTab(QtGui.QFrame):   
 	def __init__(self, hist, parent=None, previewer=None, settings=None):
@@ -117,8 +117,8 @@ class BuildTab(QtGui.QFrame):
 		modifiers = QtGui.QApplication.keyboardModifiers()
 		if modifiers == QtCore.Qt.ShiftModifier and self.prevFixed != None:
 			if self.prevFixed[1] == selected:
-				if row < self.prevFixed[0]: ind = range(row+1,self.prevFixed[0]+1)
-				else: ind = range(self.prevFixed[0],row)
+				if row < self.prevFixed[0]: ind = list(range(row+1,self.prevFixed[0]+1))
+				else: ind = list(range(self.prevFixed[0],row))
 				for i in ind:
 					pin = self.ui.structManager.cellWidget(i, 1)
 					#if selected: pin.setFixed(update=False)
@@ -137,8 +137,8 @@ class BuildTab(QtGui.QFrame):
 		modifiers = QtGui.QApplication.keyboardModifiers()
 		if modifiers == QtCore.Qt.ShiftModifier and self.prevShow != None:
 			if self.prevShow[1] == selected:
-				if row < self.prevShow[0]: ind = range(row,self.prevShow[0])
-				else: ind = range(self.prevShow[0]+1,row)
+				if row < self.prevShow[0]: ind = list(range(row,self.prevShow[0]))
+				else: ind = list(range(self.prevShow[0]+1,row))
 				for i in ind:
 					pin = self.ui.structManager.cellWidget(i, 0)
 					#if selected: pin.setShown(update=False)
@@ -186,7 +186,7 @@ class BuildTab(QtGui.QFrame):
 			c = CelluloseEditor(self.history.currentState(), self, settings=self.settings)
 			moleculeDialog(self, c)
 		elif self.key == "ssDNA":
-			print "ssDNA is not yet implemented!"
+			print("ssDNA is not yet implemented!")
 		elif self.parent == "Homopolymer":
 			from interface.homopolyEditor.HomopolyEditor import HomopolyEditor
 			homopol = HomopolyEditor(self.key, self.history.currentState(), settings=self.settings)
@@ -313,22 +313,22 @@ class BuildTab(QtGui.QFrame):
 				customTreeWidget = self.ui.molCatalog.topLevelItem (self.ui.molCatalog.topLevelItemCount()-1)
 				#print "on_catalogButton_pressed childCount", customTreeWidget.childCount ()
 				
-				print "SELCTEDDDDDD >>." , selected
+				print("SELCTEDDDDDD >>." , selected)
 				mixtureToSave = Mixture()
-				print "mixtureToSave >>>>", mixtureToSave
+				print("mixtureToSave >>>>", mixtureToSave)
 				molName = ""
-				print "molName >>>>" , molName
+				print("molName >>>>" , molName)
 				for mol in selected:
-					print "mol >>>>", mol
+					print("mol >>>>", mol)
 					mixtureToSave.add(mol.copy(), True)
-					print "mixtureToSave agregados >>>>" ,mixtureToSave
+					print("mixtureToSave agregados >>>>" ,mixtureToSave)
 					if molName == "":
 						molName = mol.molname()
 					else:
 						molName += ("-" + mol.molname())
 						
-				print "SELECETEDDDD: ", selected , "mixtureToSave Final" , mixtureToSave
-				print "############################################################"
+				print("SELECETEDDDD: ", selected , "mixtureToSave Final" , mixtureToSave)
+				print("############################################################")
 				#Pregunta el nombre de la molecula que quiere guardar en el catalogo
 				nameMolGUI = QtGui.QInputDialog(self)
 				nameMolGUI.setTextValue(str(selected[0]))
@@ -336,24 +336,24 @@ class BuildTab(QtGui.QFrame):
 				nameMol, ok = nameMolGUI.getText(self, "Custom Molecule", "Set Molecule Name:",0,str(selected[0]))
 	
 				
-				print "value ",nameMol," ok ",ok
+				print("value ",nameMol," ok ",ok)
 				if ok:		
 					#Guarda archivo en .cMolecule dentro de .wolffia
 					cMixFileName = "/" + nameMol + ".wfm"
 					cMixFileDir = WOLFFIA_DIR + C_MOLECULE_CATALOG + cMixFileName
 					if os.path.exists(cMixFileDir):
-						print "archivo existe" , cMixFileDir
+						print("archivo existe" , cMixFileDir)
 						nameMol = nameMol + "*"
 						cMixFileName = "/" + nameMol + ".wfm"
 						cMixFileDir = WOLFFIA_DIR + C_MOLECULE_CATALOG + cMixFileName
 						
-					print "cMixFileDir>>>>>" , cMixFileDir
+					print("cMixFileDir>>>>>" , cMixFileDir)
 					#Add a child to Custom Molecule in the Molecular Structure Catalog 
 					nameQT = QtGui.QTreeWidgetItem()
 					nameQT.setText(0,nameMol)
 					customTreeWidget.addChild(nameQT)
 					#customTreeWidget.addChild(QtGui.QTreeWidgetItem())
-					print "NAMEMOL1", nameMol												 
+					print("NAMEMOL1", nameMol)												 
 					self.history.currentState().getMixture().save(cMixFileDir)
 
 
@@ -395,9 +395,9 @@ class BuildTab(QtGui.QFrame):
 					message = QtGui.QMessageBox(1, "Warning", "There's a simulation running right now.")
 					message.exec_()
 			else:
-				print "on_catalogButton_pressed",  self.ui.molCatalog.topLevelItemCount()
+				print("on_catalogButton_pressed",  self.ui.molCatalog.topLevelItemCount())
 				customTreeWidget = self.ui.molCatalog.topLevelItem (self.ui.molCatalog.topLevelItemCount()-1)
-				print "on_catalogButton_pressed childCount", customTreeWidget.childCount ()
+				print("on_catalogButton_pressed childCount", customTreeWidget.childCount ())
 				selected = self.editor.selectedMolecules()
 				nombre = QtGui.QInputDialog(self)
 				nombre.setTextValue(str(selected[0]))
@@ -586,8 +586,8 @@ class BuildTab(QtGui.QFrame):
 			modifiers = QtGui.QApplication.keyboardModifiers()
 			if modifiers == QtCore.Qt.ShiftModifier and self.prevSelection != None:
 				if self.prevSelection[1] == selected:
-					if row < self.prevSelection[0]: ind = range(row+1,self.prevSelection[0])
-					else: ind = range(self.prevSelection[0]+1,row)
+					if row < self.prevSelection[0]: ind = list(range(row+1,self.prevSelection[0]))
+					else: ind = list(range(self.prevSelection[0]+1,row))
 					for i in ind:
 						mol = str(self.ui.structManager.item(i, 4).text())
 						m = self.history.currentState().getMixture().getMolecule(mol)
@@ -626,7 +626,7 @@ class BuildTab(QtGui.QFrame):
 
 	
 	def on_showCheckbox(self, on):
-		print "on_showCheckbox", 
+		print("on_showCheckbox", end=' ') 
 		
 
 	def addMolecule(self, mol, remember=True):
@@ -908,7 +908,7 @@ class ShownSolvent:
 		if ShownSolvent.isSolvent(solventName):
 			#print "ShownSolvent isShown buscando"
 			solvType = ShownSolvent.solventType(solventName)
-			if not self.solventList.has_key(solvType): self.setAsNotShown(solventName)
+			if solvType not in self.solventList: self.setAsNotShown(solventName)
 			return self.solventList[solvType]
 		return False
 	

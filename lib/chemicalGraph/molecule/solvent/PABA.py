@@ -42,7 +42,7 @@ class PABA_Tetradecane(Molecule):
     def __init__(self):
 		mix  = Mixture()
 		mix.loadWFM(WOLFFIA_WFY_DIR + "/PABAtetradecane.wfm")
-		print mix.molecules()
+		print(mix.molecules())
 		Molecule.__init__(self, "PABA-Tetradecane", molecule=mix.getMolecule("PABA-TetradecaneQ_1"))
 		self.changeResidues("PAB")
 #---------------------------------------------------------------------           
@@ -51,7 +51,7 @@ class PABA_Heptane(Molecule):
     def __init__(self):
 		mix  = Mixture()
 		mix.loadWFM(WOLFFIA_WFY_DIR + "/PABAheptane.wfm")
-		print mix.molecules()
+		print(mix.molecules())
 		Molecule.__init__(self, "PABA-Heptane", molecule=mix.getMolecule("PABA-HeptaneQ_1"))
 		self.changeResidues("PAB")
 #---------------------------------------------------------------------           
@@ -60,7 +60,7 @@ class PABA_Pentane(Molecule):
     def __init__(self):
 		mix  = Mixture()
 		mix.loadWFM(WOLFFIA_WFY_DIR + "/PABApentane.wfm")
-		print mix.molecules()
+		print(mix.molecules())
 		Molecule.__init__(self, "PABA-Pentane", molecule=mix.getMolecule("PABA-Pentane_1"))
 		self.changeResidues("PAB")
 #---------------------------------------------------------------------           

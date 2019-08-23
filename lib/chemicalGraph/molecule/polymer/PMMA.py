@@ -70,9 +70,9 @@ class PMMA(Homopolymer):
 		
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando PMMA"
+    print("Probando PMMA")
     m = PMMA(6)
-    print m
+    print(m)
     #m.writePDB("/home/wensy/invewstigacion/prueba/chito.pdb")
     #m.writePSF("/home/wensy/invewstigacion/prueba/chito.psf")
 

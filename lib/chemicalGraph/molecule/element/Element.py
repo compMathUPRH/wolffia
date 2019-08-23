@@ -124,7 +124,7 @@ class Element(Molecule):
             import logging
             logger = logging.getLogger(self.__class__.__name__)
             logger.error("Invalid element symbol \"" + str(symbol) + "\"")
-            print "Invalid element symbol \"" + str(symbol) + "\""
+            print("Invalid element symbol \"" + str(symbol) + "\"")
             return
 
         Molecule.__init__(self, symbol)

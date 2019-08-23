@@ -60,8 +60,8 @@ class SimThread(threading.Thread):
 		        self.coordinateFileName = conf.getBuildDirectory() + "\\" + conf.getMixtureName() + ".coor"
 		    else:
 		    	if useLogFile:
-		    		print "SimThread.__init__ executing \"", str(namdLocation + " " + conf.getFilename() + " > " + conf.getMixtureName() + ".log"
-), "\""
+		    		print("SimThread.__init__ executing \"", str(namdLocation + " " + conf.getFilename() + " > " + conf.getMixtureName() + ".log"
+), "\"")
 		        	self.pipe = Popen(str(namdLocation + " " + conf.getFilename() + " > " + conf.getMixtureName() + ".log"
 ), stdout=PIPE, bufsize=0, shell=True , preexec_fn=os.setsid)
 		        else:
@@ -90,16 +90,16 @@ class SimThread(threading.Thread):
 	    the timers, killing the pipe(?) and stopping the simRun thread
 	    
 	    '''
-	    print "SimThread cancel"
+	    print("SimThread cancel")
 	    try: 
 	        self.pipe.poll()
 	    except AttributeError:
-	        print "cancel: No pipe"   
+	        print("cancel: No pipe")   
 	
 	    try: 
 	        os.killpg(self.pipe.pid,signal.SIGKILL)
 	    except:
-	        print "cancel: Nothing to kill"            
+	        print("cancel: Nothing to kill")            
 
 		threading.Thread.cancel(self)
 	
@@ -185,7 +185,7 @@ class SimThread(threading.Thread):
 			#print "SimThread.run self.pipe.returncode = ", self.pipe.returncode
 			self.pipe.poll()
 		self.resetModifiationTime()
-		print "SimThread.run termino"
+		print("SimThread.run termino")
 	
 	
 	def stop(self):
@@ -204,7 +204,7 @@ class ImdSimThread(SimThread):
 		'''
 		Constructor
 		'''
-		print "ImdSimThread __init__", namdLocation, remoteHost, port, remoteLocation
+		print("ImdSimThread __init__", namdLocation, remoteHost, port, remoteLocation)
 		super(ImdSimThread,self).__init__(conf, namdLocation, remoteHost, remoteLocation, useLogFile)
 		if remoteHost == None:
 			self.imdProc = imd.IMDThread(port=port)
@@ -215,7 +215,7 @@ class ImdSimThread(SimThread):
 		'''
 		Stops the simulation 
 		'''
-		print "ImdSimThread cancel"
+		print("ImdSimThread cancel")
 		self.imdProc.cancel()
 		super(ImdSimThread,self).cancel()
 		
@@ -250,7 +250,7 @@ class ImdSimThread(SimThread):
 		self.imdProc.setCallback(f, imd.IMDType.IMD_ENERGIES)
 		
 	def run(self):
-		print "ImdSimThread run"
+		print("ImdSimThread run")
 		self.imdProc.start()
 		SimThread.run(self)
 		#self.imdProc.join()
@@ -294,13 +294,13 @@ class NAMDcell:
     def __init__(self,nombreArchivo, remoteHost=None):
 		self.archivo = nombreArchivo 
 		self.remoteHost = remoteHost
-		if self.remoteHost <> None:
+		if self.remoteHost != None:
 			self.remoteHostFile = nombreArchivo
 		self.readNext()
     
     
     def readNext(self):
-		if self.remoteHost <> None:
+		if self.remoteHost != None:
 			self.fh, tempFileName = tempfile.mkstemp()
 			(resp, err) = self.remoteHost.getFile(self.remoteHostFile, tempFileName)
 			#print "NAMDcell readNext", resp, err
@@ -311,11 +311,11 @@ class NAMDcell:
 		    f = open(self.archivo, 'r')
 		    lines = f.readlines()
 		    f.close()
-		    if self.remoteHost <> None: 
+		    if self.remoteHost != None: 
 		    	os.close(self.fh)
 		    	os.remove(self.archivo)
 		except:
-			print "Warning. NAMDcell could not open or read cell file ", self.archivo
+			print("Warning. NAMDcell could not open or read cell file ", self.archivo)
 		    
 		try:
 		    valores = lines[2].split(' ')
@@ -327,7 +327,7 @@ class NAMDcell:
 		    self.oy = float(valores[11])
 		    self.oz = float(valores[12])
 		except:
-		    print "Warning. NAMDcell could not process cell in ", self.archivo
+		    print("Warning. NAMDcell could not process cell in ", self.archivo)
 		    self.dx = self.dy = self.dz = self.ox = self.oy = self.oz = None
             
      

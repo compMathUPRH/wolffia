@@ -61,7 +61,7 @@ class PreviewerToolbar(QtGui.QToolBar):
         self.addWidget(stretchWidgetOne)
         #loop initiates the QPushButtons, adds it to the QToolbar and connects the signal triggered 
         #the different slots. 
-        for actions in self.modeButtons.keys():
+        for actions in list(self.modeButtons.keys()):
             if actions == "separator":
                 self.addSeparator()
             else:
@@ -160,7 +160,7 @@ class PreviewerToolbar(QtGui.QToolBar):
         '''
         
         '''
-        for actions in self.modeButtons.keys():
+        for actions in list(self.modeButtons.keys()):
             if actions != "separator":
                 self.modeButtons[actions].setChecked(False)
 

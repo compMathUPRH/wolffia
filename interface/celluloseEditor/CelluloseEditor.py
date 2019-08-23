@@ -106,7 +106,7 @@ class CelluloseEditor(QtGui.QDialog):
 		try:
 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
 		except:
-			print "WARNING: Could not read style specifications"
+			print("WARNING: Could not read style specifications")
 		self.homopolPreview.update()
 
 

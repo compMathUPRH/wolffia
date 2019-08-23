@@ -40,7 +40,7 @@ from ui_SettingsDialog import Ui_settingsDialog
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
 from conf.Wolffia_conf import *
-from WFileDialogs import WDirectoryDialog, WFileDialog
+from .WFileDialogs import WDirectoryDialog, WFileDialog
 from Wolffia_conf import WOLFFIA_DIR, _WOLFFIA_OS, WOLFFIA_VERSION, WOLFFIA_DEFAULT_MIXTURE_NAME #@UnresolvedImport
 from subprocess import check_output
 
@@ -216,7 +216,7 @@ class SettingsDialog(QtGui.QDialog):
         if self.ui.namD.isChecked():
             self.MDPackage = "NAMD"
             self.settings.namdLocation = str(self.ui.defMDPlaceLabel.text())
-            print "SettingsDialog.on_buttonBox_accepted, namdLocation:", self.settings.namdLocation
+            print("SettingsDialog.on_buttonBox_accepted, namdLocation:", self.settings.namdLocation)
         if self.ui.gromacs.isChecked():
             self.MDPackage = "GROMACS"
 
@@ -225,8 +225,8 @@ class SettingsDialog(QtGui.QDialog):
 			self.settings.setWorkingDirectory(str(self.ui.defDirLine.text()))
 			self.wolffia.mixtureDialog()
 			#self.settings.setCurrentMixture(WOLFFIA_DEFAULT_MIXTURE_NAME)
-			print self.settings.workingFolder
-			print self.settings.currentMixtureLocation()
+			print(self.settings.workingFolder)
+			print(self.settings.currentMixtureLocation())
 			self.close()
 			        
         self.close()

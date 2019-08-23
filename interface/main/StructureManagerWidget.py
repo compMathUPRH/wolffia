@@ -43,7 +43,7 @@ class StructureManagerWidget(QtGui.QTreeWidget):
 		start = time.clock()
 		self.clear()
 		for molName in mixture:
-			print "insertMixture", molName
+			print("insertMixture", molName)
 			row = QtGui.QTreeWidgetItem(self)
 			self.addTopLevelItem(row)
 
@@ -54,7 +54,7 @@ class StructureManagerWidget(QtGui.QTreeWidget):
 			row.setText(2, mixture.getMolecule(molName).molname())
 			row.setText(3, str(mixture.getMolecule(molName).order()))    	 
 		stop = time.clock()
-		print "insertMixture time",stop-start
+		print("insertMixture time",stop-start)
 
 
 	#activates the Structure Catalog
