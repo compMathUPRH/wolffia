@@ -1,0 +1,6 @@
+# Ignore compiled files from python
+*.pyc
+
+# Ignore compiles copies from bat, Makefile
+*.bat~
+Makefile~
