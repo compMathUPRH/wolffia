@@ -499,7 +499,13 @@ class Mixture(Graph):
             mol = Molecule(moleculeName, molecule=m)
             self.add(mol)         
 
- 
+    def countMoleculesNamed(self, molname):
+        result =  list()
+        for molid in self:
+            result.append(self.getMolecule(molid).molname())
+        return result.count(molname)
+
+
     def enclosingBox(self):
         #  CUIDADO CON boxmin y boxmax iniciales
 
