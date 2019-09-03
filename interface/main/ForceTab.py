@@ -136,7 +136,7 @@ class ChargesTable(QtGui.QTableWidget):
             charVals = dict()
             molecule = self.history.currentState().mixture.getMolecule(molName)
             if not molecule.molname() in displayedMols:
-                print "insertChargesTable ", molecule.molname()
+                print "insertChargesTable ", molecule.molname(), molecule.charge(), self.history.currentState().mixture.countMoleculesNamed(molecule.molname())
                 #self.allForceField[molName] = {"nonBonded" : [], "Bonds" : [] , "Angles": [], "Dihedrals": []}
                 displayedMols.append(molecule.molname() )
                 
@@ -183,14 +183,14 @@ class ChargesTable(QtGui.QTableWidget):
 							charge.addMolecule(otherMolecule)
                 '''
 
-                #self.allForceField[molName]["charges"]=charVals
-                totalCharge = QtGui.QTableWidgetItem("{:f}".format(molecule.charge()))
+                numMolecules = self.history.currentState().mixture.countMoleculesNamed(molecule.molname())
+                totalCharge = QtGui.QTableWidgetItem("{:f}".format(molecule.charge() * numMolecules))
                 totalCharge.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
                 self.setItem(row, 1, QtGui.QTableWidgetItem("net q:"))
                 self.setItem(row, 2, totalCharge)
 
                 row += 1
-        self.updateCharges()
+        #self.updateCharges()
         #progress.setValue(len(self.history.currentState().mixture))
         #timer.report()
         self.blockSignals(False)
