@@ -490,6 +490,7 @@ class MinTab(QtGui.QFrame):
         progress.setLabelText("Writing mixture files...")
         QtGui.qApp.processEvents()
         #print "MinTab runSim", self.history.currentState().getMixture().getMolecule(self.history.currentState().getMixture().molecules()[0]).getForceField()._ANGLES
+
         try:
             self.history.currentState().writeFiles(self.settings.currentMixtureLocation() + str(self.history.currentState().getMixture().getMixtureName()))
         except Exception,  e:

@@ -113,6 +113,7 @@ class AtomInfo(object):
 		@rtype:  string
 		@return: ATOM line.
 		"""
+		#print "PSFline: ", trad
 		if len(trad) > 0:
 		 	#print "PSFline trad:", trad
 			typename = trad[self.getType()]

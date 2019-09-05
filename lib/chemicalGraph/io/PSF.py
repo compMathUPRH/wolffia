@@ -150,6 +150,7 @@ class PSF(object):
 			#print  "writePSF(",psfFile,")"
 
 		# write ATOM section
+		#print "PSF\n\n       1 !NTITLE\n REMARKS \n\n%8i !NATOM\n" % mixture.order()
 		fd.write("PSF\n\n       1 !NTITLE\n REMARKS \n\n%8i !NATOM\n" % mixture.order())
 		count = 1
 		renumbering = dict()  # atoms labels may not be [1..n]
@@ -172,6 +173,7 @@ class PSF(object):
 			
 		# write BOND section
 		fd.write("\n%8i !NBOND\n" % mixture.bonds())
+		#print "\n%8i !NBOND\n" % mixture.bonds()
 		count = 0
 		bondCount = 0
 		for molecule in mixture:
@@ -191,6 +193,7 @@ class PSF(object):
 
 		# write angles
 		fd.write("\n\n%8d !NTHETA: angles\n" % mixture.angleCount())
+		#print "\n\n%8d !NTHETA: angles\n" % mixture.angleCount()
 		count = 0
 		angleCount = 0
 		for molecule in mixture:
@@ -214,7 +217,7 @@ class PSF(object):
 
 		# write dihedrals
 		fd.write("\n\n%8d !NPHI: dihedrals\n" % (0))
-
+		#print "\n\n%8d !NPHI: dihedrals\n" % (0)
 		# write other stuff
 		fd.write("\n\n%8d !NIMPHI: impropers\n" % (0))
 		fd.write("\n\n%8d !NDON: donors\n" % (0))
