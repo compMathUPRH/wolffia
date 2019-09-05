@@ -98,7 +98,7 @@ class Element(Molecule):
         "NA": AtomAttributes(AtomInfo("NA", "NA", "NA", 1.0,      22.98977,1.0, 1.0, ' ', "NA", "ELT", "A", 1),[0.,0.,0.]),
         "P" : AtomAttributes(AtomInfo("P",  "P",  "P",  0.39354,  30.9738, 1.0, 1.0, ' ', "P",  "ELT", "A", 1),[0.,0.,0.]),
         "S" : AtomAttributes(AtomInfo("S",  "S",  "S",  0.0,      32.065,  1.0, 1.0, ' ', "S",  "ELT", "A", 1),[0.,0.,0.]),
-        "CL": AtomAttributes(AtomInfo("CL", "CL", "CL", -0.14,     35.453,  0.0, 1.0, ' ', "CL", "ELT", "A", 1),[0.,0.,0.]),
+        "CL": AtomAttributes(AtomInfo("CL", "CL", "CL", -1,     35.453,  0.0, 1.0, ' ', "CL", "ELT", "A", 1),[0.,0.,0.]),
 		"AR": AtomAttributes(AtomInfo("AR", "AR", "AR", 0.0,	  39.9500, 0.0, 1.0, ' ', "O",  "ELT", "A", 1),[0.,0.,0.]),
 		"AU": AtomAttributes(AtomInfo("AU", "AU", "AU", 0.0,	 96.96657, 0.0, 1.0, ' ', "AU",  "ELT", "A", 1),[0.,0.,0.])
     }
