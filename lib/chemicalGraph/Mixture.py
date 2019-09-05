@@ -246,10 +246,11 @@ class Mixture(Graph):
         Used by add() and remove() methods.  Not meant to be called manually.
         """
         start = time.clock()
-        #print "Mixture __buildTranslatorTable__ starting", time.clock() - start
+        #print "Mixture __buildTranslatorTable__ starting", time.clock() - start, self.trad
         # build translation table
         # check consistency
-        if self.trad != None: return
+        #if self.trad != None: return
+        #print "Mixture __buildTranslatorTable__ empezando"
         
         indexTable     = dict()
         self.trad           = dict()
@@ -286,7 +287,7 @@ class Mixture(Graph):
 						t = strFormat % (t, indexTable[t])
 						#if len(t) > 4:
 						#    raise MixtureException("Too many atoms types " + t + " in __buildTranslatorTable__.")
-						print "renameTypes type ", a, "->", t
+						#print "__buildTranslatorTable__  renameTypes type ", a, "->", t
 						#a.setType(t)
 						self.trad[molecule][a] = t
 						#usedNames.append(t)
@@ -1376,16 +1377,16 @@ class Mixture(Graph):
 
     def writeFiles(self,baseFilename, fixedMolecules=[]):
     	from chemicalGraph.io.PRM import PRMError
-        #start = time.clock()
+        start = time.clock()
         print "Mixture writeFiles"
         self.writePDB(baseFilename+".pdb",fixedMolecules)
-        #print "Mixture writeFiles writePDB", time.clock() - start
+        print "Mixture writeFiles writePDB", time.clock() - start
         self.writePSF(baseFilename+".psf")
-        #print "Mixture writeFiles writePSF", time.clock() - start
+        print "Mixture writeFiles writePSF", time.clock() - start
         try: self.writePRM(baseFilename+".prm")
         except : raise
         
-        #print "Mixture writeFiles writePRM", time.clock() - start
+        print "Mixture writeFiles writePRM", time.clock() - start
     
 
     def writePDB(self, pdbFile=None, fixedMolecules=[]):
