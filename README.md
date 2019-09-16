@@ -17,7 +17,7 @@ Wolffia currently uses Python 2. Support for Python 3 is currently under develop
 
 Under Ubuntu:
 ```
-sudo apt-get install python-qt4-gl python-qwt5-qt4 pyqt4-dev-tools python-openbabel python-networkx python-opengl sshpass python-matplotlib python-scipy
+sudo apt-get install python-qt4-gl python-qwt5-qt4 pyqt4-dev-tools python-openbabel python-networkx python-opengl sshpass python-matplotlib python-scipy python-sklearn
 ```
 
 Wolffia currently uses namd2 to perform the simulations. NAMD2 is not a requirement for wolffia to run. Simulations can be built using wolffia and executed on a remote system with NAMD2 installed. Wolffia offers the capability of performing simulations on remote systems.

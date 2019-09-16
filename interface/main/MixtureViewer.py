@@ -68,12 +68,12 @@ class DCDLoader(QtCore.QThread):
 		super(DCDLoader, self).__init__()
 		self.coordinatesGenerator = DCDTrajectoryReader(None,fileName)
 		self.parent = parent
-		mixture = mixture
+		self.mixture = mixture
 		self.box =  box
 	def run(self):
 		for X,Y,Z,pbc in self.coordinatesGenerator:
 			print "DCDLoader updating frame"
-			mixture.updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
+			self.mixture.updateCoordinatesFromArray([item for tuples in zip(X,Y,Z) for item in tuples])
 			if pbc != None:
 				self.box.setCellBasisVectors([[pbc[0], 0.0, 0.0],
 									[0.0, pbc[2], 0.0],
