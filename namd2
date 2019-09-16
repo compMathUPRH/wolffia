@@ -1,2 +1,0 @@
-#!/bin/bash
-/usr/local/bin/namd2 +p7 $1
