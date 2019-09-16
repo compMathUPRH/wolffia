@@ -30,7 +30,7 @@
 
 import os, sys, platform
 
-WOLFFIA_VERSION = "1.4"
+WOLFFIA_VERSION = "1.5"
 
 NANOCAD_BASE            = os.path.realpath(os.path.dirname(os.path.realpath(__file__))+"/..").replace("\\","/")
 NANOCAD_PDB_DIR         = NANOCAD_BASE		   +"/data/coordinates/"
@@ -71,7 +71,8 @@ elif _WOLFFIA_OS == "Linux":
 
 # other
 WOLFFIA_DEFAULT_MIXTURE_NAME = "Unnamed"
-WOLFFIA_DEFAULT_MIXTURE_LOCATION = WOLFFIA_DIR + WOLFFIA_DEFAULT_MIXTURE_NAME
+#WOLFFIA_DEFAULT_MIXTURE_LOCATION = WOLFFIA_DIR + WOLFFIA_DEFAULT_MIXTURE_NAME
+WOLFFIA_DEFAULT_MIXTURE_LOCATION = os.path.expanduser("~")  # since v1.5
 
 
 WOLFFIA_USES_IMD = True

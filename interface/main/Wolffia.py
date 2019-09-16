@@ -62,6 +62,7 @@ class Wolffia(QtGui.QMainWindow):
 	    self.allowUpdate = True
 	    self.sharedGlList = None
 	    self.simRunning = False    #Keeps check if there's a simulation running
+
 	
 	    # Create and display the splash screen
 	    splash_pix = QtGui.QPixmap(WOLFFIA_GRAPHICS+'/Wolffialogo.png')
@@ -74,10 +75,11 @@ class Wolffia(QtGui.QMainWindow):
 	    self.settings = Settings()
 	    self.cusMolDir = C_MOLECULE_CATALOG
 	    
-	    if os.path.isdir(self.settings.workingFolder):
-	        if os.path.exists(self.settings.workingFolder):
-	            if not os.path.exists(self.settings.workingFolder + self.cusMolDir):
-	                os.makedirs(self.settings.workingFolder + self.cusMolDir)
+
+	    if os.path.isdir(self.settings.getSettingsDirectory()):
+	        if os.path.exists(self.settings.getSettingsDirectory()):
+	            if not os.path.exists(self.settings.getTempDirectory()):
+	                os.makedirs(self.settings.getTempDirectory())
 	                time.sleep(2)
 	                        
 	    else:
@@ -91,18 +93,20 @@ class Wolffia(QtGui.QMainWindow):
 	
 	        else:
 	            splash.showMessage(self.__TITLE__ + ": Creating Wolffia's working folder.")
-	            os.makedirs(self.settings.workingFolder + self.cusMolDir)
+	            os.makedirs(self.settings.workingFolder + "Temp")
 	            time.sleep(2)   
 	 
+	    ''' no automatic loading at strtup since v1.5
 	    self.settings.load()
 	    
-	    if not os.path.isdir(self.settings.currentMixtureLocation()):
-	        os.makedirs(self.settings.currentMixtureLocation())
-	    
+	    if not os.path.isdir(self.history.getCurrentState().getBuildDirectory()):
+	        os.makedirs(self.history.getCurrentState().getBuildDirectory())
+	    '''
+
 	    if self.settings.namdLocation=="":        self.settings.checkForNAMD()
 	    
 	    #set logging
-	    logging.basicConfig(filename=self.settings.getWorkingDirectory()+ '/wolffia.log',
+	    logging.basicConfig(filename=self.settings.getSettingsDirectory()+ '/wolffia.log',
 	                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 	                        level=logging.DEBUG)
 	    self.logger = logging.getLogger(self.__class__.__name__)
@@ -121,20 +125,25 @@ class Wolffia(QtGui.QMainWindow):
 	    splash.showMessage(self.__TITLE__ + ": Main window.")
 	
 	    # tool buttons
-	    self.ui.resetButton.setIcon(QtGui.QIcon().fromTheme("document-new",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "document-new.png")    ))
-	    self.ui.saveWFY.setIcon(QtGui.QIcon().fromTheme("document-save",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "document-save.png")    ))
+	    self.ui.resetButton.setIcon(QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "mixtureIcon.png"))
+	    self.ui.saveWFY.setIcon(QtGui.QIcon().fromTheme("document-save"    ))
+	    self.ui.actionSave_as.setIcon(QtGui.QIcon().fromTheme("document-save-as"   ))
 	    self.ui.undoButton.setIcon(QtGui.QIcon().fromTheme("edit-undo",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "edit-undo.png")    ))
 	    self.ui.redoButton.setIcon(QtGui.QIcon().fromTheme("edit-redo",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "edit-redo.png")    ))
 	    self.ui.actionLoad.setIcon(QtGui.QIcon().fromTheme("folder",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "document-open.png")    ))
-	    self.ui.actionMixture.setIcon(QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "mixtureIcon.png"))
+	    self.ui.recentMixture.setIcon(QtGui.QIcon().fromTheme("document-open-recent",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "document-open.png")    ))
+	    #self.ui.actionMixture.setIcon(QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "mixtureIcon.png"))
 	    #self.ui.actionLog.setIcon(QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "logIcon-off.png"))
 	    self.ui.settingsButton.setIcon(QtGui.QIcon().fromTheme("emblem-system",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "emblem-system.png")    ))
 	    self.ui.exitButton.setIcon(QtGui.QIcon().fromTheme("application-exit",    QtGui.QIcon(str(WOLFFIA_GRAPHICS) + "application-exit.png")    ))
-	    
+
+	    self.setSaveButtonEnabled(False)
+	    self.setSaveAsButtonEnabled(False)
+
 	
 	    splash.showMessage(self.__TITLE__ + ": Restoring previous session.")
-	    #self.history = History(self.ui.undoButton, self.ui.redoButton, loadFile=self.settings.currentMixtureLocation() + self.settings.currentSimulationName() + ".wfy")
-	    self.history = History(self.ui.undoButton, self.ui.redoButton, loadDir=self.settings.currentMixtureLocation(), loadFile=self.settings.currentSimulationName() + ".wfy")
+	    #self.history = History(self.ui.undoButton, self.ui.redoButton, loadFile=self.history.getCurrentState().getBuildDirectory() + self.settings.currentSimulationName() + ".wfy")
+	    self.history = History(self.ui.undoButton, self.ui.redoButton)# no aotumatic load at startup since v1.5, loadDir=self.history.getCurrentState().getBuildDirectory(), loadFile=self.settings.currentSimulationName() + ".wfy")
 	    self.history.push()
 	    #print "Wolffia returning build ", self.history.getCurrentState().getBuildDirectory()
 	    self.setTitle()
@@ -204,11 +213,20 @@ class Wolffia(QtGui.QMainWindow):
 	    splash.showMessage(self.__TITLE__ + ": Loading Analysis Tab.")
 	    self.analysis = Analysis( self.history, self, self.previewer, self.settings)
 	    self.ui.analysisLayout.addWidget(self.analysis)
-	
+
+	    self.setTabsEnabled(False)
+
+
 	    self.tabs = [self.buildTab,self.setupTab,self.forceTab,self.simTab,self.minTab,self.analysis]
 	    splash.finish(self)
 	
-	
+	def askForUnsavedMixture(self):
+		if not self.history.isCurrentMixtureSaved():
+			return QtGui.QMessageBox.question(self, "Warning", "Current simulation was not saved. Continue?", QtGui.QMessageBox.Ok, QtGui.QMessageBox.No)
+		else:
+			return QtGui.QMessageBox.Ok
+
+
 	@QtCore.pyqtSlot()
 	def on_actionLoad_triggered(self, checked = True):
 	    print "on_actionLoad_triggered", checked
@@ -216,25 +234,31 @@ class Wolffia(QtGui.QMainWindow):
 	    if self.simRunning:
 	        QtGui.QMessageBox.information(self, "Stop!", "This action is not allowed while a simulation/minimization is running.", QtGui.QMessageBox.Ok)
 	    else:
-	    #mixFile = self.settings.currentMixtureLocation() + self.history.currentState().getMixtureName() + ".wfy"
-	               
-	        d = WFileDialog(self, 'Load data', self.settings.currentMixtureLocation(), "Wolffia file (*.wfy)")
+	        if self.askForUnsavedMixture() == QtGui.QMessageBox.No:     return
+
+	        d = WFileDialog(self, 'Load mixture', self.history.currentState().getBuildDirectory(), "Wolffia file (*.wfy)")
+	        print "on_actionLoad_triggered d.accepted()", d.accepted()
 	        if d.accepted():
-	            filename = d.fullFilename()
-	            if not os.path.exists(str(filename)):
-	                QtGui.QMessageBox.information(self, "Wolffia's message", "Did not find file " + filename + ". Data not loaded.", QtGui.QMessageBox.Ok)
-	                return
-	            self.history.push()
-	            
-	            folder = self.history.currentState().getBuildDirectory()  # remember current folder
-	            mName = self.history.currentState().getMixture().getMixtureName()
-	            self.history.currentState().load(filename)
-	            print "on_actionLoad_triggered ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
-	            self.history.currentState().setBuildDirectory(folder)
-	            self.history.currentState().getMixture().setMixtureName(mName)
-	            self.history.currentState().save()
-	            self.update()
-	            QtGui.QMessageBox.information(self, "Wolffia's message", filename + " loaded.", QtGui.QMessageBox.Ok)
+				filename = d.fullFilename()
+				if not os.path.exists(str(filename)):
+					QtGui.QMessageBox.information(self, "Wolffia's message", "Did not find file " + filename + ". Data not loaded.", QtGui.QMessageBox.Ok)
+					return
+				self.history.push()
+
+				folder = self.history.currentState().getBuildDirectory()  # remember current folder
+				mName = self.history.currentState().getMixture().getMixtureName()
+				self.history.currentState().load(filename)
+				print "on_actionLoad_triggered ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
+				#self.history.currentState().setBuildDirectory(folder)
+				#self.history.currentState().getMixture().setMixtureName(mName)
+
+				self.update()
+				self.setTabsEnabled(True)
+				self.setSaveButtonEnabled(True)
+				self.setSaveAsButtonEnabled(True)
+				self.setTitle()
+				self.history.currentState().setCurrentMixtureSaved(True)
+				QtGui.QMessageBox.information(self, "Wolffia's message", filename + " loaded.", QtGui.QMessageBox.Ok)
 	       
 	
 	def on_actionMixture_triggered(self, checked = None):
@@ -288,8 +312,10 @@ class Wolffia(QtGui.QMainWindow):
 	
 	
 	def on_resetButton_triggered(self, val=True):
-	    #print "on_resetButton_triggered ", val
+	    print "on_resetButton_triggered ", val
 	    if not val: return
+	    if self.askForUnsavedMixture() == QtGui.QMessageBox.No:     return
+
 	    msgBox = QtGui.QMessageBox(self)
 	    msgBox.setText("Delete the current mixture?\nAny simulations that are running will be terminated.")
 	    #msgBox.setInformativeText("Do you want to save your changes?")
@@ -298,6 +324,54 @@ class Wolffia(QtGui.QMainWindow):
 	    ret = msgBox.exec_()
 	    if ret == QtGui.QMessageBox.Ok:
 	        self.reset()
+	               
+	        d = WFileNameDialog(self, 'File for new Mixture', self.history.getCurrentState().getBuildDirectory(), "Wolffia file (*.wfy)")
+	        if d.isReady():
+	            filename = d.fullFilename()
+	            if filename[-4:] != ".wfy" and QtGui.QMessageBox.question (self, "Wolffia's message", "File does not end with .wfy. Add extension?", "Yes", "No") == 0:
+	                filename += ".wfy"
+	                if os.path.exists(filename) and QtGui.QMessageBox.question (self, "Wolffia's message", "File exists.", "Overwrite", "Cancel") != 0:
+	                    return
+
+	            print "on_resetButton_triggered ","\'"+filename+"\'"
+	            self.history.currentState().setBuildDirectory(os.path.dirname(str(filename)))
+	            self.history.currentState().getMixture().setMixtureName(os.path.splitext(os.path.basename(str(filename)))[0])
+	            self.setTitle()
+
+	            self.history.currentState().save(filename)
+	            self.setTabsEnabled(True)
+	            QtGui.QMessageBox.information(self, "Wolffia's message", filename + " created.", QtGui.QMessageBox.Ok)
+	
+
+	def on_actionSave_as_triggered(self, saveState=True):
+	    '''
+	    
+	    :param saveState:
+	    '''
+	    print "on_actionSave_as_triggered "
+	    if not saveState: return
+	    if self.simRunning:
+	        QtGui.QMessageBox.information(self, "Warning", "This action is not allowed while a simulation/minimization is running.", QtGui.QMessageBox.Ok)
+	    else:
+	        #mixFile = self.history.getCurrentState().getBuildDirectory() + self.history.currentState().getMixtureName() + ".wfy"
+	        self.history.currentState().save()
+	        #print "on_saveWFY_triggered ",  mixFile 
+	               
+	        d = WFileNameDialog(self, 'Save current data', self.history.getCurrentState().getBuildDirectory(), "Wolffia file (*.wfy)")
+	        if d.isReady():
+	            filename = d.fullFilename()
+	            print "on_actionSave_as_triggered ","\'"+filename+"\'"
+	            if filename[-4:] != ".wfy" and QtGui.QMessageBox.question (self, "Wolffia's message", "File does not end with .wfy. Add extension?", "Yes", "No") == 0:
+	                filename += ".wfy"
+	                if os.path.exists(filename) and QtGui.QMessageBox.question (self, "Wolffia's message", "File exists.", "Overwrite", "Cancel") != 0:
+	                    return
+	            self.history.currentState().setBuildDirectory(os.path.dirname(str(filename)))
+	            self.history.currentState().getMixture().setMixtureName(os.path.splitext(os.path.basename(str(filename)))[0])
+	            self.setTitle()
+
+	            self.history.currentState().save(filename)
+	
+	            QtGui.QMessageBox.information(self, "Wolffia's message", filename + " saved.", QtGui.QMessageBox.Ok)
 	
 	def on_saveWFY_triggered(self, saveState=True):
 	    '''
@@ -309,20 +383,10 @@ class Wolffia(QtGui.QMainWindow):
 	    if self.simRunning:
 	        QtGui.QMessageBox.information(self, "Warning", "This action is not allowed while a simulation/minimization is running.", QtGui.QMessageBox.Ok)
 	    else:
-	        mixFile = self.settings.currentMixtureLocation() + self.history.currentState().getMixtureName() + ".wfy"
-	        #print "on_saveWFY_triggered ",  mixFile 
-	               
-	        d = WFileNameDialog(self, 'Save current data', self.settings.currentMixtureLocation(), "Wolffia file (*.wfy)")
-	        if d.isReady():
-	            filename = d.fullFilename()
-	            print "on_saveWFY_triggered ","\'"+filename[-4:]+"\'"
-	            if filename[-4:] != ".wfy" and QtGui.QMessageBox.question (self, "Wolffia's message", "File does not end with .wfy. Add extension?", "Yes", "No") == 0:
-	                filename += ".wfy"
-	                if os.path.exists(filename) and QtGui.QMessageBox.question (self, "Wolffia's message", "File exists.", "Overwrite", "Cancel") != 0:
-	                    return
-	            self.history.currentState().save(filename)
+	        #mixFile = self.history.getCurrentState().getBuildDirectory() + self.history.currentState().getMixtureName() + ".wfy"
+	        self.history.currentState().save()
 	
-	            QtGui.QMessageBox.information(self, "Wolffia's message", filename + " saved.", QtGui.QMessageBox.Ok)
+	        QtGui.QMessageBox.information(self, "Wolffia's message", self.history.currentState().getMixtureName() + " saved.", QtGui.QMessageBox.Ok)
 	
 	
 	def on_settingsButton_triggered(self, openDialog=True):
@@ -368,13 +432,16 @@ class Wolffia(QtGui.QMainWindow):
 	                    self.simTab.cancelSim()
 	                except:
 	                    self.minTab.stopMin()
-	    self.saveWolffiaState()
+	    elif not self.history.isCurrentMixtureSaved():
+	        reply = QtGui.QMessageBox.question(self, 'Warning!', "Current mixture was not saved. Save?", QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+	        if reply == QtGui.QMessageBox.Yes:
+	            self.saveWolffiaState()
 	    print "closeEvent", event
 	    event.accept()
 	
 	
 	def configurationFilesBasename(self):
-		return str(self.settings.currentMixtureLocation()) + str(self.history.currentState().getMixture().getMixtureName())
+		return str(self.history.getCurrentState().getBuildDirectory()) + str(self.history.currentState().getMixture().getMixtureName())
 	
 	
 	def reset(self):
@@ -382,9 +449,10 @@ class Wolffia(QtGui.QMainWindow):
 		mName = self.history.currentState().getMixture().getMixtureName()
 		self.history.reset()
 		print "Wolffia.reset ",self.history.currentState().getMixture().getMixtureName(),self.history.currentState().getBuildDirectory(), " to ", mName , folder
-		self.history.currentState().setBuildDirectory(folder)
-		self.history.currentState().getMixture().setMixtureName(mName)
-		self.history.currentState().save()
+
+		#self.history.currentState().setBuildDirectory(folder)
+		#self.history.currentState().getMixture().setMixtureName(mName)
+		#self.history.currentState().save()
 		
 		for tab in self.tabs:
 		    tab.reset()
@@ -397,14 +465,13 @@ class Wolffia(QtGui.QMainWindow):
 	        saves the current state of wolffia, usually before the window closes
 	    """
 	    if baseFilename == None:
-	    	baseFilename = self.settings.currentMixtureLocation() + self.settings.currentSimulationName()
+	    	baseFilename = self.history.currentState().getMixtureFileName()
 	    self.history.currentState().setSimTabValues(self.simTab.getValues())
 	    self.history.currentState().minTabValues = self.minTab.getValues()
 	    
 	    print "saveWolffiaState ",baseFilename , self.configurationFilesBasename()
 	    self.history.currentState().save(filename=baseFilename + ".wfy")
 	    self.settings.save()
-	
 	
 	def settingsChanged(self):
 	    '''
@@ -416,11 +483,21 @@ class Wolffia(QtGui.QMainWindow):
 	    self.previewer.showAxes(self.settings.showAxes)
 	    self.previewer.showHelp(self.settings.showHelp)
 	    
-	
+	def setTabsEnabled(self, status=True):
+	    self.ui.wolffiaTabs.setEnabled(status)
+
 	def setTitle(self):
-	    self.setWindowTitle(self.__TITLE__ + " - " + self.settings.currentMixtureLocation())
+		print "self.setTitle()", self.history.getCurrentState().getMixtureName()
+		self.setWindowTitle(self.__TITLE__ + " - " + self.history.getCurrentState().getMixtureName())
 	
-	
+	def setSaveButtonEnabled(self, status=True):
+		print "setSaveButtonEnabled"
+		self.ui.saveWFY.setEnabled(status)
+
+	def setSaveAsButtonEnabled(self, status=True):
+		print "setSaveAsButtonEnabled"
+		self.ui.actionSave_as.setEnabled(status)
+
 	
 	def setDefaultTabs(self):
 	    for tab in self.tabs:
@@ -431,18 +508,18 @@ class Wolffia(QtGui.QMainWindow):
 	            
 	def update(self):
 	
-	    #timer = WTimer("Wolffia")
-	    if self.allowUpdate:
-	        print "wolffia.update, updating Wolffia"
-	        self.allowUpdate = False
-	        self.setTitle()
-	        for tab in self.tabs:
-	            #timer2 = WTimer("Wolffia calling"+str(tab))
-	            #print "Wolffia.update() updating ", tab
-	            tab.update()
-	            #timer2.report()
-	        self.previewer.update()
-	        self.allowUpdate = True
+		#timer = WTimer("Wolffia")
+		if self.allowUpdate:
+			print "wolffia.update, updating Wolffia"
+			self.allowUpdate = False
+			self.setTitle()
+			for tab in self.tabs:
+				#timer2 = WTimer("Wolffia calling"+str(tab))
+				#print "Wolffia.update() updating ", tab
+				tab.update()
+				#timer2.report()
+			self.previewer.update()
+			self.allowUpdate = True
 	
 	    #timer.report()
 

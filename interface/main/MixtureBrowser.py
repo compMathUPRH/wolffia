@@ -238,7 +238,7 @@ class MixtureBrowser(QtGui.QDialog):
         newTableWidgetItem.setFlags(QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled)
         self.settings.setMixtureLocation(newName)
         #print newName
-        self.history.currentState().setBuildDirectory(self.settings.currentMixtureLocation())
+        #self.history.currentState().setBuildDirectory(self.history.getCurrentState().getBuildDirectory())
         self.wolffia.reset()
         newMix = Mixture(mixName = newName)
 
@@ -248,8 +248,9 @@ class MixtureBrowser(QtGui.QDialog):
         self.lastSelectedItem = newTableWidgetItem
         newTableWidgetItem.setBackgroundColor(QtGui.QColor("blue"))
         self.history.currentState().updateMixture(newMix)
-        self.history.currentState().setBuildDirectory(self.settings.currentMixtureLocation())
-        self.history.currentState().save(self.settings.currentMixtureLocation() + newMix.mixName + ".wfy")
+        #self.history.currentState().setBuildDirectory(self.history.getCurrentState().getBuildDirectory())
+        #self.history.currentState().save(self.history.getCurrentState().getBuildDirectory() + newMix.mixName + ".wfy")
+        self.history.currentState().setCurrentMixtureSaved(False)
         self.wolffia.update()
         self.mixtures.append(newName)
         self.setTable()
@@ -299,7 +300,7 @@ class MixtureBrowser(QtGui.QDialog):
                         self.wolffia.update()
                     else:
                         self.history.currentState().save(self.settings.workingFolder + mixture + "/" + mixture + ".wfy")
-                        self.history.currentState().load(self.settings.currentMixtureLocation()  + "/" + self.settings.currentSimulationName() + ".wfy" )
+                        self.history.currentState().load(self.history.getCurrentState().getBuildDirectory()  + "/" + self.settings.currentSimulationName() + ".wfy" )
                     renamingDir = self.settings.workingFolder + mixture
                     for files in os.listdir(renamingDir):
                         os.rename(renamingDir + "/" + files, renamingDir + "/" + files.replace(mixture, name))

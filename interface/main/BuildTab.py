@@ -105,6 +105,7 @@ class BuildTab(QtGui.QFrame):
 		self.firstUpdate = True
 		#print "buildTab init out", QtGui.QWidget.keyboardGrabber ()
 		
+		#self.setBuildTabEnabled()
 		self.cMol = C_MOLECULE_CATALOG
 
 
@@ -442,8 +443,9 @@ class BuildTab(QtGui.QFrame):
 		if not saveState: return
 		
 		else:
-			mixFile = self.settings.currentMixtureLocation() + self.history.currentState().getMixtureName() + ".wfm" 
-			d = WFileNameDialog(self, 'Save current Mixture', self.settings.currentMixtureLocation(), "Mixture file (*.wfm)")
+			#mixFile = self.history.currentState().getBuildDirectory() + self.history.currentState().getMixtureName() + ".wfm" 
+			self.history.currentState().save()
+			d = WFileNameDialog(self, 'Save current Mixture', self.history.currentState().getBuildDirectory(), "Mixture file (*.wfm)")
 			if d.isReady():
 				filename = d.fullFilename()
 				#print "FILENAME = ", filename

@@ -72,6 +72,7 @@ class ChargesTable(QtGui.QTableWidget):
         item = self.horizontalHeaderItem(2)
         item.setText("Charge")
 
+
     def update(self):
         #print "ChargesTable update"
         self.insertChargesTable()

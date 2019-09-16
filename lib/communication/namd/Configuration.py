@@ -44,8 +44,11 @@ class Configuration(object):
 	def openFile(self, buildDirectory, mixtureName):
 	    self.buildDirectory = buildDirectory
 	    if _WOLFFIA_OS == "Windows":
+	        if self.buildDirectory[-1] != "\\": self.buildDirectory.append("\\")
 	        self.buildDirectory = str(buildDirectory.replace('\\' , "\\\\"))
-	
+	    else:
+	        if self.buildDirectory[-1] != "/": self.buildDirectory += "/"
+
 	    self.mixtureName = mixtureName
 	    self.filename =    self.buildDirectory  + mixtureName + ".conf"
 	    conf          =    file(self.filename, mode="w")
@@ -339,7 +342,7 @@ class Configuration(object):
 	    """
 	     Writes the configuration file for the MD simulation. 
 	    """
-	    #print "Configuration writeSimulationConfig", buildDirectory, mixtureName
+	    print "Configuration writeSimulationConfig", buildDirectory, mixtureName
 	    confFile = self.openFile(buildDirectory, mixtureName)
 	    self.writeHeader(confFile)
 	    self.writeSimulationType(confFile)

@@ -2,11 +2,14 @@
 <ui version="4.0">
  <class>buildTab</class>
  <widget class="QDialog" name="buildTab">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1043</width>
+    <width>1197</width>
     <height>604</height>
    </rect>
   </property>
@@ -31,21 +34,10 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Build or Modify structure files</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QTreeWidget" name="molCatalog">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -355,6 +347,20 @@
            <string>Custom</string>
           </property>
          </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Build or Modify structure files</string>
+         </property>
         </widget>
        </item>
       </layout>

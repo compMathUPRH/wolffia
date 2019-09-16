@@ -39,6 +39,7 @@ Created on Jun 12, 2012
 from conf.Wolffia_conf import WOLFFIA_DIR, WOLFFIA_DEFAULT_MIXTURE_NAME, WOLFFIA_STYLESHEET, WOLFFIA_VERSION, _WOLFFIA_OS #@UnresolvedImport
 from subprocess import check_output
 import os
+ 
 
 class Settings(object):
 	'''
@@ -51,15 +52,15 @@ class Settings(object):
 		Constructor
 		'''
 		self.wolffiaVersion         = WOLFFIA_VERSION
-		self.workingFolder          = WOLFFIA_DIR
+		self.settingsFolder         = WOLFFIA_DIR
 		self.MDPackage              = "NAMD"
 		self.highResolution         = True
 		self.solventHighResolution  = False
 		self.showAxes               = True
 		self.showLabels             = False
-		self.showHelp               = True
+		self.showHelp               = False
 		self.skin                   = WOLFFIA_STYLESHEET
-		self.simulationFolder       = WOLFFIA_DEFAULT_MIXTURE_NAME
+		#self.simulationFolder       = os.path.expanduser("~")  now in WolffiaState
 		self.namdLocation           = ""
 		    
 		if not filename == None:
@@ -88,7 +89,7 @@ class Settings(object):
 	    Resets all of the variables to their defaults
 	    '''
 	
-	    self.workingFolder   = WOLFFIA_DIR
+	    self.settingsFolder   = WOLFFIA_DIR
 	    self.MDPackage       = "NAMD"
 	    self.highResolution  = True
 	    self.solventHighResolution  = False
@@ -96,8 +97,9 @@ class Settings(object):
 	    self.showLabels      = False
 	    self.showHelp        = False
 	    self.skin            = WOLFFIA_STYLESHEET
-	    self.simulationFolder = WOLFFIA_DEFAULT_MIXTURE_NAME
+	    #self.simulationFolder = WOLFFIA_DEFAULT_MIXTURE_NAME  removed in v1.5
 	
+	''' now in WolffiaSettings v1.5
 	def setMixtureLocation(self, loc):
 	    #Sets current location
 	    
@@ -105,13 +107,14 @@ class Settings(object):
 	    #print "setSimulationLocation ", self.currentMixtureLocation()
 	    if not os.path.isdir(self.currentMixtureLocation()):
 	        os.makedirs(self.currentMixtureLocation())
-	
+
 	def currentSimulationName(self):  
 		try:
 			return self.simulationFolder
 		except:  # move to History.load()?
 			self.simulationFolder = WOLFFIA_DEFAULT_MIXTURE_NAME
 			return self.simulationFolder
+	'''
 	
 	def setHighResolution(self, st):
 	    '''
@@ -159,24 +162,27 @@ class Settings(object):
 	    '''
 	    self.showLabels  = st
 	
-	
+	""" in WilffiaState sinnce v1.5
 	def currentMixtureLocation(self):
 		'''
 		Returns folder with current mixture info
 		'''
 		try:
-			locDir = self.workingFolder + "/" + self.simulationFolder + "/"
+			locDir = self.simulationFolder + "/"
 		except AttributeError:
-			locDir = self.workingFolder + "/" + WOLFFIA_DEFAULT_MIXTURE_NAME + "/"
+			locDir = "~/"
 		if _WOLFFIA_OS == "Windows":
 			locDir.replace('\\' , "\\\\")
 		return locDir
+	"""
 	   
-	   
-	def setWorkingDirectory(self, path):
-	    self.workingFolder = path
+	def setSettingsDirectory(self, path):
+	    self.settingsFolder = path
 	        
-	def getWorkingDirectory(self): return self.workingFolder
+	def getSettingsDirectory(self): return self.settingsFolder
+
+	def getTempDirectory(self):
+		return self.getSettingsDirectory() + "Temp"
 	  
 	#--------------------------------------------------------------------
 	def load(self, filename=None):

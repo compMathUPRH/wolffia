@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1080</width>
-    <height>494</height>
+    <height>505</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -38,7 +38,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="forceTab">
+     <widget class="QTabWidget" name="wolffiaTabs">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -220,7 +220,7 @@
      <x>0</x>
      <y>0</y>
      <width>1080</width>
-     <height>30</height>
+     <height>39</height>
     </rect>
    </property>
    <property name="defaultUp">
@@ -255,10 +255,11 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionMixture"/>
+   <addaction name="recentMixture"/>
    <addaction name="resetButton"/>
    <addaction name="actionLoad"/>
    <addaction name="saveWFY"/>
+   <addaction name="actionSave_as"/>
    <addaction name="separator"/>
    <addaction name="undoButton"/>
    <addaction name="redoButton"/>
@@ -276,8 +277,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>333</width>
-     <height>299</height>
+     <width>392</width>
+     <height>370</height>
     </size>
    </property>
    <property name="baseSize">
@@ -420,26 +421,6 @@
     </layout>
    </widget>
   </widget>
-  <action name="resetButton">
-   <property name="text">
-    <string> New</string>
-   </property>
-   <property name="iconText">
-    <string>New</string>
-   </property>
-   <property name="toolTip">
-    <string>Clear current simulation (CTRL- N)</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::ApplicationShortcut</enum>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::NoRole</enum>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
   <action name="undoButton">
    <property name="text">
     <string>Undo</string>
@@ -473,9 +454,6 @@
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
    </property>
-   <property name="softKeyRole">
-    <enum>QAction::NoSoftKey</enum>
-   </property>
   </action>
   <action name="exitButton">
    <property name="checkable">
@@ -508,17 +486,6 @@
     <enum>QAction::NoRole</enum>
    </property>
   </action>
-  <action name="actionMixture">
-   <property name="text">
-    <string>Mixture</string>
-   </property>
-   <property name="toolTip">
-    <string>Create/delete simulations</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
-  </action>
   <action name="actionLoad">
    <property name="text">
     <string>load</string>
@@ -536,6 +503,51 @@
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="resetButton">
+   <property name="text">
+    <string> New</string>
+   </property>
+   <property name="iconText">
+    <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear current simulation (CTRL- N)</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="recentMixture">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Recent</string>
+   </property>
+   <property name="toolTip">
+    <string>Load recent simulation.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="text">
+    <string>Save as</string>
+   </property>
+   <property name="toolTip">
+    <string>Save as</string>
    </property>
   </action>
  </widget>

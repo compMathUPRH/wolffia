@@ -44,7 +44,7 @@ import sys, os, time, copy, tempfile
 import logging
 from lib.chemicalGraph.Mixture import Mixture #@UnresolvedImport
 from Drawer import Drawer
-from conf.Wolffia_conf import WOLFFIA_DEFAULT_MIXTURE_LOCATION, WOLFFIA_DEFAULT_MIXTURE_NAME, WOLFFIA_VERSION #@UnresolvedImport
+from conf.Wolffia_conf import WOLFFIA_DEFAULT_MIXTURE_LOCATION, WOLFFIA_DEFAULT_MIXTURE_NAME, WOLFFIA_DIR, WOLFFIA_VERSION #@UnresolvedImport
 from lib.chemicalGraph.molecule.Molecule import Molecule
 import cPickle as pickle #Tremenda aportación por carlos cortés.
 
@@ -104,11 +104,9 @@ class History(list):
 		#if not self.isEmpty(): self.pop()
 		
 		# copies state, then copies ShownMolecules manually
-		#newState = copy.deepcopy(st)
-		#newState.shownMolecules = ShownMoleculesSet(newState.mixture)
-		#for mol in st.mixture: newState.shownMolecules.show(mol)
+
 		#print "push getBuildDirectory", self.getCurrentState().getBuildDirectory()
-		tmpPush = tempfile.NamedTemporaryFile(prefix="temp"+self.getCurrentState().getMixtureName(), dir=self.getCurrentState().getBuildDirectory(), delete=True, suffix='.wfy')
+		tmpPush = tempfile.NamedTemporaryFile(prefix="temp"+self.getCurrentState().getMixtureName(), dir=self.getCurrentState().getTempDirectory(), delete=True, suffix='.wfy')
 		#print "push name", tmpPush.name
 		self.append(tmpPush)
 		self.currentState().save(fileObject=tmpPush)
@@ -169,7 +167,12 @@ class History(list):
 	    '''
 		return self.current
 	
-	        
+	def isCurrentMixtureSaved(self): return self.current.isCurrentMixtureSaved()
+
+	def setCurrentMixtureSaved(status=True):
+		self.getCurrentState.setCurrentMixtureSaved(status)
+	
+
 	def getCurrentState(self): return self.current
 	
 	def reset(self):
@@ -203,7 +206,9 @@ class NanoCADState(object):
 	    self.minTabValues	=	None
 	    self.shownMolecules =   None
 	    self.fixedMolecules =   None
-	    
+
+	    self.currentMixtureSaved = True
+
 	    self.reset()
 	    if not filename == None:
 	        self.load(filename)
@@ -227,9 +232,15 @@ class NanoCADState(object):
 	    self.shownMolecules = ShownMoleculesSet(self.mixture)
 	    self.fixedMolecules = FixedMolecules()
 	    #print "NanoCADState reset"
+	    self.setCurrentMixtureSaved(True)
 	
 	#--------------------------------------------------------------------
 
+	def isCurrentMixtureSaved(self): 
+		print "NanoCADState.isCurrentMixtureSaved() = ", self.currentMixtureSaved
+		return self.currentMixtureSaved
+	        
+	#--------------------------------------------------------------------
 	def save(self, filename=None, fileObject=None):
 	
 		if fileObject <> None:
@@ -239,7 +250,7 @@ class NanoCADState(object):
 		else:
 			if filename == None:
 				#filename = WOLFFIA_DEFAULT_MIXTURE_LOCATION + "/" + WOLFFIA_DEFAULT_MIXTURE_NAME + ".wfy"
-				filename = self.getBuildDirectory()+"/"+self.getMixtureName() + ".wfy"
+				filename = self.getMixtureFileName()
 			
 			#print "History.save_ importing cPickle"
 			#print "History.save_ imported cPickle, starting to save"
@@ -250,7 +261,7 @@ class NanoCADState(object):
 			    print filename + ": File does not exist."
 			pickle.dump(self.__dict__, f)
 			f.close()
-		
+
 		#print "NanoCADState.save, save sucessful", f.name
 	
 	
@@ -411,11 +422,17 @@ class NanoCADState(object):
 		if self.wolffiaVerion < "1.31": 
 			self.getMixture().upgrade(self.wolffiaVerion)
 			
+		if self.wolffiaVerion < "1.5": 
+			self.setBuildDirectory(os.path.dirname(str(filename)))
+
 		#from PyQt4 import QtGui
 		if self.wolffiaVerion < WOLFFIA_VERSION: 
 			#QtGui.QMessageBox.information(self.parent,"Wolffia", "Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION))
 			print "NANOCADState.load: Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION)
 		self.wolffiaVerion =  WOLFFIA_VERSION
+
+		self.setCurrentMixtureSaved(True)
+
 		print "NanoCADState.load_ imported cPickle, load sucessful", f.name
 		#print "History.load self.shownMolecules", self.shownMolecules
 		#self.shownMolecules.showAll()
@@ -516,110 +533,9 @@ class NanoCADState(object):
 		#print "fillBox ", mol.molname(),progressMax
 		solv.rename(solventMolecules.molname())
 		progressMax -= 1
-		
-		#print "tiempo ", time.clock() - start
-		#print "Molecules after cleaning: ",mix.order()
 
+		self.setCurrentMixtureSaved(False)
 
-	def fillBoxBAK(self, solv, molNum, checkCollisions=False, replaceCollisions=False, applyPCBs=True, progress=None):
-		import math, random
-		remaining = -1   # to track removng collissions
-		
-		totalDim = self.getDrawer().getBoxDimension()
-		boxmin = self.getDrawer().getCellOrigin()
-		boxmax =[ boxmin[0]+totalDim[0], boxmin[1]+totalDim[1], boxmin[2]+totalDim[2] ]
-		
-		#calculate the volume for a single solvent molecule
-		center = [0., 0., 0.]
-		pos = solv.massCenter()
-		solv.moveBy([center[0]-pos[0], center[1]-pos[1], center[2]-pos[2]])
-		#solvDiameter = solv.diameter()+ _SEPARATION_BETWEEN_SOLVENTS_
-		solvDiameter = math.pow(self.getDrawer().getBoxVolume() / molNum, 1./3.)
-		if solvDiameter == 0: return
-		
-		row = math.floor(totalDim[1]/solvDiameter)
-		col = math.floor(totalDim[0]/solvDiameter)
-		dep = math.floor(totalDim[2]/solvDiameter)
-
-		progressMax   = molNum
-		progressCount = 0
-		if progress != None:	
-			progress.setLabelText("Adding solvent")
-			progress.setRange(0,molNum-1)
-			progress.setValue(0)
-		
-		solvRadius = solvDiameter / 2
-		newPos = solv.massCenter()
-		refCoor = boxmin
-		
-		boxmax[0] -= solvDiameter/2.
-		boxmax[1] -= solvDiameter/2.
-		boxmax[2] -= solvDiameter/2.
-		
-		# add first molecule and rename solvent with the given name
-		mol = solv.copy()
-		mol.moveBy([random.uniform(boxmin[0], boxmax[0]), random.uniform(boxmin[1], boxmax[1]), random.uniform(boxmin[2], boxmax[2])])
-		nodeName = self.addMolecule(mol, checkForInconsistentNames=True)
-		self.shownMolecules.show(nodeName)
-		#print "fillBox ", mol.molname(),progressMax
-		solv.rename(mol.molname())
-		progressMax -= 1
-		
-		if progress != None:	
-			progress.setLabelText("Adding solvent")
-			progress.setRange(progressCount,progressMax)
-			progress.setValue(progressCount)
-
-		# lopps over a sequence of adding solvent and removing collisions
-		while progressCount < progressMax:
-
-			originalMolecules = self.getMixture().molecules()
-			
-			#print "anadiendo... ", progressMax-progressCount
-			while progressCount < progressMax:  # adds solvent
-				#random rotation for solvent atoms
-				rx = random.uniform(0, 360)
-				ry = random.uniform(0, 360)
-				rz = random.uniform(0, 360)
-				
-				#random displacement for solvent atoms
-				rdx = random.uniform(boxmin[0], boxmax[0])
-				rdy = random.uniform(boxmin[1], boxmax[1])
-				rdz = random.uniform(boxmin[2], boxmax[2])
-				
-				#generate new molecule and assign next position
-				mol = solv.copy()
-				mol.rotateDeg(rx, ry, rz)
-				newPos = [rdx, rdy, rdz]
-				mol.moveBy(newPos)
-				#mol.rename("SOLVENT("+mol.molname()+")")
-				nodeName = self.addMolecule(mol, checkForInconsistentNames=False)
-				self.shownMolecules.show(nodeName)
-	
-				progressCount += 1
-				if progress != None:	progress.setValue(progressCount)
-		
-			# remove collisions
-			if checkCollisions:
-				if progress != None:	
-					progress.setLabelText("Removing collisions")
-
-				mix = self.getMixture()
-				collisions = mix.overlapingMolecules(originalMolecules, pbc=self.getDrawer(),applyPBCs=applyPCBs)
-
-				toRemove  = set(collisions).difference(set(originalMolecules))
-				if remaining < 0: remaining = len(toRemove)
-				#print "remaining", remaining
-				#print "removiendo... ", len(toRemove)
-				#print "faltan... ", remaining-len(toRemove)
-				if progress != None:
-					progress.setRange(0,remaining)
-					progress.setValue(remaining-len(toRemove))
-				self.removeMoleculesFrom(toRemove)
-
-				if replaceCollisions: progressCount -= len(toRemove)
-				
-				
 		#print "tiempo ", time.clock() - start
 		#print "Molecules after cleaning: ",mix.order()
 
@@ -637,13 +553,18 @@ class NanoCADState(object):
 	    return self.mixture.mixName
 	
 	def getBuildDirectory(self):
-		#return self.buildDir  # no longer used
 		try:
 			return self.workingDir
 		except:
 			self.workingDir     =   WOLFFIA_DEFAULT_MIXTURE_LOCATION + "/" 
 	    	return self.workingDir
-	    
+	
+	def getMixtureFileName(self):
+		return self.getBuildDirectory()+"/"+self.getMixtureName() + ".wfy"
+
+	def getTempDirectory(self):
+		return WOLFFIA_DIR + "/Temp"
+
 	def getCurrentDirectory(self):
 	    return self.getBuildDirectory()
 	
@@ -656,17 +577,23 @@ class NanoCADState(object):
 	    self.fixedMolecules.updateMixture(self.mixture)
 	    #for mol in self.mixture:
 	    #    print "mix @t NanoCADState",self.mixture.getMolecule(mol)._name
+	    self.setCurrentMixtureSaved(False)
+
 	
 	def addMixture(self,mix):
 	    #print "History addMixture",mix
 	    #self.mixture.merge(mix)
 	    for mol in mix:
 	        self.addMolecule(mix.getMolecule(mol))
+	    self.setCurrentMixtureSaved(False)
+
 	
 	def addMolecule(self,mol, checkForInconsistentNames=True):
 	    print "NanoCADState addMolecule",mol
 	    molname = self.mixture.add(mol, checkForInconsistentNames)
 	    self.shownMolecules.show(molname)
+	    self.setCurrentMixtureSaved(False)
+
 	    return molname
 	
 	def removeMolecule(self, mol):
@@ -676,18 +603,31 @@ class NanoCADState(object):
 	    
 	    self.shownMolecules.remove(mol)
 	    self.getMixture().remove(mol)
+	    self.setCurrentMixtureSaved(False)
+
 	
 	def removeMoleculesFrom(self, mols):
 	    self.getMixture().removeFrom(mols)
 	    self.updateMixture(self.getMixture())
 	    #self.getMixture().removeFrom(mols)
+	    self.setCurrentMixtureSaved(False)
+
 	
 	def duplicateMolecule(self, mol):
 	    newName = self.getMixture().duplicateMolecule(mol)
 	    self.shownMolecules.show(newName)
+	    self.setCurrentMixtureSaved(False)
+
+	def setCurrentMixtureSaved(self, status=True):
+		import inspect
+		#print "NanoCADState.setCurrentMixtureSaved status=", status, "  caller=",inspect.stack()[1]
+		print "NanoCADState.setCurrentMixtureSaved status=", status
+		self.currentMixtureSaved = status
 	
 	def setMixtureName(self, n):
 	    self.mixture.mixName = n
+	    self.setCurrentMixtureSaved(False)
+
 	
 	def setDrawer(self, dr):
 	    self.drawer = dr
@@ -696,12 +636,18 @@ class NanoCADState(object):
 	    #print "buildDirectory changed to, " , d
 	    #self.buildDir = d  # no longer used
 	    self.workingDir = d
+	    self.setCurrentMixtureSaved(False)
+
 	
 	def setCurrentDirectory(self, d):
 	    self.workingDir = d
+	    self.setCurrentMixtureSaved(False)
+
 	
 	def setSimTabValues(self, simVals):
 	    self.simTabValues = simVals.copy()
+	    self.setCurrentMixtureSaved(False)
+
 	    
 	def hasBox(self):
 	    return self.drawer != None and self.drawer.hasCell()

@@ -416,7 +416,7 @@ class SimTab(QtGui.QFrame):
 		self.myLongTask.notifyProgress.connect(self.onProgress)
 		self.myLongTask.notifyFinishedProgress.connect(self.onFinishedProgress)
 
-	
+
 	def storeValuesInState(self, dummy=None):
 		self.history.currentState().setSimTabValues(self.getValues())
 	    
@@ -757,7 +757,7 @@ class SimTab(QtGui.QFrame):
 		'''
 	
 		from interface.main.WFileDialogs import WFileNameDialog
-		d = WFileNameDialog(self, 'Save parameters', self.settings.currentMixtureLocation())
+		d = WFileNameDialog(self, 'Save parameters', str(self.history.currentState().getBuildDirectory()))
 		if d.isReady():
 		    confFile            =    self.wolffia.configurationFilesBasename() + ".para"
 		    conf                =    open(confFile, mode="w")
@@ -778,7 +778,7 @@ class SimTab(QtGui.QFrame):
 	    Loads the .para (parameters) file and uses it to re-assign the values to all the input widgets 
 	    '''
 	    import csv
-	    parmFile = QtGui.QFileDialog.getOpenFileName(self, "Choose an .para file", self.settings.currentMixtureLocation())
+	    parmFile = QtGui.QFileDialog.getOpenFileName(self, "Choose an .para file", str(self.history.currentState().getBuildDirectory()))
 	    if parmFile != '' and parmFile != ' ':
 	        try:
 	            csvread = csv.reader(open(parmFile, 'r'), delimiter=' ')
@@ -844,7 +844,7 @@ class SimTab(QtGui.QFrame):
 	        self.continueSim()
 	        
 	def on_IOtreeWidget_expanded(self):
-	    self.baseDir.setText(self.settings.currentMixtureLocation());
+	    self.baseDir.setText(str(self.history.currentState().getBuildDirectory()));
 	    self.coordinatesFile.setText(self.wolffia.configurationFilesBasename() + ".coor");
 	    self.structuresFile.setText (self.wolffia.configurationFilesBasename() + ".psf" );
 	    self.parametersFile.setText (self.wolffia.configurationFilesBasename() + ".prm" );
@@ -988,7 +988,7 @@ class SimTab(QtGui.QFrame):
 			# update files
 			#print "packing options ", Configuration.CURRENT_FOLDER|Configuration.NO_IMD_WAIT
 			conf = Configuration(self.__dict__, self.history.currentState().getDrawer(), self.history.currentState().fixedMolecules.hasFixedMolecules(), confOptions=Configuration.CURRENT_FOLDER|Configuration.NO_IMD_WAIT)
-			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), self.history.currentState().getMixture().getMixtureName())
+			conf.writeSimulationConfig(str(self.history.currentState().getBuildDirectory()), self.history.currentState().getMixture().getMixtureName())
 			progress.setValue(1)
 			
 			extensionsNotPacked = self.history.currentState().packFiles(self.wolffia.configurationFilesBasename(),filename)
@@ -1107,6 +1107,7 @@ class SimTab(QtGui.QFrame):
 		"""
 		 Sets up the configuration, the run thread and the timer for polling the simulation. 
 		"""
+
 		progress      = QtGui.QProgressDialog("Configuring...", QtCore.QString(), 0, 8, self,QtCore.Qt.Dialog|QtCore.Qt.WindowTitleHint)
 		progress.setWindowModality(QtCore.Qt.WindowModal)
 		progress.setWindowTitle("Simulation")
@@ -1125,7 +1126,7 @@ class SimTab(QtGui.QFrame):
 			conf = Configuration(self.__dict__, self.history.currentState().getDrawer(), self.history.currentState().fixedMolecules.hasFixedMolecules())
 
 		try:
-			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), self.history.currentState().getMixture().getMixtureName())
+			conf.writeSimulationConfig(str(self.history.currentState().getBuildDirectory()), self.history.currentState().getMixture().getMixtureName())
 		except ConfigurationError, e:
 		    Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
 		    Error.exec_()
@@ -1143,7 +1144,9 @@ class SimTab(QtGui.QFrame):
 			progress.hide()
 			return
 		#self.history.currentState().save()
-		
+
+		self.history.currentState().setCurrentMixtureSaved(False) 
+
 		progress.setValue(3)
 		progress.setLabelText("Starting namd...")
 		if WOLFFIA_USES_IMD:
@@ -1229,7 +1232,7 @@ class RunThread(QtCore.QThread):
 			conf = Configuration(self.sim.__dict__, self.sim.history.currentState().getDrawer(), self.sim.history.currentState().fixedMolecules.hasFixedMolecules())
 	
 		try:
-			conf.writeSimulationConfig(str(self.sim.settings.currentMixtureLocation()), self.sim.history.currentState().getMixture().getMixtureName())
+			conf.writeSimulationConfig(str(self.history.currentState().getBuildDirectory()), self.sim.history.currentState().getMixture().getMixtureName())
 		except ConfigurationError, e:
 		    Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
 		    Error.exec_()
@@ -1237,7 +1240,7 @@ class RunThread(QtCore.QThread):
 		
 		self.notifyProgress.emit(30)
 		self.sim.progressBar.setLabelText("Writing files...")
-		self.sim.history.currentState().writeFiles(self.sim.wolffia.configurationFilesBasename())
+		self.sim.history.currentState().writeFiles()
 		self.notifyProgress.emit(40)
 		#self.sim.history.currentState().save()
 		

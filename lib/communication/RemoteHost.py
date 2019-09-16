@@ -74,11 +74,12 @@ class RemoteHost:
 
 	@staticmethod
 	def testConnection(remoteHost, username, password, workingDir="./", logArea=sys.stdout):
-		#print "RemoteHost.testConnection ", workingDir
+		print "RemoteHost.testConnection ", workingDir
 		logArea.write("RemoteHost.testConnection Attempting connection: host=" + remoteHost + ", user=" + username + ", workingDir=" + workingDir + "\n")
 		#remoteConnection = Popen(['/usr/bin/sshpass', '-p',  password, '/usr/bin/ssh' , '-T',  username + '@' +  remoteHost], stdin=PIPE, stdout=PIPE)
 		#(resp, err) = remoteConnection.communicate(input='hostname ')
 		(resp, err) = RemoteHost._sendCommand(remoteHost, username, password, ['hostname '])
+		print "RemoteHost.testConnection ", resp, err
 		logArea.write("RemoteHost.testConnection RESPONSE " + resp + "\n")
 		if len(resp) == 0 or len(err) > 0:
 			return FAILED

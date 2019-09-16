@@ -185,6 +185,7 @@ class MinTab(QtGui.QFrame):
 		
 		self.exclude = self.exclusion  # backward compatibilitu < 0.24
 
+
     @QtCore.pyqtSlot()
     def on_stopButton_pressed(self):
         '''
@@ -454,6 +455,7 @@ class MinTab(QtGui.QFrame):
          Sets up the configuration, the run thread and the timer for polling the simulation. 
         """
         start = time.clock()
+        self.history.currentState().setCurrentMixtureSaved(False)
 
         #print "runSim A", time.clock() - start
         progress      = QtGui.QProgressDialog("Configuring...", QtCore.QString(), 0, 6, self,QtCore.Qt.Dialog|QtCore.Qt.WindowTitleHint)
@@ -478,8 +480,8 @@ class MinTab(QtGui.QFrame):
         #print "runSim D", time.clock() - start
         progress.setLabelText("Configuring simulator...")
         try:
-			conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.history.currentState().getMixture().getMixtureName()))
-            #conf.writeSimulationConfig(str(self.settings.currentMixtureLocation()), str(self.settings.currentMixtureName))
+			conf.writeSimulationConfig(str(self.history.currentState().getBuildDirectory()), str(self.history.currentState().getMixture().getMixtureName()))
+            #conf.writeSimulationConfig(str(self.history.currentState().getBuildDirectory())), str(self.settings.currentMixtureName))
         except ConfigurationError, e:
             Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
             Error.exec_()
@@ -492,7 +494,7 @@ class MinTab(QtGui.QFrame):
         #print "MinTab runSim", self.history.currentState().getMixture().getMolecule(self.history.currentState().getMixture().molecules()[0]).getForceField()._ANGLES
 
         try:
-            self.history.currentState().writeFiles(self.settings.currentMixtureLocation() + str(self.history.currentState().getMixture().getMixtureName()))
+            self.history.currentState().writeFiles(self.history.currentState().getBuildDirectory() + "/" + str(self.history.currentState().getMixture().getMixtureName()))
         except Exception,  e:
 			Error = QtGui.QMessageBox(QtGui.QMessageBox.Critical, "Error!", e.message)
 			Error.exec_()

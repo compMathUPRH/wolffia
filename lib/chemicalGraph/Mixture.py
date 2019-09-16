@@ -1378,7 +1378,7 @@ class Mixture(Graph):
     def writeFiles(self,baseFilename, fixedMolecules=[]):
     	from chemicalGraph.io.PRM import PRMError
         start = time.clock()
-        print "Mixture writeFiles"
+        print "Mixture writeFiles ", baseFilename
         self.writePDB(baseFilename+".pdb",fixedMolecules)
         print "Mixture writeFiles writePDB", time.clock() - start
         self.writePSF(baseFilename+".psf")

@@ -98,6 +98,8 @@ class SetupTab(QtGui.QFrame):
 		self.ui.removeButton.setIcon(QtGui.QIcon().fromTheme("list-remove"))
 		self.updateVolume()
 
+
+
 	def setBoundBox(self):
 		self.ui.boxBoundButton.setChecked(self._history.currentState().hasBox())
 		self.ui.noneRButton.setChecked(not self._history.currentState().hasBox())
