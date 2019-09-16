@@ -437,6 +437,11 @@ class Wolffia(QtGui.QMainWindow):
 	        if reply == QtGui.QMessageBox.Yes:
 	            self.saveWolffiaState()
 	    print "closeEvent", event
+	    import threading
+	    print "closeEvent procesos: ", self.minTab.simRun.isAlive(), threading.enumerate()
+	    threading.enumerate()[1].do_run = False
+	    threading.enumerate()[1].join()
+	    print "closeEvent procesos: ", threading.enumerate()
 	    event.accept()
 	
 	
@@ -470,7 +475,7 @@ class Wolffia(QtGui.QMainWindow):
 	    self.history.currentState().minTabValues = self.minTab.getValues()
 	    
 	    print "saveWolffiaState ",baseFilename , self.configurationFilesBasename()
-	    self.history.currentState().save(filename=baseFilename + ".wfy")
+	    self.history.currentState().save(filename=baseFilename)
 	    self.settings.save()
 	
 	def settingsChanged(self):
