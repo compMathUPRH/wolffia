@@ -446,7 +446,7 @@ class Wolffia(QtGui.QMainWindow):
 	
 	
 	def configurationFilesBasename(self):
-		return str(self.history.getCurrentState().getBuildDirectory()) + str(self.history.currentState().getMixture().getMixtureName())
+		return str(self.history.getCurrentState().getBuildDirectory()) + "/" + str(self.history.currentState().getMixture().getMixtureName())
 	
 	
 	def reset(self):
