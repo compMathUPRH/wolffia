@@ -34,7 +34,7 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 from interface.main.ui_ConnectionDialog import Ui_ConnectionDialog
 from lib.communication.RemoteHost import *
 import time
@@ -42,7 +42,7 @@ import time
 class ConnectionDialog(QtGui.QDialog):
 	def __init__(self, parent, connection=None, logWidget=None):
 	
-		super(ConnectionDialog, self).__init__(parent, modal = 1)
+		super(ConnectionDialog, self).__init__(parent, modal = 1, flags = QtCore.Qt.Window)
 		
 		self.log               = logWidget
 		self.connection        = connection

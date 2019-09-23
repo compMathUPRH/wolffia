@@ -30,6 +30,15 @@ FAILED       = 2
 NO_MDS       = 4
 NO_DIR       = 8
 
+SSHPASS_RESPONSES=[
+	"OK",
+    "Invalid command line argument",
+    "Conflicting arguments given",
+    "General runtime error",
+    "Unrecognized response from ssh (parse error)",
+    "Invalid/incorrect password",
+    "Host public key is unknown. sshpass exits without confirming the new key."]
+
 class RemoteHost:
 	def __init__(self, remoteHost, username, password=None, workingDir="", logArea=sys.stdout):
 		self.username    = username
@@ -69,76 +78,90 @@ class RemoteHost:
 	def _sendCommand(remoteHost, username, password, command):
 		#print "sending command: ", ['/usr/bin/sshpass', '-p',  password, '/usr/bin/ssh' , '-T',  username + '@' +  remoteHost] + command
 		remoteConnection = Popen(['/usr/bin/sshpass', '-p',  password, '/usr/bin/ssh' , '-T',  username + '@' +  remoteHost] + command, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-		return remoteConnection.communicate()
+		#return remoteConnection.communicate()
+		return (remoteConnection.communicate()[0], remoteConnection.returncode)
 
 
 	@staticmethod
 	def testConnection(remoteHost, username, password, workingDir="./", logArea=sys.stdout):
-		print "RemoteHost.testConnection ", workingDir
-		logArea.write("RemoteHost.testConnection Attempting connection: host=" + remoteHost + ", user=" + username + ", workingDir=" + workingDir + "\n")
-		#remoteConnection = Popen(['/usr/bin/sshpass', '-p',  password, '/usr/bin/ssh' , '-T',  username + '@' +  remoteHost], stdin=PIPE, stdout=PIPE)
-		#(resp, err) = remoteConnection.communicate(input='hostname ')
-		(resp, err) = RemoteHost._sendCommand(remoteHost, username, password, ['hostname '])
-		print "RemoteHost.testConnection ", resp, err
-		logArea.write("RemoteHost.testConnection RESPONSE " + resp + "\n")
-		if len(resp) == 0 or len(err) > 0:
+		print "RemoteHost.testConnection directorio ", workingDir
+		logArea.write("Attempting connection: host=" + remoteHost + ", user=" + username + ", workingDir=" + workingDir + "\n\n")
+
+		try:
+			(resp, err) = RemoteHost._sendCommand(remoteHost, username, password, ['hostname '])
+		except Exception as e:
+			print "RemoteHost.testConnection Exception: " + str(e)
+			logArea.write("Error when trying to connect. Please check that /usr/bin/sshpss and /usr/bin/ssh exist.\n")
 			return FAILED
 
+		print "RemoteHost.testConnection respuesta a hostname", resp, err
+
+		if len(resp) == 0 or err > 0:
+			if err == 255:
+				logArea.write("Error occurred in SSH (probably incorrect hostname)")
+			else:
+				logArea.write("Connection Failed: " + SSHPASS_RESPONSES[err])
+			return FAILED
+
+		logArea.write("Remote hostname:  " + str(resp) + "\n")
 		returnCode = CONNECTED
-		logArea.write("RemoteHost.testConnection Checking namd ...\n")
+		logArea.write("Checking namd ... ")
 		(resp, err) = RemoteHost._sendCommand(remoteHost, username, password, ['whereis', 'namd2'])
 		if len(resp) > 1 and resp.split('\n')[-2] <> "namd2:":
-			logArea.write("RemoteHost.testConnection NAMD confirmed: " + resp.split('\n')[-2] + "\n")
+			logArea.write("NAMD confirmed: " + resp.split('\n')[-2] + "\n")
 		else:
-			logArea.write("RemoteHost.testConnection ERROR: namd2 is not in the remote host's search path. \n")
+			logArea.write("ERROR: namd2 is not in the remote host's search path. \n")
 			returnCode = returnCode | NO_MDS
 
-		logArea.write("RemoteHost.testConnection Checking working directory \"" + workingDir + "\" ...\n")
+		logArea.write("Checking working directory \"" + workingDir + "\" ... ")
 		(resp, err) = RemoteHost._sendCommand(remoteHost, username, password, ['ls', '-la',  workingDir])
-		if len(resp) > 1 and err.find("No such file or directory") == -1 and resp.split('\n')[1][:4] == 'drwx':
-			logArea.write("RemoteHost.testConnection working directory confirmed: " + resp.split('\n')[1] + "\n")
+		if len(resp) > 1 and resp.find("No such file or directory") == -1 and resp.split('\n')[1][:4] == 'drwx':
+			logArea.write("working directory confirmed: " + resp.split('\n')[1] + "\n")
 		else:
-			logArea.write("RemoteHost.testConnection ERROR: working directory is not present or access permissions are wrong. \n")
+			logArea.write("ERROR: working directory is not present or access permissions are wrong. \n")
 			returnCode = returnCode | NO_DIR
 
 		return returnCode
 	
 	
 	def retrieveProcessors(self):
-		self.logArea.write("RemoteHost.retrieveProcessors Checking number of cpu cores ...\n")
+		self.logArea.write( "---------------------------------")
+		self.logArea.write("Checking number of cpu cores ... ")
 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['cat /proc/cpuinfo | awk \'/^processor/{print $3}\' | tail -1'])
 		try:
 			self.maxProcessors = int(resp) + 1
-			self.logArea.write("RemoteHost.retrieveProcessors number of cores: " + str(self.maxProcessors) + "\n")
+			self.logArea.write("number of cores=" + str(self.maxProcessors) + "\n")
 		except:
-			self.logArea.write( "RemoteHost.retrieveProcessors ERROR: did not find number of cores. Setting to 1.\n ")
+			self.logArea.write( "WARNING: did not find number of cores. Setting to 1.\n ")
 			self.maxProcessors = 1
 		return self.maxProcessors
 	
 	
 	def retrieveNamdUsers(self):
-		self.logArea.write("RemoteHost.retrieveNamdUsers Checking namd users ...\n")
+		self.logArea.write( "---------------------------------")
+		self.logArea.write("Checking namd users ... \n")
 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['ps -A u | grep namd2 | grep -v grep | cut -d\' \' -f1'])
 		#print "retrieveNamdUsers ", resp
 		try:
 			self.namdUsers = resp.split('\n')[:-1]
-			self.logArea.write("RemoteHost.retrieveNamdUsers users: " + str(self.namdUsers) + "\n")
+			self.logArea.write("users: " + str(self.namdUsers) + "\n")
 		except:
-			self.logArea.write( "RemoteHost.retrieveNamdUsers ERROR: did not find namd users. Setting to [].\n ")
+			self.logArea.write( "ERROR: did not find namd users. Setting to [].\n ")
 			self.namdUsers = []
 		return self.namdUsers
 	
 	
 	def retrieveGPUs(self):
 		self.maxGpus = 0
-		self.logArea.write( "RemoteHost.retrieveGPUs Checking number of cpu cores ...\n")
+		self.logArea.write( "---------------------------------")
+		self.logArea.write( "Checking number of gpu cores ...\n")
 		(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['cat /proc/driver/nvidia/version'])
-		if err.find("No such file or directory") <> -1:
-			self.logArea.write( "RemoteHost.retrieveGPUs did not find NVIDIA drivers\n")
+		if resp.find("No such file or directory") <> -1:
+			self.logArea.write( "did not find NVIDIA drivers\n")
 		else:
 			(resp, err) = RemoteHost._sendCommand(self.remoteHost, self.username, self.password, ['lspci | grep -i nvidia | wc -l'])
 			self.maxGpus = int(resp)
-			self.logArea.write( "RemoteHost.retrieveGPUs number of GPU devices: " + str(self.maxGpus) + "\n")
+			self.logArea.write( "number of GPU devices = " + str(self.maxGpus) + "\n")
 
 		return self.maxGpus
 

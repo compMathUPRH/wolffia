@@ -800,6 +800,7 @@ class SimTab(QtGui.QFrame):
 	def on_remoteButton_pressed(self):
 	    from ConnectionDialog import ConnectionDialog
 	    connectDialog = ConnectionDialog(self, connection=self.remoteHost, logWidget=self.log)
+	    self.wolffia.ui.FeedbackTabs.setCurrentIndex(3)
 	    connectDialog.exec_()
 	    self.remoteHost = connectDialog.connection
 	    if self.remoteHost == None:

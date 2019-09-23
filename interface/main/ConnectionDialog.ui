@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>705</width>
-    <height>412</height>
+    <height>700</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -19,7 +25,7 @@
      <x>20</x>
      <y>10</y>
      <width>671</width>
-     <height>381</height>
+     <height>686</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -238,6 +244,9 @@
        <widget class="QPushButton" name="probeButton">
         <property name="text">
          <string>probe</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
