@@ -75,26 +75,22 @@ class CelluloseEditor(QtGui.QDialog):
 		self.state			= appState
 		self.files			= None
 		self.isAdded		= False
-		#esto hay que arreglarlo!
-		# Que hay que arreglar de aqui??? ~ Radames
 		self.history		= History()
 		self.homopolPreview	= MixtureViewer(self.history, self, None)
 		self.ui				= Ui_CelluloseEditor()
 
-		self.ui.setupUi					(self)
+		self.ui.setupUi					    (self)
 		self.generateCellulose				()
 		self.ui.viewerLayout.addWidget		(self.homopolPreview)
 		self.ui.headerLabel.setText			("Cellulose Crystal Editor")
-		#self.ui.stackedWidget.setCurrentIndex	(self.poly.STACK_INDEX)
 		self.ui.lengthDSpinner.setSingleStep(self.poly.DISPL)
 		self.ui.lengthDSpinner.setMinimum	(self.poly.DISPL)
 		self.ui.lengthSlider.setTickInterval(self.poly.DISPL)
 		self.ui.lengthSlider.setMinimum		(self.poly.DISPL)
-		self.ui.nSpinBox.setValue		(2)
+		self.ui.nSpinBox.setValue		    (2)
 		
 		image = os.path.dirname(os.path.realpath(__file__))+"/images/" +self.poly.IMAGE
-		self.ui.diagram.setPixmap(QtGui.QPixmap(QtCore.QString.fromUtf8(image)).scaledToHeight(100,1
-																							))
+		self.ui.diagram.setPixmap(QtGui.QPixmap(QtCore.QString.fromUtf8(image)).scaledToHeight(100,1))
 
 		if self.settings != None:
 			self.homopolPreview.setHighResolution	(self.settings.highResolution)
@@ -111,14 +107,54 @@ class CelluloseEditor(QtGui.QDialog):
 
 
 	def generateCellulose(self):
+		"""
+		Arguments:
+		n:  number of monomers per chain
+		nx: number of chains per plane
+		nz: number of stacked planes
+		"""
+		DISPL_100 = [7.3,0.0,6.0]
+		DISPL_010 = [7.3,0.0,4.0]
+		DISPL_110 = [6.5,0.0,7.0]
+
 		n = self.ui.nSpinBox.value()
+		nx = self.ui.horizontalSpinBox.value()
+		nz = self.ui.layersSpinBox.value()
+
 		self.homopol = Mixture()
 		from chemicalGraph.molecule.polymer.Cellulose import Cellulose
-		if self.ui.buttonA.isChecked():
-			self.poly = Cellulose(n, 'a')
-		else:
-			self.poly = Cellulose(n, 'b')
-		self.homopol.add(self.poly)
+		
+		if self.ui.radio100.isChecked():
+			for i in range(nx):
+				for j in range(nz):
+					# alpha or betha structure
+					if self.ui.buttonA.isChecked(): self.poly = Cellulose(n, 'a')
+					else:                           self.poly = Cellulose(n, 'b')
+					# locate the polymer chain			
+					self.poly.moveby([DISPL_100[0] * (i+(j%2)/2.), DISPL_100[1] * ((i+j)%2), DISPL_100[2] * j])
+					self.homopol.add(self.poly)
+					
+		if self.ui.radio110.isChecked():
+			for i in range(nx):
+				for j in range(nz):
+					# alpha or betha structure
+					if self.ui.buttonA.isChecked(): self.poly = Cellulose(n, 'a')
+					else:                           self.poly = Cellulose(n, 'b')
+					# locate the polymer chain	
+					self.poly.rotateDeg(0., 45.0, 0.)	
+					self.poly.moveby([DISPL_110[0] * i, DISPL_110[1] * ((i+j)%2), DISPL_110[2] * j])
+					self.homopol.add(self.poly)	
+					
+		if self.ui.radio010.isChecked(): 
+			for i in range(nx):
+				for j in range(nz):
+					# alpha or betha structure
+					if self.ui.buttonA.isChecked(): self.poly = Cellulose(n, 'a')
+					else:                           self.poly = Cellulose(n, 'b')
+					# locate the polymer chain	
+					self.poly.rotateDeg(0., 0., 90.)	
+					self.poly.moveby([DISPL_010[0] * (i+(j%2)/2.), DISPL_010[1] * ((i+j)%2), DISPL_010[2] * j])
+					self.homopol.add(self.poly)
 
 		self.history.currentState().reset()
 		self.history.currentState().addMixture(self.homopol)
@@ -144,13 +180,17 @@ class CelluloseEditor(QtGui.QDialog):
 		n = int(self.ui.lengthSlider.value()/self.poly.DISPL)
 		self.ui.nSpinBox.setValue(n)
 
+	def on_horizontalSpinBox_valueChanged(self): 
+		self.generateCellulose()
 
+	def on_layersSpinBox_valueChanged(self): 
+		self.generateCellulose()
+		
 	#---------------------------------------------------------------------
 	def on_buttonB_toggled(self, checked):
 		self.ui.buttonA.setChecked(not checked)
 		self.generateCellulose()
 
-	#---------------------------------------------------------------------
 	def on_buttonA_toggled(self, checked):
 		self.ui.buttonB.setChecked(not checked)
 		self.generateCellulose()
@@ -160,22 +200,39 @@ class CelluloseEditor(QtGui.QDialog):
 		if checked:
 			self.ui.button100.setChecked(not checked)
 			self.ui.button010.setChecked(not checked)
-			self.update()
+			self.generateCellulose()
 
-	#---------------------------------------------------------------------
 	def on_button100_toggled(self, checked):
 		if checked:
 			self.ui.button110.setChecked(not checked)
 			self.ui.button010.setChecked(not checked)
-			self.update()
+			self.generateCellulose()
 
-	#---------------------------------------------------------------------
 	def on_button010_toggled(self, checked):
 		if checked:
 			self.ui.button100.setChecked(not checked)
 			self.ui.button110.setChecked(not checked)
-			self.update()
-
+			self.generateCellulose()
+			
+	#---------------------------------------------------------------------
+	def on_radio100_toggled(self, checked):
+		if checked:
+			self.ui.radio110.setChecked(not checked)
+			self.ui.radio010.setChecked(not checked)
+			self.generateCellulose()
+			
+	def on_radio110_toggled(self, checked):
+		if checked:
+			self.ui.radio100.setChecked(not checked)
+			self.ui.radio010.setChecked(not checked)
+			self.generateCellulose()
+			
+	def on_radio010_toggled(self, checked):
+		if checked:
+			self.ui.radio110.setChecked(not checked)
+			self.ui.radio100.setChecked(not checked)
+			self.generateCellulose()
+	#---------------------------------------------------------------------						
 	def on_okButton_pressed(self):
 		self.generateCellulose()
 		self.isAdded = True
