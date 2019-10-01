@@ -113,7 +113,7 @@ class CelluloseEditor(QtGui.QDialog):
 		nx: number of chains per plane
 		nz: number of stacked planes
 		"""
-		DISPL_100 = [7.3,0.0,6.0]
+		DISPL_100 = [8.0,0.0,4.0,3.0] # dx, dy, dz, dxz
 		DISPL_010 = [7.3,0.0,4.0]
 		DISPL_110 = [6.5,0.0,7.0]
 
@@ -131,7 +131,8 @@ class CelluloseEditor(QtGui.QDialog):
 					if self.ui.buttonA.isChecked(): self.poly = Cellulose(n, 'a')
 					else:                           self.poly = Cellulose(n, 'b')
 					# locate the polymer chain			
-					self.poly.moveby([DISPL_100[0] * (i+(j%2)/2.), DISPL_100[1] * ((i+j)%2), DISPL_100[2] * j])
+					#self.poly.moveby([DISPL_100[0] * (i+(j%2)/2.), DISPL_100[1] * ((i+j)%2), DISPL_100[2] * j])
+					self.poly.moveby([DISPL_100[0] * i + DISPL_100[3] * (j%2), DISPL_100[1] * (i%2), DISPL_100[2] * j])
 					self.homopol.add(self.poly)
 					
 		if self.ui.radio110.isChecked():
