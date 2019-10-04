@@ -970,7 +970,8 @@ class SimTab(QtGui.QFrame):
 	    '''
 	    from WFileDialogs import WFileNameDialog
 	
-	    d = WFileNameDialog(self, 'Save Zipped Files', self.settings.workingFolder, "Zip File (*.zip)")
+	    #d = WFileNameDialog(self, 'Save Zipped Files', self.settings.workingFolder, "Zip File (*.zip)")
+            d = WFileNameDialog(self, 'Save Zipped Files', self.history.currentState().getBuildDirectory(), "Zip File (*.zip)")
 	    if d.isReady():
 			self.history.currentState().save()
 						
