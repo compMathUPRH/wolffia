@@ -263,7 +263,13 @@ class BuildTab(QtGui.QFrame):
 		elif self.key == "Na":
 			from lib.chemicalGraph.molecule.solvent.Na import Na
 			self.addMolecule(Na())
-		
+
+                # Custom section - CORALS
+                elif self.key == "CORALS":
+                        from interface.coralsEditor.coralsEditor import CoralsBuilder
+                        corals = CoralsBuilder(self, self.settings)
+                        moleculeDialog(self, corals)
+	
 		else:
 			self.addMolecule(Element(Element.nameToSymbol(self.key.split(' ')[0])))
 		
