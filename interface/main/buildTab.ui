@@ -346,6 +346,11 @@
           <property name="text">
            <string>Custom</string>
           </property>
+          <item>
+           <property name="text">
+            <string>CORALS</string>
+           </property>
+          </item>
          </item>
         </widget>
        </item>

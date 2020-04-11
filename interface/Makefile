@@ -13,6 +13,7 @@ all:
 	cd main ; make
 	cd celluloseEditor ; make
 	cd diamondEditor ; make
+	cd coralsEditor ; make
 	cd PANI ; make
 	cd PEDOT ; make
 	cd PSS ; make
@@ -26,6 +27,7 @@ clean:
 
 	cd celluloseEditor ; make clean
 	cd diamondEditor ; make clean
+	cd coralsEditor; make clean
 	cd PANI ; make clean
 	cd PEDOT ; make clean
 	cd PSS ; make clean

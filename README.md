@@ -37,6 +37,7 @@ sudo ln -s /usr/local/namd/${namd_extracted_directory}/charmrun /usr/local/bin/c
 Installing wolffia as a project without the need of elevated privileges.
 ```
 git clone https://github.com/compMathUPRH/wolffia.git # clone from git
+mkdir ~/.wolffia;                                     # create wolffia working directory
 cd wolffia; make;                                     # compile wolffia
 ./wolffia                                             # run wolffia
 ``` 
@@ -44,6 +45,7 @@ cd wolffia; make;                                     # compile wolffia
 As an executable for multiple users (requires elevated privileges).
 ```
 git clone https://github.com/compMathUPRH/wolffia.git
+mkdir ~/.wolffia;                                    
 sudo cp -r path/to/wolffia /usr/local/share
 sudo ln -s  /usr/local/share/wolffia/wolffia /usr/local/bin/wolffia
 ```
