@@ -110,10 +110,11 @@ class  Tube(Molecule):
 
 	#============================================================================
 #==========================================================================
+print(__name__)
 if __name__ == '__main__':
-	print "Probando Tube"
+	print("Probando Tube")
 	m = Tube(10,10,20)
-	print m
+	print(m)
 	m.writePDB("prueba.pdb")
 	m.writePSF("prueba.psf")
 
