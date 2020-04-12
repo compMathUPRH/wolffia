@@ -32,7 +32,7 @@ from math import *
 
 from networkx.classes.graph import Graph
 from networkx.algorithms.components.connected import connected_components
-from networkx.algorithms.components.connected import connected_component_subgraphs
+#from networkx.algorithms.components.connected import connected_component_subgraphs
 from networkx.algorithms import isomorphism, could_be_isomorphic, fast_could_be_isomorphic
 import numpy
 
@@ -73,7 +73,7 @@ class ChemicalGraph(Graph):
         # add nodes
         elements = psf.get_elements()
         charges = psf.get_charges()
-        print "ChemicalGraph loadFiles charges", charges[:30]
+        #print("ChemicalGraph loadFiles charges", charges[:30])
         masses = psf.get_masses()
         for n in range(len(atoms)):
             atom=atoms[n]
@@ -255,12 +255,12 @@ class ChemicalGraph(Graph):
         @graph2:  graph to be compared to self
         @return: true if they are isomorphic.
         """
-        print "graph1: " , graph1.order()
-        print "graph2: " , graph2.order()
+        #print "graph1: " , graph1.order()
+        #print "graph2: " , graph2.order()
         matcher = isomorphism.GraphMatcher(graph1,graph2)
 
         if graph1.order() == graph2.order():
-            print "order is the same"
+            #print "order is the same"
             try:
                 match_iter = matcher.isomorphisms_iter().next()
                 for atom in match_iter:
@@ -281,19 +281,19 @@ class ChemicalGraph(Graph):
         """
         matcher = isomorphism.GraphMatcher(graph1,graph2)
         match_iter = matcher.isomorphisms_iter()
-        print "is_isomorphic(graph1, graph2)"
-        print "graph1: " , graph1.order()
-        print "graph2: " , graph2.order()
-        print "match_iter + ",match_iter
+        #print "is_isomorphic(graph1, graph2)"
+        #print "graph1: " , graph1.order()
+        #print "graph2: " , graph2.order()
+        #print "match_iter + ",match_iter
         for iso in match_iter:
-            print "iso = ",iso
+            #print "iso = ",iso
             for atom in iso:
-                print "pair = ",atom, iso[atom]
+                #print "pair = ",atom, iso[atom]
                 if not(graph1.getAttributes(atom) == graph2.getAttributes(iso[atom])):
-                    print "is_isomorphic: False"
+                    #print "is_isomorphic: False"
                     return False
                     break
-                print "is_isomorphic: True"
+                #print "is_isomorphic: True"
             
             
         return True
@@ -316,7 +316,8 @@ class ChemicalGraph(Graph):
     def getAtomAttributes(self, node):
         """
         """
-        return self.node[node]['attrs'][0]
+        #print("ChemicalGraph atoms_attributes: ", self.__dict__.keys(), self.nodes)
+        return self.nodes[node]['attrs'][0]
 
     #-------------------------------------------------------------
     def atoms_attributes(self):
@@ -373,8 +374,10 @@ class ChemicalGraph(Graph):
     def copy(self):
         """
         """
-        newCG = ChemicalGraph()
-        newCG = Graph.copy(self)
+        import copy
+        newCG = copy.deepcopy(self)
+        #newCG = ChemicalGraph()
+        #newCG = super().copy(self)
         
         return newCG
         

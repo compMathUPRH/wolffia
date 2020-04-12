@@ -131,7 +131,7 @@ class PRM(dict):
 		try:
 			f = open(filename)
 		except:
-			print "Error in PRM.loadCHARMM: could not open \'" + str(filename) + "\'"
+			print("Error in PRM.loadCHARMM: could not open \'" + str(filename) + "\'")
 			sys.exit(0)
 
 		mode = None
@@ -266,7 +266,7 @@ class PRM(dict):
 #==========================================================================
 class PRMError(Exception):
     def __init__(self, message):
-		Exception.__init__(self, message)
+        Exception.__init__(self, message)
 
 
 #==========================================================================

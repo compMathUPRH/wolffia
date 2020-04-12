@@ -212,7 +212,7 @@ class AtomAttributes(object):
 			import inspect
 			global DEPRECATED_CALLS
 			if not str(inspect.stack()[1][1:]) in DEPRECATED_CALLS:
-				print "WARNING: Deprecated AtomAttributes.__init__ called from "+ str(inspect.stack()[1][1:]) + "."
+				print("WARNING: Deprecated AtomAttributes.__init__ called from "+ str(inspect.stack()[1][1:]) + ".")
 			raise Exception
 
 
@@ -236,7 +236,7 @@ class AtomAttributes(object):
 			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self.getCoord()[0],self.getCoord()[1],self.getCoord()[2],0,0.0,tObj._element)
 
 	def getType(self):
-		print "WARNING: Deprecated call to AtomAttributes.getType() from ", inspect.stack()[1]
+		print("WARNING: Deprecated call to AtomAttributes.getType() from ", inspect.stack()[1])
 		return self.getInfo().getType() 
 
 	def getInfo(self):
@@ -251,7 +251,7 @@ class AtomAttributes(object):
 			return AtomInfo("X", "X", "X",  0., 0., 0.0, 1.0, ' ', "X   ", "XXX", "X", 1)
 		
 	def setInfo(self, t):
-		print "AA setInfo", t
+		#print "AA setInfo", t
 		self._info = t
 
 	#-------------------------------------------------------------
@@ -302,15 +302,15 @@ class AtomAttributes(object):
 			#print " distanceTo ", origin,boxDims
 			X0, Y0, Z0 = list(self.getCoord())
 			X1, Y1, Z1 = list(attr2.getCoord())
-			print "----------------> ", X0, Y0, Z0, list(attr2.getCoord())
+			#print "----------------> ", X0, Y0, Z0, list(attr2.getCoord())
 			
 			box = [origin, [origin[0]+vectors[0][0], origin[1]+vectors[1][1], origin[2]+vectors[2][2]]]
 			#-----------------------------------------------------------------
 			dx = box[1][0]-box[0][0]
 			dy = box[1][1]-box[0][1]
 			dz = box[1][2]-box[0][2]
-			print "box=", box
-			print "dx:", dx,"dy:", dy,"dz:", dz
+			#print "box=", box
+			#print "dx:", dx,"dy:", dy,"dz:", dz
 			
 			dmin = float("inf")
 			Xmin = box[0][0]
@@ -324,11 +324,11 @@ class AtomAttributes(object):
 			X1 = X1 - (math.floor((X1-Xmin)/dx)) * dx
 			Y1 = Y1 - (math.floor((Y1-Ymin)/dy)) * dy
 			Z1 = Z1 - (math.floor((Z1-Zmin)/dz)) * dz
-			print "Atom1:", (X0,Y0,Z0), "Atom2:", (X1,Y1,Z1)
+			#print "Atom1:", (X0,Y0,Z0), "Atom2:", (X1,Y1,Z1)
 			
-			print "Xmin=", Xmin, "   X0=", X0, "X1:", X1, "  dx=", dx
-			print "Ymin=", Ymin, "   Y0=", Y0, "Y1:", Y1, "  dy=", dy
-			print "Zmin=", Zmin, "   Z0=", Z0, "Z1:", Z1, "  dz=", dz
+			#print "Xmin=", Xmin, "   X0=", X0, "X1:", X1, "  dx=", dx
+			#print "Ymin=", Ymin, "   Y0=", Y0, "Y1:", Y1, "  dy=", dy
+			#print "Zmin=", Zmin, "   Z0=", Z0, "Z1:", Z1, "  dz=", dz
 			#d = []
 			# traer los puntos a la caja central
 			for sigX in [-dx,0,dx]:
@@ -338,7 +338,7 @@ class AtomAttributes(object):
 						#d.append(  math.sqrt ((X1+sigX-X0)**2 + (Y1+sigY-Y0)**2 + (Z1+sigZ-Z0)**2))
 						dmin = min(dmin, math.sqrt (((X1+(sigX))-X0)**2 + ((Y1+(sigY))-Y0)**2 + ((Z1+(sigZ))-Z0)**2))
 			#print "Distances:", d
-			print "Minimum Distance:", dmin
+			#print "Minimum Distance:", dmin
 			return dmin
 		else:
 			#print "distanceTo ", self.getCoord(), attr2._coordinates

@@ -28,12 +28,12 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 import sys,os, warnings
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
+#sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
 
-if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
+#if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
 from lib.chemicalGraph.ChemicalGraph import ChemicalGraph
-from ForceField import ForceField, NonBond
-from AtomAttributes import AtomAttributes,AtomInfo
+from lib.chemicalGraph.molecule.ForceField import ForceField, NonBond
+from lib.chemicalGraph.molecule.AtomAttributes import AtomAttributes,AtomInfo
 from networkx import NetworkXError, isomorphism
 import numpy as np
 
@@ -255,7 +255,7 @@ class  Molecule(ChemicalGraph):
 			try:  #  there seems to be problems with Networkx on removing edges
 				yield (self.getAtomAttributes(e[0]), self.getAtomAttributes(e[1]))
 			except KeyError:
-				print "WARNING: Molecule.bondsGenerator ", e
+				print("WARNING: Molecule.bondsGenerator ", e)
 				pass
 
 	#-------------------------------------------------------------
@@ -277,7 +277,7 @@ class  Molecule(ChemicalGraph):
 			if self.getAtomAttributes(atoms[i]).getElement() == element1:
 				for j in range(i+1,len(atoms)):
 					if self.getAtomAttributes(atoms[j]).getElement() == element2 and math.fabs(self.distance(atoms[i], atoms[j]) ) < self._EPSILON_:
-						print "WARNING: Atoms ",atoms[i], " and ", atoms[j] , " are too close."
+						print( "WARNING: Atoms ",atoms[i], " and ", atoms[j] , " are too close.")
 					if self.getAtomAttributes(atoms[j]).getElement() == element2 and math.fabs(self.distance(atoms[i], atoms[j]) - bondDistance) < self._EPSILON_:
 						self.addBond(atoms[i], atoms[j])
 			if element1 != element2 and self.getAtomAttributes(atoms[i]).getElement() == element2:
@@ -352,7 +352,7 @@ class  Molecule(ChemicalGraph):
 		#print "Molecule.setAtomAttributes: ", attr.getType().typeName()
 		if attr.getInfo().typeName() in self.atomTypesTable:
 			attr.setType(self.atomTypes[attr.getType().typeName()])
-		self.node[atom]['attrs'] = [attr]
+		self.nodes[atom]['attrs'] = [attr]
 
 	#-------------------------------------------------------------
 	def rename(self, name):
@@ -469,7 +469,7 @@ class  Molecule(ChemicalGraph):
 		self.forceField.addZeroParameters(self)
 		self.copyChargesToForceField()
 
-		print "Molecule.redefineTypes typeAssignments", typeAssignments
+		#print "Molecule.redefineTypes typeAssignments", typeAssignments
 		return typeAssignments
 	#-------------------------------------------------------------
 
@@ -605,10 +605,10 @@ class  Molecule(ChemicalGraph):
 			try:
 				newMol.remove_edge(edge[0], edge[1])
 			except NetworkXError:
-				print "WARNING: Tried to remove inexistent bond ", edge, " from molecule ", self, " in Molecule.removeBond()"
+				print("WARNING: Tried to remove inexistent bond ", edge, " from molecule ", self, " in Molecule.removeBond()")
 
 		newMolsList = newMol.connectedComponents()
-		print "Molecule.removeBonds() produjo ", len(newMolsList), " moleculas"
+		#print "Molecule.removeBonds() produjo ", len(newMolsList), " moleculas"
 		return newMolsList
 	
 	def removeAtoms(self, atomsList):
@@ -628,10 +628,10 @@ class  Molecule(ChemicalGraph):
 			try:
 				newMol.remove_node(atom)
 			except NetworkXError:
-				print "WARNING: Tried to remove inexistent atom ", atom, " from molecule ", self, " in Molecule.removeBond()"
+				print("WARNING: Tried to remove inexistent atom ", atom, " from molecule ", self, " in Molecule.removeBond()")
 
 		newMolsList = newMol.connectedComponents()
-		print "Molecule.removeBonds() produjo ", len(newMolsList), " moleculas"
+		print("Molecule.removeBonds() produjo ", len(newMolsList), " moleculas")
 		return newMolsList
 	
 	#-------------------------------------------------------------
@@ -709,7 +709,7 @@ class  Molecule(ChemicalGraph):
 	def enclosingBox(self):
 		"""
 		"""
-		boxmin = boxmax = self.getAtomAttributes(self.atoms()[0]).getCoord()
+		boxmin = boxmax = self.getAtomAttributes(list(self.atoms())[0]).getCoord()
 		for atom in self.atoms():
 			coords = self.getAtomAttributes(atom).getCoord()
 			boxmin = [min(boxmin[0], coords[0]), min(boxmin[1], coords[1]), min(boxmin[2], coords[2])]
@@ -914,7 +914,7 @@ class  Molecule(ChemicalGraph):
 		#print "Molecule.setForceField types: ",fftypes
 		for atom in self:
 			if not self.forceField.hasType(self.getAtomAttributes(atom).getInfo().getType()):
-				print "WARNING: Molecule.setForceField found type ", self.getAtomAttributes(atom).getInfo().getType()," not present in FF", self.getAtomAttributes(atom).getInfo().getTypes(), ".  Setting parameters to zero."
+				print("WARNING: Molecule.setForceField found type ", self.getAtomAttributes(atom).getInfo().getType()," not present in FF", self.getAtomAttributes(atom).getInfo().getTypes(), ".  Setting parameters to zero.")
 				#ff.setNonBond(self.getAtomAttributes(atom).getInfo().getType(),0.,0) # sets both parameters to 0.
 				raise Molecule.MoleculeError("Trying to assign incompatible force field to a molecule in Molecule.setForceField()")
 		
@@ -945,11 +945,13 @@ class  Molecule(ChemicalGraph):
 		else:
 			pairing = self.getForceField().guess(self, timeLimit, options, includeHydrogens)
 		#self.renameTypes(pairing.getPairing())
+		'''
 		if pairing != None:
 			print "guessForceField result", pairing.getForceField()._NONBONDED
 			print "guessForceField result", pairing.getForceField()._BONDS
 		else:
 			print "guessForceField NO result"
+		'''
 		return pairing
 
 	def renameTypes(self, nameTable=None):
@@ -978,10 +980,10 @@ class  Molecule(ChemicalGraph):
 if __name__ == '__main__':
 	from solvent.THF import THF
 	mol = THF()
-	print mol.getForceField()._ANGLES
+	#print mol.getForceField()._ANGLES
 	#mol.guessForceField(5)
 	#print mol.getForceField()._NONBONDED
 
-	for atom in mol.atomsGenerator(): print atom
+	for atom in mol.atomsGenerator(): print(atom)
 
 

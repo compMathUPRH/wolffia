@@ -32,12 +32,12 @@
 import threading
 
 import sys,os, time
-if __name__ == '__main__':
-	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
-	print sys.path
+#if __name__ == '__main__':
+#	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
+#	print sys.path
 from conf.Wolffia_conf import CHARMM_FORCE_FIELDS
 from lib.chemicalGraph.io.PRM import PRM
-from chemicalGraph.io.PRM import PRMError
+from lib.chemicalGraph.io.PRM import PRMError
 
 
 #_CHARMM_PARAMETER_FILES_=["par_all27_prot_na.prm","par_all32_lipid.prm","par_all35_ethers.prm","par_all36_carb.prm","par_all36_cgenff.prm"]
@@ -136,13 +136,13 @@ class ForceField(object):
 	
 	
 	def addZeroAngles(self, angles):
-	    for [t1,t2,t3] in angles:
-		if t1 < t3:
-		    if not (t1, t2, t3) in self._ANGLES.keys():
-		        self._ANGLES[(t1, t2, t3)] = [0.,0.]
-		else:
-		    if not (t3, t2, t1) in self._ANGLES.keys():
-		        self._ANGLES[(t3, t2, t1)] = [0.,0.]
+		for [t1,t2,t3] in angles:
+		    if t1 < t3:
+		        if not (t1, t2, t3) in self._ANGLES.keys():
+		            self._ANGLES[(t1, t2, t3)] = [0.,0.]
+		    else:
+		        if not (t3, t2, t1) in self._ANGLES.keys():
+		            self._ANGLES[(t3, t2, t1)] = [0.,0.]
 	
 	def addZeroParameters(self, molecule):
 	    aTypes = molecule.atomTypes()
@@ -284,7 +284,7 @@ class ForceField(object):
 	    timeSlot = timeLimit
 	    for fftype in options:
 	        fn       = _CHARMM_PARAMETER_FILES_[_CHARMM_FILES_.index(fftype)]
-	        print "ForceField guess", fftype, fn
+	        #print "ForceField guess", fftype, fn
 	        charmFF  = ForceField(None, filename=CHARMM_FORCE_FIELDS+fn)
 	        pareoMin.append(FFPairings(molecule,charmFF, timeLimit=timeSlot, includeHydrogens=includeHydrogens))
 	        
@@ -402,17 +402,17 @@ class ForceField(object):
 	    #print "ForceField merge typesToMerge2", typesToMerge
 	    
 	    for pType in pars:
-		#print "ForceField merge", pType, self.__dict__[pType]
-		#print "ForceField merff", pType, ff.__dict__[pType]
-		for k in ff.__dict__[pType].keys():
-		    copyOK =True
-		    for aType in k:
-		        #print "for aType in k.split(' '): ", aType
-		        copyOK = aType in typesToMerge
-		        if not copyOK: break
-		    if copyOK or k in typesToMerge:  # k in typesToMerge  fixed NONB problem
-		        self.__dict__[pType][k] = ff.__dict__[pType][k]
-		        #print ">",k
+		    #print "ForceField merge", pType, self.__dict__[pType]
+		    #print "ForceField merff", pType, ff.__dict__[pType]
+		    for k in ff.__dict__[pType].keys():
+		        copyOK =True
+		        for aType in k:
+		            #print "for aType in k.split(' '): ", aType
+		            copyOK = aType in typesToMerge
+		            if not copyOK: break
+		        if copyOK or k in typesToMerge:  # k in typesToMerge  fixed NONB problem
+		            self.__dict__[pType][k] = ff.__dict__[pType][k]
+		            #print ">",k
 		#print "ForceField merge 2 ", pType, self.__dict__[pType]
 	
 	
@@ -424,7 +424,7 @@ class ForceField(object):
 	
 			
 	def renameTypes(self, nameTable):
-	    print "renameTypes  ", nameTable, self._NONBONDED.keys()
+	    #print "renameTypes  ", nameTable, self._NONBONDED.keys()
 	    resultDict = dict()
 	    for nonb in self._NONBONDED.keys():
 	        if nameTable.has_key(nonb):
@@ -435,7 +435,7 @@ class ForceField(object):
 	            resultDict[nonb] = self._NONBONDED[nonb]
 	    self._NONBONDED = resultDict
 	    
-	    print "renameTypes2 ", nameTable, self._NONBONDED.keys()
+	    #print "renameTypes2 ", nameTable, self._NONBONDED.keys()
 	    resultDict = dict()
 	    for bond in self._BONDS.keys():
 	        t1, t2 = bond
@@ -508,7 +508,7 @@ class ForceField(object):
 	
 	
 	def setNonBond(self, t, val, pos):
-	    if not self._NONBONDED.has_key(t):
+	    if not t in self._NONBONDED:
 	        self._NONBONDED[t] = [0,0,0]
 	    self._NONBONDED[t][pos] = val
 	    #print "setNonBond ", t, val, pos, id(self), id(self._NONBONDED[t])
@@ -575,7 +575,7 @@ class ForceField(object):
 		try: 
 			prm.writeCHARMM(filename, mode, trad)
 		except : 
-			print "writeCHARMM"
+			#print "writeCHARMM"
 			raise
 
 
@@ -585,42 +585,42 @@ import sys, openbabel, time
 
 class FFPairings(threading.Thread):
     def __init__(self, molecule, ff, timeLimit=float("inf"), includeHydrogens=True):
-		threading.Thread.__init__(self)
-		self.FFcharm   = ff
-		self.molecule  = molecule
-		self.parMin    = None
-		self.resultFF  = None
-		self.minPot    = float('inf')
-		self.matches   = 0
-		
-		self.timeLimit = timeLimit
-		self.startTime = time.clock()
-		
-		if includeHydrogens:
-			self.tiposMol       = molecule.atomTypes() 
-		else:
-			self.tiposMol       = list()  
-			for t in molecule.atomTypes():
-				if includeHydrogens or t[0] != 'H': 
-					self.tiposMol.append(t)
+        threading.Thread.__init__(self)
+        self.FFcharm   = ff
+        self.molecule  = molecule
+        self.parMin    = None
+        self.resultFF  = None
+        self.minPot    = float('inf')
+        self.matches   = 0
 
-		self.tiposFF        = self.FFcharm._NONBONDED
-		#print "FFPairings __init__  self.tiposMol ",  self.tiposMol
-		#print "FFPairings __init__  self.tiposFF ",  self.tiposFF
-		
-		FFPairings.__sortElements  (self.tiposMol) 
+        self.timeLimit = timeLimit
+        self.startTime = time.clock()
+
+        if includeHydrogens:
+	        self.tiposMol       = molecule.atomTypes() 
+        else:
+	        self.tiposMol       = list()  
+	        for t in molecule.atomTypes():
+		        if includeHydrogens or t[0] != 'H': 
+			        self.tiposMol.append(t)
+
+        self.tiposFF        = self.FFcharm._NONBONDED
+        #print "FFPairings __init__  self.tiposMol ",  self.tiposMol
+        #print "FFPairings __init__  self.tiposFF ",  self.tiposFF
+
+        FFPairings.__sortElements  (self.tiposMol) 
         
     def run(self):
-		#print "FFPairings run A ",   self.tiposMol, self.tiposFF.keys()
-		self.__pareaListas(self.tiposMol, self.tiposFF.keys())
-		if self.parMin != None:
-			self.resultFF  = ForceField(self.molecule)
-			self.resultFF.merge(self.molecule.getForceField())
-			#print "FFPairings run before ",   self.resultFF._NONBONDED.keys()
-			self.resultFF.renameTypes(self.parMin)
-			self.resultFF.merge(self.FFcharm, self.resultFF._NONBONDED.keys())
-			#print "FFPairings run",   self.resultFF._NONBONDED.keys()
-			#self.resultFF.merge(self.FFcharm, self.molecule.atomTypes())
+        #print "FFPairings run A ",   self.tiposMol, self.tiposFF.keys()
+        self.__pareaListas(self.tiposMol, self.tiposFF.keys())
+        if self.parMin != None:
+	        self.resultFF  = ForceField(self.molecule)
+	        self.resultFF.merge(self.molecule.getForceField())
+	        #print "FFPairings run before ",   self.resultFF._NONBONDED.keys()
+	        self.resultFF.renameTypes(self.parMin)
+	        self.resultFF.merge(self.FFcharm, self.resultFF._NONBONDED.keys())
+	        #print "FFPairings run",   self.resultFF._NONBONDED.keys()
+	        #self.resultFF.merge(self.FFcharm, self.molecule.atomTypes())
     '''        
     def inverse(self):
         self.parMin = {v:k for k, v in self.parMin.items()}
@@ -633,22 +633,22 @@ class FFPairings(threading.Thread):
         #print "FFPairings getPairedForceField, oldFF._NONBONDED",  oldFF._NONBONDED
         #print "FFPairings getPairedForceField, self.resultFF._NONBONDED",  self.resultFF._NONBONDED
         newFF = ForceField()
-        
+
         for nonb  in self.parMin.keys():
             #print "FFPairings getPairedForceField self.parMin[nonb]", nonb,self.parMin[nonb],oldFF._NONBONDED.has_key(nonb),oldFF._NONBONDED.keys()
             newFF._NONBONDED[nonb] = list(self.resultFF._NONBONDED[self.parMin[nonb]])
             #if keepCharges and oldFF._NONBONDED.has_key(nonb): 
             #    newFF._NONBONDED[nonb][NonBond._CHARGE] = oldFF._NONBONDED[nonb][NonBond._CHARGE]
 
-		#print "FFPairings getPairedForceField,oldFF._BONDS.keys()",  oldFF._BONDS.keys()
+        #print "FFPairings getPairedForceField,oldFF._BONDS.keys()",  oldFF._BONDS.keys()
         for bond  in oldFF._BONDS.keys():
-			t1, t2 = bond
-			try:
-			    vals   = [val for val in self.resultFF.bond(self.parMin[t1], self.parMin[t2])]
-			    newFF.setBond(bond, vals[0], 0)
-			    newFF.setBond(bond, vals[1], 1)
-			except KeyError:
-			    pass
+	        t1, t2 = bond
+	        try:
+	            vals   = [val for val in self.resultFF.bond(self.parMin[t1], self.parMin[t2])]
+	            newFF.setBond(bond, vals[0], 0)
+	            newFF.setBond(bond, vals[1], 1)
+	        except KeyError:
+	            pass
         #print "FFPairings getPairedForceField,oldFF._ANGLES.keys()",  oldFF._ANGLES.keys()
         for angle in oldFF._ANGLES.keys():
             t1, t2, t3 = angle
@@ -736,8 +736,8 @@ class FFPairings(threading.Thread):
                 t1 = pareo[t1]
                 t2 = pareo[t2]
                 if not ((t1, t2) in self.FFcharm._BONDS or (t2, t1) in self.FFcharm._BONDS):
-					#print False
-					return False
+                    #print False
+                    return False
         #print True
         return True
 
@@ -762,77 +762,77 @@ class FFPairings(threading.Thread):
         
         for t1,t2,t3,t4 in dT:
             #print "__prametersFound ", t1,t2,t3,t4
-			try:
-				k, n, l = self.FFcharm.dihedral(pairs[t1], pairs[t2], pairs[t3], pairs[t4])
-			except KeyError:
-				continue
-			if k != 0 or l != 0: count += 1
+            try:
+	            k, n, l = self.FFcharm.dihedral(pairs[t1], pairs[t2], pairs[t3], pairs[t4])
+            except KeyError:
+	            continue
+            if k != 0 or l != 0: count += 1
         return count
     
     def __pareaListas(self, lista1, lista2, result=None, pareo=None):
-		#print "__pareaListas ", pareo, lista1
-		if result == None: result = list()
-		if pareo  == None: pareo  = dict()
-		if len(lista1) == 0:
-		    if self.__cuadraEnlaces(pareo): # or cuadraAngulos(pareo):
-		        #print "\n __pareaListas-pareo----> ", pareo
-		        if not pareo in result:
-		            self.matches  += 1
-		            result.append(pareo)
-		            #pot = abs(self.__potencial(pareo))  # discarded in favor of measuring how may parameters are found
-		            pot = -self.__prametersFound(pareo)
-		            #print "\n-----> ", pareo
-		            #print "\n-----> pot ", pot, " NEW", (pot  < self.minPot)
-		            if pot  < self.minPot:
-		                print "-----> ", pareo, pot
-		                #print "%8.2f\033[12D", pot
-		                self.minPot = pot
-		                self.parMin = dict(pareo)
-		                #print "-----> ", self, pot
-		                return True
-		else:
-		    t1 = lista1.pop()
-		    subMatch = False
-		    if t1 in lista2:  # perfect matches considered first
-		    	lista2.remove(t1)
-		    	lista2.insert(0, t1)
-		    for t2 in lista2:
-		        #print "%6s" % t2,
-		        #sys.stdout.flush()
-		        #print "probando ", t1,' ', t2, "  pareo: ", pareo
-		        #time.sleep(.1)
-		        if t1[0] == t2[0]:
-		            pareo[t1] = t2
-		            if self.__cuadraEnlaces(pareo): # or cuadraAngulos(pareo):
-		                #porProbar2.remove(t2)
-		                if self.__pareaListas(lista1, lista2, result, pareo):
-		                	subMatch = True
-		                else:
-		                	#print "__pareaListas", pareo
-		                	pot = -self.__prametersFound(pareo)
-		                	#if self.parMin == None or len(self.parMin) < len(pareo) or (len(self.parMin) == len(pareo) and pot  < self.minPot):
-		                	if self.parMin == None or  pot  < self.minPot:
-				                self.minPot = pot
-				                self.parMin = dict(pareo)
-				                subMatch = True
-		                		print "sub--> ", -pot, len(pareo), pareo
-		                #porProbar2.append(t2)
-		            pareo.pop(t1)
-		        #print "\033[8D        \033[8D",
-		        if time.clock() - self.startTime > self.timeLimit: return
-		    lista1.append(t1)
-		    #print "__pareaListas ", lista1
-		    return subMatch
+        #print "__pareaListas ", pareo, lista1
+        if result == None: result = list()
+        if pareo  == None: pareo  = dict()
+        if len(lista1) == 0:
+            if self.__cuadraEnlaces(pareo): # or cuadraAngulos(pareo):
+                #print "\n __pareaListas-pareo----> ", pareo
+                if not pareo in result:
+                    self.matches  += 1
+                    result.append(pareo)
+                    #pot = abs(self.__potencial(pareo))  # discarded in favor of measuring how may parameters are found
+                    pot = -self.__prametersFound(pareo)
+                    #print "\n-----> ", pareo
+                    #print "\n-----> pot ", pot, " NEW", (pot  < self.minPot)
+                    if pot  < self.minPot:
+                        #print "-----> ", pareo, pot
+                        #print "%8.2f\033[12D", pot
+                        self.minPot = pot
+                        self.parMin = dict(pareo)
+                        #print "-----> ", self, pot
+                        return True
+        else:
+            t1 = lista1.pop()
+            subMatch = False
+            if t1 in lista2:  # perfect matches considered first
+            	lista2.remove(t1)
+            	lista2.insert(0, t1)
+            for t2 in lista2:
+                #print "%6s" % t2,
+                #sys.stdout.flush()
+                #print "probando ", t1,' ', t2, "  pareo: ", pareo
+                #time.sleep(.1)
+                if t1[0] == t2[0]:
+                    pareo[t1] = t2
+                    if self.__cuadraEnlaces(pareo): # or cuadraAngulos(pareo):
+                        #porProbar2.remove(t2)
+                        if self.__pareaListas(lista1, lista2, result, pareo):
+                        	subMatch = True
+                        else:
+                        	#print "__pareaListas", pareo
+                        	pot = -self.__prametersFound(pareo)
+                        	#if self.parMin == None or len(self.parMin) < len(pareo) or (len(self.parMin) == len(pareo) and pot  < self.minPot):
+                        	if self.parMin == None or  pot  < self.minPot:
+		                        self.minPot = pot
+		                        self.parMin = dict(pareo)
+		                        subMatch = True
+                        		#print "sub--> ", -pot, len(pareo), pareo
+                        #porProbar2.append(t2)
+                    pareo.pop(t1)
+                #print "\033[8D        \033[8D",
+                if time.clock() - self.startTime > self.timeLimit: return
+            lista1.append(t1)
+            #print "__pareaListas ", lista1
+            return subMatch
 #==========================================================================
 if __name__ == '__main__':
-#    print "Probando ForceField"
+#    print( "Probando ForceField")
     m = ForceField("Probando ForceField")
     m.load("../../data/forceFields/PMMA.prm")
-    print "FF__main__: ", m._ANGLES
+    print( "FF__main__: ", m._ANGLES)
     trad={'HT': 'ht', 'CZ':'XX'}
     
     m.writeCHARMM("/tmp/prueba.prm", trad=trad)
-    print "FF__main__: ", m._ANGLES
+    print( "FF__main__: ", m._ANGLES)
     #print " Probando ForceFieldWriter"
     #r = ForceFieldWriter()
     #r.load("/home_inv/frances/Desktop/CLF.prm" )
