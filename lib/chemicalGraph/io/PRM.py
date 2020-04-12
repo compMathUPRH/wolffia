@@ -199,7 +199,7 @@ class PRM(dict):
 
 	#-----------------------------------------------------------------------------------------
 	def __tr__(self, elt):
-		if self.trad == None or not self.trad.has_key(elt):
+		if self.trad == None or not elt in self.trad:
 			return elt
 		else:
 			return self.trad[elt]
