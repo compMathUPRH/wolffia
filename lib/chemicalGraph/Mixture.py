@@ -217,7 +217,7 @@ class Mixture(Graph):
         self.mixName = mixName
         #self.version = VersionControl()
         #print "Mixture__init__", self.__dict__.keys()
-        self.modificationTime = time.clock()
+        self.modificationTime = time.process_time()
         #self.IDIndex   = dict()
         self.molNameIndex = dict()
         
@@ -238,8 +238,8 @@ class Mixture(Graph):
         This is important in order to produce correct force field files.
         Used by add() and remove() methods.  Not meant to be called manually.
         """
-        start = time.clock()
-        #print "Mixture __buildTranslatorTable__ starting", time.clock() - start, self.trad
+        start = time.process_time()
+        #print "Mixture __buildTranslatorTable__ starting", time.process_time() - start, self.trad
         # build translation table
         # check consistency
         #if self.trad != None: return
@@ -285,7 +285,7 @@ class Mixture(Graph):
                         self.trad[molecule][a] = t
                         #usedNames.append(t)
         #print "Mixture __buildTranslatorTable__ self.trad", self.trad
-        #print "Mixture __buildTranslatorTable__ finished", time.clock() - start
+        #print "Mixture __buildTranslatorTable__ finished", time.process_time() - start
 
 
     
@@ -538,7 +538,7 @@ class Mixture(Graph):
 
     def getModificationTime(self):
         if not self.__dict__.has_key('modificationTime'):
-            self.modificationTime = time.clock()
+            self.modificationTime = time.process_time()
         return self.modificationTime
 
     
@@ -1263,7 +1263,7 @@ class Mixture(Graph):
         '''
         should be calld when the composition of the mixture changes.
         '''
-        self.modificationTime = time.clock()
+        self.modificationTime = time.process_time()
         self.trad = None
 
         #print "setChanged",self.modificationTime
@@ -1304,7 +1304,7 @@ class Mixture(Graph):
 
 
     def updateCoordinatesFromArray(self, coordsArray):
-        #start = time.clock()
+        #start = time.process_time()
         #print "Mixture updateCoordinatesFromArray len(coordsArray)", len(coordsArray)
         for i in range(self.order()):
             try:
@@ -1318,7 +1318,7 @@ class Mixture(Graph):
             except (IndexError,ValueError):
                 print("Mixture.updateCoordinatesFromArray failed to update atom ",i)
                 break
-        #print "updateCoordinatesFromArray finished time=", time.clock() - start
+        #print "updateCoordinatesFromArray finished time=", time.process_time() - start
             
 
     def getAtomsCoordinatesAsArray(self):
@@ -1370,16 +1370,16 @@ class Mixture(Graph):
 
     def writeFiles(self,baseFilename, fixedMolecules=[]):
         from chemicalGraph.io.PRM import PRMError
-        start = time.clock()
+        start = time.process_time()
         #print "Mixture writeFiles ", baseFilename
         self.writePDB(baseFilename+".pdb",fixedMolecules)
-        #print "Mixture writeFiles writePDB", time.clock() - start
+        #print "Mixture writeFiles writePDB", time.process_time() - start
         self.writePSF(baseFilename+".psf")
-        #print "Mixture writeFiles writePSF", time.clock() - start
+        #print "Mixture writeFiles writePSF", time.process_time() - start
         try: self.writePRM(baseFilename+".prm")
         except : raise
 
-        #print "Mixture writeFiles writePRM", time.clock() - start
+        #print "Mixture writeFiles writePRM", time.process_time() - start
     
 
     def writePDB(self, pdbFile=None, fixedMolecules=[]):
@@ -1389,8 +1389,8 @@ class Mixture(Graph):
         @type  pdbFile: string
         @param pdbFile: PDB filename.  If None it will write to sys.stdout.
         """
-        start = time.clock()
-        #print "Mixture writePDB __buildTranslatorTable__", time.clock() - start
+        start = time.process_time()
+        #print "Mixture writePDB __buildTranslatorTable__", time.process_time() - start
         self.__buildTranslatorTable__()
         if pdbFile==None:
             fd = sys.stdout
@@ -1402,7 +1402,7 @@ class Mixture(Graph):
         self.atomOrder = []
         count = 1
     
-        #print "Mixture writePDB writing coordinates", time.clock() - start
+        #print "Mixture writePDB writing coordinates", time.process_time() - start
         renumbering = dict()  
         for molecule in self:
             mol = self.getMolecule(molecule)
@@ -1416,7 +1416,7 @@ class Mixture(Graph):
         
         mixture = self
         fd.write("ENDMDL\n")
-        #print "Mixture writePDB writing connect", time.clock() - start
+        #print "Mixture writePDB writing connect", time.process_time() - start
         for molecule in mixture:
             mol = mixture.getMolecule(molecule)
             for atom in mol:
@@ -1437,7 +1437,7 @@ class Mixture(Graph):
         #        fd.write("\n")
         #    count += self.getMolecule(molecule).order()
             
-        #print "Mixture writePDB writing finished", time.clock() - start
+        #print "Mixture writePDB writing finished", time.process_time() - start
         if pdbFile != None:
             fd.close()
 
@@ -1554,7 +1554,7 @@ class MixtureError(Exception):
 class VersionControl:
     def __init__(self):
         self.trackers = dict()
-        self.modificationTime = time.clock()
+        self.modificationTime = time.process_time()
         
     def hasChanged(self, tracker, keepTime=False):
         if self.trackers.has_key(tracker):
@@ -1567,10 +1567,10 @@ class VersionControl:
             return True
     
     def setChanged(self):
-        self.modificationTime = time.clock()
+        self.modificationTime = time.process_time()
         
     def reset(self):
-        self.modificationTime = time.clock()
+        self.modificationTime = time.process_time()
         self.trackers = dict()
 
 
