@@ -27,7 +27,7 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 import sys, os
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../conf')
+#sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../conf')
 #print sys.path
 from conf.Wolffia_conf import NANOCAD_PDB_DIR, NANOCAD_FORCE_FIELDS
 
@@ -41,7 +41,7 @@ class WATER(Molecule):
 	otObj = AtomInfo("OT", "O", "OT", -0.834, 15.9994, 0.0, 1.0, ' ', "OT  ", "WAT", "A", 1)
 	htObj = AtomInfo("HT1", "H", "HT", 0.417, 1.00794, 0.0, 1.0, ' ', "HT ", "WAT", "A", 1)
 	def __init__(self):
-		Molecule.__init__(self, "WATER")
+		super(WATER, self).__init__(ident="WATER")
 
 		# print NANOCAD_PDB_DIR + "/Solvents/WATER.pdb" , NANOCAD_PDB_DIR + "/Solvents/WATER.psf" 
 		#self.load(NANOCAD_PDB_DIR + "/Solvents/WATER.pdb" , NANOCAD_PDB_DIR + "/Solvents/WATER.psf")
@@ -60,7 +60,7 @@ class WATER(Molecule):
 		self.add_atom(atr,[1])
 
 		if WATER._FORCE_FIELD == None: 
-			print "WATER generating FF"
+			print( "WATER generating FF")
 			WATER._FORCE_FIELD = ForceField(self, NANOCAD_FORCE_FIELDS + "/WATER.prm")
 		#print "WATER1", WATER._FORCE_FIELD._BONDS
 		self.setForceField(WATER._FORCE_FIELD )
@@ -71,11 +71,11 @@ class WATER(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando WATER"
+	print( "Probando WATER")
 	m = WATER( )
-	print m
+	print( m)
 	for node in m:
-		print m.getAtomAttributes(node)
+		print( m.getAtomAttributes(node))
 	m.writePSF("caca.psf")
 	m.writePDB("caca.pdb")
 

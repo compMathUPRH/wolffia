@@ -316,8 +316,9 @@ class ChemicalGraph(Graph):
     def getAtomAttributes(self, node):
         """
         """
-        #print("ChemicalGraph atoms_attributes: ", self.__dict__.keys(), self.nodes)
-        return self.nodes[node]['attrs'][0]
+        #print("ChemicalGraph node: ", node, self.nodes(data=True)[node])
+        #print("ChemicalGraph atoms_attributes: ", self.nodes(data=True)[node][1]['attrs'])
+        return self.nodes(data=True)[node]['attrs'][0]
 
     #-------------------------------------------------------------
     def atoms_attributes(self):
@@ -430,6 +431,7 @@ class ChemicalGraph(Graph):
         #=======================================================================
 
         for atom in self.nodes():
+            #print("\n\n\nrotate  self.getAtomAttributes(atom)", self.getAtomAttributes(atom))
             self.getAtomAttributes(atom).rotate(matr)
 
 

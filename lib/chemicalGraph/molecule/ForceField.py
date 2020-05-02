@@ -581,7 +581,7 @@ class ForceField(object):
 
 #==========================================================================
 
-import sys, openbabel, time
+#import openbabel
 
 class FFPairings(threading.Thread):
     def __init__(self, molecule, ff, timeLimit=float("inf"), includeHydrogens=True):

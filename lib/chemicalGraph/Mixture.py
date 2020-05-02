@@ -37,8 +37,8 @@ import logging
 #from Bio.PDB.PDBParser import PDBParser
 #import Bio.PDB
 #import chemicalGraph.io.xpdb as xpdb 
-import pybel
-import openbabel
+#import pybel
+#import openbabel
 if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
 from lib.chemicalGraph.molecule.Molecule import Molecule
 #from pybel import *
@@ -66,118 +66,118 @@ def posicion(Atomo, box,cantidad,setInBox=True):
     return tuple(pos)
 
 def applyPCB(Atomo, box,cantidad):
-	#if Atomo[1] < box[0][1]: print "applyPCB Atomo=", Atomo, box,cantidad
-	posN = posicion(Atomo, box,cantidad,setInBox=False)
-	posM = posicion(Atomo, box,cantidad,setInBox=True)
-	dx  = (box[1][0]-box[0][0])/cantidad
-	dy  = (box[1][1]-box[0][1])/cantidad
-	dz  = (box[1][2]-box[0][2])/cantidad
-	d   = [dx,dy,dz]
-	newCoords = []
-	for i in range(3):
-		difC = Atomo[i]-box[0][i]
-		newCoords.append(Atomo[i]-(posN[i]-posM[i])*d[i])
-		#if Atomo[i] < box[0][i] or Atomo[i] > box[1][i]: 
-			#print "applyPCB final ",box
-			#print "applyPCB final ", Atomo, newCoords,i, posN[i],posM[i],cantidad,(posN[i]-posM[i])*d[i]
-	#if Atomo[2] < box[0][2]: print "applyPCB final ", Atomo, newCoords
-	return tuple(newCoords)
-	
+    #if Atomo[1] < box[0][1]: print "applyPCB Atomo=", Atomo, box,cantidad
+    posN = posicion(Atomo, box,cantidad,setInBox=False)
+    posM = posicion(Atomo, box,cantidad,setInBox=True)
+    dx  = (box[1][0]-box[0][0])/cantidad
+    dy  = (box[1][1]-box[0][1])/cantidad
+    dz  = (box[1][2]-box[0][2])/cantidad
+    d   = [dx,dy,dz]
+    newCoords = []
+    for i in range(3):
+        difC = Atomo[i]-box[0][i]
+        newCoords.append(Atomo[i]-(posN[i]-posM[i])*d[i])
+        #if Atomo[i] < box[0][i] or Atomo[i] > box[1][i]: 
+            #print "applyPCB final ",box
+            #print "applyPCB final ", Atomo, newCoords,i, posN[i],posM[i],cantidad,(posN[i]-posM[i])*d[i]
+    #if Atomo[2] < box[0][2]: print "applyPCB final ", Atomo, newCoords
+    return tuple(newCoords)
+    
 #------X--------------------------------------------------------------------------------------------------------
 def diccionario(box, listaCoordenadas, cantidad,VDW,applyPBCs=True):
-		diccionario = {(a,b,c):set() for a in range(cantidad) for b in range(cantidad) for c in range(cantidad)}
-		#VDW = 1.5
-		dx  = (box[1][0]-box[0][0])/cantidad
-		dy  = (box[1][1]-box[0][1])/cantidad
-		dz  = (box[1][2]-box[0][2])/cantidad
-		#print "diccionario  box=", box, "  dx", dx, "dy", dy, "dz", dz
-		for AtomoL in listaCoordenadas:
-			Atomo = tuple(AtomoL)
-			pos   =   posicion(Atomo,box,cantidad,applyPBCs)
-			if applyPBCs: aPCB = applyPCB(Atomo, box, cantidad)   
-			else: aPCB = Atomo
-			#print "diccionario Atomo     ", Atomo, " en pos    ", pos
-			try:
-				diccionario[pos].add(aPCB)
-			except KeyError:
-				if applyPBCs: raise
-				else: continue
+        diccionario = {(a,b,c):set() for a in range(cantidad) for b in range(cantidad) for c in range(cantidad)}
+        #VDW = 1.5
+        dx  = (box[1][0]-box[0][0])/cantidad
+        dy  = (box[1][1]-box[0][1])/cantidad
+        dz  = (box[1][2]-box[0][2])/cantidad
+        #print "diccionario  box=", box, "  dx", dx, "dy", dy, "dz", dz
+        for AtomoL in listaCoordenadas:
+            Atomo = tuple(AtomoL)
+            pos   =   posicion(Atomo,box,cantidad,applyPBCs)
+            if applyPBCs: aPCB = applyPCB(Atomo, box, cantidad)   
+            else: aPCB = Atomo
+            #print "diccionario Atomo     ", Atomo, " en pos    ", pos
+            try:
+                diccionario[pos].add(aPCB)
+            except KeyError:
+                if applyPBCs: raise
+                else: continue
 
-			for dpx in  [-1,1]:
-				mdpx  = max(dpx,0)
-				bx    = math.fabs(Atomo[0] - ((pos[0]+mdpx)*dx+box[0][0])) 
-				if bx < VDW: 
-					diccionario[((pos[0]+dpx)%cantidad,pos[1],pos[2])].add(Atomo)
+            for dpx in  [-1,1]:
+                mdpx  = max(dpx,0)
+                bx    = math.fabs(Atomo[0] - ((pos[0]+mdpx)*dx+box[0][0])) 
+                if bx < VDW: 
+                    diccionario[((pos[0]+dpx)%cantidad,pos[1],pos[2])].add(Atomo)
 
-				for dpy in  [-1,1]:
-					mdpy  = max(dpy,0)
-					by    = math.fabs(Atomo[1] - ((pos[1]+mdpy)*dy+box[0][1])) 
-					if by < VDW:
-						diccionario[ (pos[0], (pos[1]+dpy)%cantidad,pos[2]) ].add(Atomo)
-					if bx < VDW and by < VDW:
-						diccionario[ ((pos[0]+dpx)%cantidad,(pos[1]+dpy)%cantidad,pos[2])].add(Atomo)
-					for dpz in  [-1,1]:
-						mdpz  = max(dpz,0)
-						bz    = math.fabs(Atomo[2] - ((pos[2]+mdpz)*dz+box[0][2]) )
-						if bz < VDW:
-							diccionario[ (pos[0], pos[1], (pos[2]+dpz)%cantidad) ].add(Atomo)
-						if bx < VDW and bz < VDW:
-							diccionario[ ((pos[0]+dpx)%cantidad,pos[1], (pos[2]+dpz)%cantidad) ].add(Atomo)
-						if by < VDW and bz < VDW:
-							diccionario[ (pos[0], (pos[1]+dpy)%cantidad,(pos[2]+dpz)%cantidad) ].add(Atomo)
-						if bx < VDW and by < VDW and bz < VDW:
-							diccionario[ ((pos[0]+dpx)%cantidad,(pos[1]+dpy)%cantidad,(pos[2]+dpz)%cantidad) ].add(Atomo)
+                for dpy in  [-1,1]:
+                    mdpy  = max(dpy,0)
+                    by    = math.fabs(Atomo[1] - ((pos[1]+mdpy)*dy+box[0][1])) 
+                    if by < VDW:
+                        diccionario[ (pos[0], (pos[1]+dpy)%cantidad,pos[2]) ].add(Atomo)
+                    if bx < VDW and by < VDW:
+                        diccionario[ ((pos[0]+dpx)%cantidad,(pos[1]+dpy)%cantidad,pos[2])].add(Atomo)
+                    for dpz in  [-1,1]:
+                        mdpz  = max(dpz,0)
+                        bz    = math.fabs(Atomo[2] - ((pos[2]+mdpz)*dz+box[0][2]) )
+                        if bz < VDW:
+                            diccionario[ (pos[0], pos[1], (pos[2]+dpz)%cantidad) ].add(Atomo)
+                        if bx < VDW and bz < VDW:
+                            diccionario[ ((pos[0]+dpx)%cantidad,pos[1], (pos[2]+dpz)%cantidad) ].add(Atomo)
+                        if by < VDW and bz < VDW:
+                            diccionario[ (pos[0], (pos[1]+dpy)%cantidad,(pos[2]+dpz)%cantidad) ].add(Atomo)
+                        if bx < VDW and by < VDW and bz < VDW:
+                            diccionario[ ((pos[0]+dpx)%cantidad,(pos[1]+dpy)%cantidad,(pos[2]+dpz)%cantidad) ].add(Atomo)
 
-		# convertir diccionario a listas de listas
-		for pos in diccionario:
-			atomos = list()
-			for atom in diccionario[pos]:
-				atomos.append(list(atom))
-				diccionario[pos] = atomos
+        # convertir diccionario a listas de listas
+        for pos in diccionario:
+            atomos = list()
+            for atom in diccionario[pos]:
+                atomos.append(list(atom))
+                diccionario[pos] = atomos
 
-		return diccionario
+        return diccionario
 #---------------------------------------------------------
 def diccionarioOld(box, listaCoordenadas, cantidad):
-		diccionario = {}
-		VDW = 1.5
-		dx  = (box[1][0]-box[0][0])/cantidad
-		dy  = (box[1][1]-box[0][1])/cantidad
-		dz  = (box[1][2]-box[0][2])/cantidad
-		for Atomo in listaCoordenadas:
-			#print Atomo
-			pos = posicion(Atomo,box,cantidad)
-			x = math.fabs  (Atomo[0]  -(pos[0]+1*dx))
-			y = math.fabs  (Atomo[1]  -(pos[1]+1*dy))
-			z = math.fabs  (Atomo[2]  -(pos[2]+1*dz))
-			x1 = math.fabs (Atomo[0]  -(pos[0]*dx))
-			y1 = math.fabs (Atomo[1]  -(pos[1]*dy))
-			z1 = math.fabs (Atomo[2]  -(pos[2]*dz))
-			#print "x", x, "y", y, "z", z, "x1", x1, "y1", y1, "z1", z1
-			if pos not in diccionario:
-			    diccionario.update({pos: [Atomo]})
-			else:
-			    diccionario[pos].append(Atomo)
-			if x < VDW:
-			    diccionario.update({(pos[0]-1, pos[1], pos[2]): [Atomo]})
-			    #print "*X*"
-			if y < VDW:
-			    diccionario.update({(pos[0], pos[1]-1, pos[2]): [Atomo]})
-			    #print "*Y*"
-			if z < VDW:
-			    diccionario.update({(pos[0], pos[1], pos[2]-1): [Atomo]})
-			    #print "*Z*"
-			if x1 < VDW:
-				diccionario.update({(pos[0]+1, pos[1], pos[2]): [Atomo]})
-				#print "*X1*"
-			if y1 < VDW:
-				diccionario.update({(pos[0], pos[1]+1, pos[2]): [Atomo]})
-				#print "*Y1*"
-			if z1 < VDW:
-				diccionario.update({(pos[0], pos[1], pos[2]+1): [Atomo]})
-				#print "*Z1*"
-		return diccionario    
+        diccionario = {}
+        VDW = 1.5
+        dx  = (box[1][0]-box[0][0])/cantidad
+        dy  = (box[1][1]-box[0][1])/cantidad
+        dz  = (box[1][2]-box[0][2])/cantidad
+        for Atomo in listaCoordenadas:
+            #print Atomo
+            pos = posicion(Atomo,box,cantidad)
+            x = math.fabs  (Atomo[0]  -(pos[0]+1*dx))
+            y = math.fabs  (Atomo[1]  -(pos[1]+1*dy))
+            z = math.fabs  (Atomo[2]  -(pos[2]+1*dz))
+            x1 = math.fabs (Atomo[0]  -(pos[0]*dx))
+            y1 = math.fabs (Atomo[1]  -(pos[1]*dy))
+            z1 = math.fabs (Atomo[2]  -(pos[2]*dz))
+            #print "x", x, "y", y, "z", z, "x1", x1, "y1", y1, "z1", z1
+            if pos not in diccionario:
+                diccionario.update({pos: [Atomo]})
+            else:
+                diccionario[pos].append(Atomo)
+            if x < VDW:
+                diccionario.update({(pos[0]-1, pos[1], pos[2]): [Atomo]})
+                #print "*X*"
+            if y < VDW:
+                diccionario.update({(pos[0], pos[1]-1, pos[2]): [Atomo]})
+                #print "*Y*"
+            if z < VDW:
+                diccionario.update({(pos[0], pos[1], pos[2]-1): [Atomo]})
+                #print "*Z*"
+            if x1 < VDW:
+                diccionario.update({(pos[0]+1, pos[1], pos[2]): [Atomo]})
+                #print "*X1*"
+            if y1 < VDW:
+                diccionario.update({(pos[0], pos[1]+1, pos[2]): [Atomo]})
+                #print "*Y1*"
+            if z1 < VDW:
+                diccionario.update({(pos[0], pos[1], pos[2]+1): [Atomo]})
+                #print "*Z1*"
+        return diccionario    
 #------X--------------------------------------------------------------------------------------------------------
-	
+    
 def distancia(puntos, newCoordinate, dmin): 
     for atom in puntos:
         d = math.sqrt (((atom[0]-newCoordinate[0])**2) + ((atom[1]-newCoordinate[1])**2) + ((atom[2]-newCoordinate[2])**2))
@@ -256,7 +256,7 @@ class Mixture(Graph):
             ff  = mol.getForceField()
             newFF = True
             for f2 in writtenFF.keys():#reuse the translation for other molecule if FFs are the same
-                print("__buildTranslatorTable__ comparacion ",  ff, f2.getForceField()," = ", ff == f2.getForceField())
+                #print("__buildTranslatorTable__ comparacion ",  ff, f2.getForceField()," = ", ff == f2.getForceField())
                 if ff == f2.getForceField():
                     self.trad[molecule] = writtenFF[f2]
                     newFF = False
@@ -317,7 +317,7 @@ class Mixture(Graph):
         self.add_node(nodeName, attrs=[mol])
         
         if checkForInconsistentNames and mol.molname()[:8] != "SOLVENT(":
-        	self.checkExistingMoleculeNames(mol)
+            self.checkExistingMoleculeNames(mol)
         
         #print "Mixture.add mol.molname() ============> added", mol.molname()
         return nodeName
@@ -355,12 +355,12 @@ class Mixture(Graph):
         return res
     
     def atomsGenerator(self):
-    	'''
-    	Atom generator
-    	'''
-    	for m in self.moleculeGenerator():
-    		for a in m.atomsGenerator():
-    			yield a
+        '''
+        Atom generator
+        '''
+        for m in self.moleculeGenerator():
+            for a in m.atomsGenerator():
+                yield a
 
     def bonds(self):
         res = 0
@@ -386,10 +386,10 @@ class Mixture(Graph):
 
 
     def charge(self):
-    	totalCharge = 0
-    	for molecule in self:
-    		totalCharge += self.getMolecule(molecule).charge()
-    	return totalCharge
+        totalCharge = 0
+        for molecule in self:
+            totalCharge += self.getMolecule(molecule).charge()
+        return totalCharge
 
     def center(self):
         x,y,z = [0.,0.,0.] 
@@ -419,7 +419,7 @@ class Mixture(Graph):
             existingMolecule = molecules.pop()
             if existingMolecule.molname() == mol.molname() \
             and not ( existingMolecule.sameSpeciesAs(mol)  and existingMolecule.getForceField() == mol.getForceField() ):
-            	break
+                break
 
         if not molecules: return False  # no problem
         
@@ -433,14 +433,14 @@ class Mixture(Graph):
                 #raise MixtureException(MixtureException.SAME_NAME, "Non-isomorphic molecules with same name " + mol.molname())
                 return False
 
-		# new unique molecule
+        # new unique molecule
         mol.rename(self.newMolName(mol.molname()))
         mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
         warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
         print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
         return True
 
-	
+    
 
     def checkExistingMoleculeNamesBAK(self, mol):
         '''
@@ -453,34 +453,34 @@ class Mixture(Graph):
         #print "Mixture.checkExistingMoleculeNames, caller=",inspect.stack()[1]
 
         for existingMolecule in self.moleculeGenerator():
-	        #existingMolecule  = self.getMolecule(existingMoleculeID)
-	        #print "Mixture.checkExistingMoleculeNames, existingMolecule  = ",existingMolecule
-	        if existingMolecule.molname() == mol.molname() and not (existingMolecule is mol):
-		        #print "add existingMolecule.molname() == mol.molname()", existingMolecule.__repr__(), mol.__repr__()
-		        #print "add existingMolecule.molname() == mol.molname()", existingMolecule.molname(), mol.molname()
-		        #print "add existingMolecule.getForceField() == mol.getForceField()", existingMolecule.getForceField(), mol.getForceField()
-		        #print "add existingMolecule.getForceField() == mol.getForceField()", existingMolecule.getForceField().getTypes(), mol.getForceField().getTypes()
-		        #print "add existingMolecule.getForceField() == mol.getForceField()", existingMolecule.getForceField().__dict__, mol.getForceField().__dict__
-		        oldName = mol.molname()
-		        #print "checkExistingMoleculeNames", existingMolecule.getForceField()._ANGLES.keys(), mol.getForceField()._ANGLES.keys()
-		        if not existingMolecule.isIsomorphicTo(mol):
-			        mol.rename(self.newMolName(mol.molname()))
-			        mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
-			        #print "add not existingMolecule.isIsomorphicTo(mol)", oldName, mol.molname(),  mol.getForceField()
-			        warnings.warn("Molecule renamed as " + mol.molname() + " since it is not isomorphic to the existing molecule with ID " + str(existingMolecule) + ".", SyntaxWarning)
-			        #raise MixtureException(MixtureException.SAME_NAME, "Non-isomorphic molecules with same name " + mol.molname())
-			        return True
-		        elif not existingMolecule.getForceField() == mol.getForceField():
-			        mol.rename(self.newMolName(mol.molname()))
-			        mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
-			        #for k in existingMolecule.getForceField()._ANGLES:
-			        #	print k,existingMolecule.getForceField()._ANGLES[k][1], mol.getForceField()._ANGLES[k][1]
-			        #raise MixtureException(MixtureException.SAME_NAME, "Isomorphic molecules with different force fields have the same names")
-			        warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
-			        print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
-			        return True
-		        mol.setForceField(existingMolecule.getForceField())
-		        return False  # ANTES HAY QUE HACER QUE LOS DOS FF SEAN EL MISMO EN MEMORIA
+            #existingMolecule  = self.getMolecule(existingMoleculeID)
+            #print "Mixture.checkExistingMoleculeNames, existingMolecule  = ",existingMolecule
+            if existingMolecule.molname() == mol.molname() and not (existingMolecule is mol):
+                #print "add existingMolecule.molname() == mol.molname()", existingMolecule.__repr__(), mol.__repr__()
+                #print "add existingMolecule.molname() == mol.molname()", existingMolecule.molname(), mol.molname()
+                #print "add existingMolecule.getForceField() == mol.getForceField()", existingMolecule.getForceField(), mol.getForceField()
+                #print "add existingMolecule.getForceField() == mol.getForceField()", existingMolecule.getForceField().getTypes(), mol.getForceField().getTypes()
+                #print "add existingMolecule.getForceField() == mol.getForceField()", existingMolecule.getForceField().__dict__, mol.getForceField().__dict__
+                oldName = mol.molname()
+                #print "checkExistingMoleculeNames", existingMolecule.getForceField()._ANGLES.keys(), mol.getForceField()._ANGLES.keys()
+                if not existingMolecule.isIsomorphicTo(mol):
+                    mol.rename(self.newMolName(mol.molname()))
+                    mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
+                    #print "add not existingMolecule.isIsomorphicTo(mol)", oldName, mol.molname(),  mol.getForceField()
+                    warnings.warn("Molecule renamed as " + mol.molname() + " since it is not isomorphic to the existing molecule with ID " + str(existingMolecule) + ".", SyntaxWarning)
+                    #raise MixtureException(MixtureException.SAME_NAME, "Non-isomorphic molecules with same name " + mol.molname())
+                    return True
+                elif not existingMolecule.getForceField() == mol.getForceField():
+                    mol.rename(self.newMolName(mol.molname()))
+                    mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
+                    #for k in existingMolecule.getForceField()._ANGLES:
+                    #    print k,existingMolecule.getForceField()._ANGLES[k][1], mol.getForceField()._ANGLES[k][1]
+                    #raise MixtureException(MixtureException.SAME_NAME, "Isomorphic molecules with different force fields have the same names")
+                    warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
+                    print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
+                    return True
+                mol.setForceField(existingMolecule.getForceField())
+                return False  # ANTES HAY QUE HACER QUE LOS DOS FF SEAN EL MISMO EN MEMORIA
         return False
 
     
@@ -507,7 +507,7 @@ class Mixture(Graph):
             boxmin = [0., 0., 0.]
             boxmax = [2.,2.,2.]
         else:
-            molecules = self.nodes()
+            molecules = list(self.nodes())
             box = self.getMolecule(molecules[0]).enclosingBox()
             boxmin = [box[0][0], box[0][1], box[0][2]]
             boxmax = [box[1][0], box[1][1], box[1][2]]
@@ -531,6 +531,111 @@ class Mixture(Graph):
         return equiv
 
 
+	#--------------------------------------------------------------------
+	# If progress != None, it is an object that responds to he folowing methods:
+	#   .setLabelText("Removing collisions")
+	#   .setRange(0,molNum)
+	#   .setValue(0)
+
+    def fillBox(self, box, solv, molNum, checkCollisions=False, replaceCollisions=False, applyPCBs=True, progress=None):
+        import math, random
+        import numpy as np
+        from lib.chemicalGraph.molecule.solvent.Solvent import Solvent
+        
+        solventMolecules = Solvent(solv)#.__class__)
+        
+        remaining = -1   # to track removng collissions
+        
+        totalDim = box.getBoxDimension()
+        boxmin = box.getCellOrigin()
+        boxmax =[ boxmin[0]+totalDim[0], boxmin[1]+totalDim[1], boxmin[2]+totalDim[2] ]
+        
+        #calculate the volume for a single solvent molecule
+        center = [0., 0., 0.]
+        pos = solv.massCenter()
+        solv.moveBy([center[0]-pos[0], center[1]-pos[1], center[2]-pos[2]])
+        #solvDiameter = solv.diameter()+ _SEPARATION_BETWEEN_SOLVENTS_
+        solvDiameter = math.pow(box.getBoxVolume() / molNum, 1./3.)
+        if solvDiameter == 0: return
+        
+        row = math.floor(totalDim[1]/solvDiameter)
+        col = math.floor(totalDim[0]/solvDiameter)
+        dep = math.floor(totalDim[2]/solvDiameter)
+        
+        progressMax   = molNum
+        progressCount = 0
+        if progress != None:    
+            progress.setLabelText("Adding solvent")
+            progress.setRange(0,molNum-1)
+            progress.setValue(0)
+        
+        solvRadius = solvDiameter / 2
+        newPos = solv.massCenter()
+        refCoor = boxmin
+        
+        #boxmax[0] -= solvDiameter/2.
+        #boxmax[1] -= solvDiameter/2.
+        #boxmax[2] -= solvDiameter/2.
+        
+        if progress != None:    
+            progress.setLabelText("Adding solvent")
+            progress.setRange(progressCount,progressMax)
+            progress.setValue(progressCount)
+        
+        # lopps over a sequence of adding solvent and removing collisions
+        originalMolecules = self.molecules()
+        originalCoords = self.getAtomsCoordinatesAsArray()
+        solvRadius = solvDiameter / 2.0 + 1.5
+        
+        #print("fillBox solvent {} with {} atoms.... ".format(solv, len(solv)))
+        #print("fillBox anadiendo... ", progressMax-progressCount, ': ', end=', ')
+        while progressCount < progressMax:  # adds solvent
+            #random rotation for solvent atoms
+            rx = random.uniform(0, 360)
+            ry = random.uniform(0, 360)
+            rz = random.uniform(0, 360)
+            
+            #random displacement for solvent atoms
+            rdx = random.uniform(boxmin[0], boxmax[0])
+            rdy = random.uniform(boxmin[1], boxmax[1])
+            rdz = random.uniform(boxmin[2], boxmax[2])
+            
+            #generate new molecule and assign next position
+            mol = solv.copy()
+            mol.rotateDeg(rx, ry, rz)
+            newPos = np.array([[rdx, rdy, rdz]])
+        
+            if checkCollisions:
+                from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
+                atomDistances = euclidean_distances(originalCoords, newPos)
+                if np.min(atomDistances) > solvRadius:
+                    #print 'fillBox: añadiendo', progressCount, np.min(atomDistances), newPos
+                    mol.moveBy(list(newPos)[0])
+                    #nodeName = self.addMolecule(mol, checkForInconsistentNames=False)
+                    #self.shownMolecules.show(nodeName)
+                    solventMolecules.addCoordinates(mol)
+                else:
+                    #print 'fillBox: colision'
+                    if replaceCollisions: progressCount -= 1
+        
+            progressCount += 1
+            if progress != None:    progress.setValue(progressCount)
+            del mol
+            #print("{} ({})".format(progressCount,len(solventMolecules)), end=', ')
+        #print()
+        
+                
+        # add solvent and rename with the given name
+        nodeName = self.add(solventMolecules, checkForInconsistentNames=True)
+        #self.shownMolecules.show(nodeName)
+        #print "fillBox ", mol.molname(),progressMax
+        solv.rename(solventMolecules.molname())
+        progressMax -= 1
+        
+        #self.setCurrentMixtureSaved(False)
+        
+        #print "tiempo ", time.clock() - start
+        #print "Molecules after cleaning: ",mix.order()
 
     def getMixtureName(self):
         return self.mixName
@@ -562,13 +667,13 @@ class Mixture(Graph):
         return None
     
     def getSolvent(self):
-    	s = set()
-    	for mol in self.moleculeGenerator():
-    		if mol.isSolvent(): s.add(mol)
-    	return s
+        s = set()
+        for mol in self.moleculeGenerator():
+            if mol.isSolvent(): s.add(mol)
+        return s
 
     def hasMoleculeID(self, m): return m in self.nodes()
-	
+    
     def duplicateMolecule(self, molName):
         self.setChanged()
         newMol = Molecule(molecule=self.getMolecule(molName))
@@ -611,20 +716,20 @@ class Mixture(Graph):
         """
         Loads a single frame in the coordinate file and merges the content to the current 
         mixture.
-        The contents of the pdbFile could be in any format supported by	pyBel.   
+        The contents of the pdbFile could be in any format supported by    pyBel.   
         Connectivity will be determined by the PSF file is present.
         moleculeFile should have the content of the coordinate file if pdbFile == None.
         """
         from lib.io.CoordinateFile import CoordinateFile, CoordinateString
 
         if pdbFile != None:
-	        reader = CoordinateFile(pdbFile,fileType,psfFile,id)
+            reader = CoordinateFile(pdbFile,fileType,psfFile,id)
         else:
-	        #print "Mixture load ", fileType
-	        reader = CoordinateString(moleculeFile,id,fileType)
+            #print "Mixture load ", fileType
+            reader = CoordinateString(moleculeFile,id,fileType)
 
         self.merge(reader.next())
-		
+        
 
     def loadBAK(self, pdbFile=None,psfFile=None,moleculeFile=None,fileType=None,id=None):
         """
@@ -639,85 +744,85 @@ class Mixture(Graph):
         self.setChanged()
 
         if not(pdbFile == None):
-	        #mol		  = pybel.readfile("pdb", pdbFile).next()
-	        mol		  = self.readFile(pdbFile,fileType)
-	        moleculeName = os.path.basename(pdbFile).split('.')[0]
-	        
-	        
+            #mol          = pybel.readfile("pdb", pdbFile).next()
+            mol          = self.readFile(pdbFile,fileType)
+            moleculeName = os.path.basename(pdbFile).split('.')[0]
+            
+            
         elif not(moleculeFile == None):
-	        mol		  = self.readString(moleculeFile, fileType)
-	        
-	        if fileType   == "pdb" and not(id==None): 
-		        moleculeName = id+"_PDB"
-		        
-	        elif fileType == "sdf" and not(id==None): 
-		        moleculeName = id+"_NCI-CADD"
-		        
-	        else: 
-		        moleculeName = "loadedPDB"
-        atoms			   = mol.atoms
-        #print"cant. atomos = ",len(atoms)			  
-        flag				= False
+            mol          = self.readString(moleculeFile, fileType)
+            
+            if fileType   == "pdb" and not(id==None): 
+                moleculeName = id+"_PDB"
+                
+            elif fileType == "sdf" and not(id==None): 
+                moleculeName = id+"_NCI-CADD"
+                
+            else: 
+                moleculeName = "loadedPDB"
+        atoms               = mol.atoms
+        #print"cant. atomos = ",len(atoms)              
+        flag                = False
 
         chemicalGraphMixed  = ChemicalGraph()
         # add nodes
-        etable			  = openbabel.OBElementTable()
-	        
+        etable              = openbabel.OBElementTable()
+            
 
 
         if not(psfFile == None):
-	        psf=PSF(psfFile)
+            psf=PSF(psfFile)
 
-	        if len(atoms) != len(psf.atoms):
-		        raise MixtureError("Ammount of atoms in "+pdbFile + " and "+psfFile + " files are different ("+str( len(atoms))+" vs "+str(len(psf.atoms))+").")
-	        flag = True
-	        bonds = psf.bonds
-	        
+            if len(atoms) != len(psf.atoms):
+                raise MixtureError("Ammount of atoms in "+pdbFile + " and "+psfFile + " files are different ("+str( len(atoms))+" vs "+str(len(psf.atoms))+").")
+            flag = True
+            bonds = psf.bonds
+            
         for n in range(len(atoms)):
-	        atom=atoms[n]				
-	        atomType = atom.type # Hay que revisar esto, aqui debe ir otra cosa
-	        symbol   = etable.GetSymbol(atom.atomicnum)
-	        coords   = list(atom.coords)
-	        #print "Mix load", coords
-	        name	 = etable.GetName(atom.atomicnum) 
-	        residue  = atom.OBAtom.GetResidue().GetName()
-	        psfType  = atom.type
-	        charge   = atom.partialcharge
-	        mass	 = atom.atomicmass	
-	        if flag:
-		        psfType  = psf.getType(n)
-		        charge   = psf.getCharge(n)
-		        mass	 = psf.getMass(n)
+            atom=atoms[n]                
+            atomType = atom.type # Hay que revisar esto, aqui debe ir otra cosa
+            symbol   = etable.GetSymbol(atom.atomicnum)
+            coords   = list(atom.coords)
+            #print "Mix load", coords
+            name     = etable.GetName(atom.atomicnum) 
+            residue  = atom.OBAtom.GetResidue().GetName()
+            psfType  = atom.type
+            charge   = atom.partialcharge
+            mass     = atom.atomicmass    
+            if flag:
+                psfType  = psf.getType(n)
+                charge   = psf.getCharge(n)
+                mass     = psf.getMass(n)
 
 
-	        atr = AtomAttributes(	atomType, symbol, psfType, coords, charge, mass, 1, 1, 1, name, residue)
-	        chemicalGraphMixed.add_node(n+1, attrs=[atr])
+            atr = AtomAttributes(    atomType, symbol, psfType, coords, charge, mass, 1, 1, 1, name, residue)
+            chemicalGraphMixed.add_node(n+1, attrs=[atr])
 
         # add edges
 
         if flag:
-	        for b in bonds:
-		        #if progress.wasCanceled():
-			        #print "fillBox cancelado"
-			        #self.setChanged() Como hacer un back a esto?
-			        #progress.hide()
-			        #return
-		        try:  # avoids adding an edge twice
-			        chemicalGraphMixed.add_edge(b)
-		        except AdditionError:
-			        pass			
-		        #progressCount += 1
-		        #progress.setValue(progressCount)
-        else:			
-	        for bond in openbabel.OBMolBondIter(mol.OBMol):   
-		        chemicalGraphMixed.add_edge([bond.GetBeginAtom().GetIdx(),bond.GetEndAtom().GetIdx()])	   
-			        
-        molecules = chemicalGraphMixed.connectedComponents()	  
-        # finally, add the molecules to the mixture				  
+            for b in bonds:
+                #if progress.wasCanceled():
+                    #print "fillBox cancelado"
+                    #self.setChanged() Como hacer un back a esto?
+                    #progress.hide()
+                    #return
+                try:  # avoids adding an edge twice
+                    chemicalGraphMixed.add_edge(b)
+                except AdditionError:
+                    pass            
+                #progressCount += 1
+                #progress.setValue(progressCount)
+        else:            
+            for bond in openbabel.OBMolBondIter(mol.OBMol):   
+                chemicalGraphMixed.add_edge([bond.GetBeginAtom().GetIdx(),bond.GetEndAtom().GetIdx()])       
+                    
+        molecules = chemicalGraphMixed.connectedComponents()      
+        # finally, add the molecules to the mixture                  
         for m in molecules:
-		        #return 
-	        mol = Molecule(moleculeName, molecule=m)
-	        self.add(mol)		 
+                #return 
+            mol = Molecule(moleculeName, molecule=m)
+            self.add(mol)         
 
 
     def loadAndInffer(self, pdbFile, prmFile):
@@ -812,15 +917,15 @@ class Mixture(Graph):
 
 
     def molecules(self):
-    	return self.moleculeIDs()
+        return self.moleculeIDs()
     
     def moleculeGenerator(self):
-    	'''
-    	Generator of molecules in mixture.  (New in v1.137)
-    	'''
-    	for mol in self:
-    		yield self.getMolecule(mol)
-    		
+        '''
+        Generator of molecules in mixture.  (New in v1.137)
+        '''
+        for mol in self:
+            yield self.getMolecule(mol)
+            
     def moleculeIDs(self):
         return self.nodes()  
 
@@ -872,19 +977,19 @@ class Mixture(Graph):
         listaCoordenadas = []
         maxVDW = 1.5
         for refMolName in refMolNames:
-	        refMol = self.getMolecule(refMolName)
-	        # sacar lista de atomos de molecula refMol
-	        for atom2 in refMol:
-		        vdWr1 = refMol.getForceField().nonBond(refMol.getAtomAttributes(atom2).getInfo().getType())[NonBond._SIGMA] 
-		        maxVDW = max(maxVDW, vdWr1)
-		        listaCoordenadas.append(refMol.getAtomAttributes(atom2).getCoord())
+            refMol = self.getMolecule(refMolName)
+            # sacar lista de atomos de molecula refMol
+            for atom2 in refMol:
+                vdWr1 = refMol.getForceField().nonBond(refMol.getAtomAttributes(atom2).getInfo().getType())[NonBond._SIGMA] 
+                maxVDW = max(maxVDW, vdWr1)
+                listaCoordenadas.append(refMol.getAtomAttributes(atom2).getCoord())
 
         #print "crear diccionario de cajas"
         #crear diccionario de cajas con la lista listaCoordenadas
         # JORDAN
         atomosEnSubCajas = diccionario(box, listaCoordenadas, cantCajas, maxVDW * 2, applyPBCs)
         #print "diccionario", atomosEnSubCajas
-		          
+                  
 
 
         #print "busca moleculas en self que chocan"
@@ -910,55 +1015,55 @@ class Mixture(Graph):
                         
                         #si choca entonces anade
                         if pruebaDistancia == False:
-                        	collidingMolecules.add(mol)
-			        
+                            collidingMolecules.add(mol)
+                    
         return collidingMolecules
     
     def overlapingMolecules3(self, refMolName, pbc=None):
-    	"""
-    	Finds all the molecules overlapping a given molecule.
-    	pbc = periodic boundary conditions (class Drawer)   (new in version 1.136)
-    	"""
-    	
-    	refMol = self.getMolecule(refMolName)
-    	
-    	faces = pbc.getFaces()
-    	#print "overlapingMolecules face=", faces
-    	box = [[faces[0],faces[2],faces[4]],[faces[1],faces[3],faces[5]]]
-    	
-    	# sacar lista de moleculas de molecula refMol
-    	listaCoordenadas = []
-    	for atom2 in refMol:
-    		listaCoordenadas.append(refMol.getAtomAttributes(atom2).getCoord())
-    	
-    	#crear diccionario de cajas con la lista listaCoordenadas
-    	# JORDAN
-    	atomosEnSubCajas = diccionario(box, listaCoordenadas, 11)
-    			  
+        """
+        Finds all the molecules overlapping a given molecule.
+        pbc = periodic boundary conditions (class Drawer)   (new in version 1.136)
+        """
+        
+        refMol = self.getMolecule(refMolName)
+        
+        faces = pbc.getFaces()
+        #print "overlapingMolecules face=", faces
+        box = [[faces[0],faces[2],faces[4]],[faces[1],faces[3],faces[5]]]
+        
+        # sacar lista de moleculas de molecula refMol
+        listaCoordenadas = []
+        for atom2 in refMol:
+            listaCoordenadas.append(refMol.getAtomAttributes(atom2).getCoord())
+        
+        #crear diccionario de cajas con la lista listaCoordenadas
+        # JORDAN
+        atomosEnSubCajas = diccionario(box, listaCoordenadas, 11)
+                  
     
     
-    	
-    	# busca moleculas en self que chocan y las anade a collidingMolecules
-    	collidingMolecules = set()
-    	for mol in self:
+        
+        # busca moleculas en self que chocan y las anade a collidingMolecules
+        collidingMolecules = set()
+        for mol in self:
             if mol != refMolName:
-	            m = self.getMolecule(mol)
-	            atoms = m.atoms()
-	            vdWr1 = m.getForceField().nonBond(m.getAtomAttributes(atom).getInfo().getType())[NonBond._SIGMA] 
-	            for atom in atoms:
-		            acoordinates = m.getAtomAttributes(atom).getCoord()
-		            vdWr2 = refMol.getForceField().nonBond(refMol.getAtomAttributes(atom2).getInfo().getType())[NonBond._SIGMA] 
-		            #vdWr1 = m.getForceField().nonBond(m.getAtomAttributes(atom).getInfo().getType())[NonBond._SIGMA]
-		            # determinar si acoordinates chocan con alguien en diccionario de listaCoordenadas
-		            # JORDAN
-		            pruebaDistancia = distancia(listaCoordenadas, acoordinates, vdWr1 + vdWr2)
-		            #print "distancias: ", acoordinates, distancias(listaCoordenadas, acoordinates)
-		            
-		            #si choca entonces anade
-		            if pruebaDistancia == False:
-			            collidingMolecules.add(mol)
-    				
-    	return collidingMolecules
+                m = self.getMolecule(mol)
+                atoms = m.atoms()
+                vdWr1 = m.getForceField().nonBond(m.getAtomAttributes(atom).getInfo().getType())[NonBond._SIGMA] 
+                for atom in atoms:
+                    acoordinates = m.getAtomAttributes(atom).getCoord()
+                    vdWr2 = refMol.getForceField().nonBond(refMol.getAtomAttributes(atom2).getInfo().getType())[NonBond._SIGMA] 
+                    #vdWr1 = m.getForceField().nonBond(m.getAtomAttributes(atom).getInfo().getType())[NonBond._SIGMA]
+                    # determinar si acoordinates chocan con alguien en diccionario de listaCoordenadas
+                    # JORDAN
+                    pruebaDistancia = distancia(listaCoordenadas, acoordinates, vdWr1 + vdWr2)
+                    #print "distancias: ", acoordinates, distancias(listaCoordenadas, acoordinates)
+                    
+                    #si choca entonces anade
+                    if pruebaDistancia == False:
+                        collidingMolecules.add(mol)
+                    
+        return collidingMolecules
     
 
     def overlapingMoleculesCOPIA2(self, refMolName, pbc=None):
@@ -974,7 +1079,7 @@ class Mixture(Graph):
         # sacar lista de moleculas de molecula refMol
         listaCoordenadas = []
         for atom2 in refMol:
-        	listaCoordenadas.append(refMol.getAtomAttributes(atom2).getCoord())
+            listaCoordenadas.append(refMol.getAtomAttributes(atom2).getCoord())
         #crear diccionario de cajas con la lista listaCoordenadas
         # JORDAN
         
@@ -985,22 +1090,22 @@ class Mixture(Graph):
         # busca moleculas en self que chocan y las anade a collidingMolecules
         """
             collidingMolecules = set()
-        		for mol in self:
-        			m = self.getMolecule(mol)
-        			atoms = m.atoms()
-        			for atom in atoms:
-        				acoordinates = m.getAtomAttributes(atom).getCoord()
-        				# determinar si acoordinates chocan con alguien en diccionario de listaCoordenadas
-        			
+                for mol in self:
+                    m = self.getMolecule(mol)
+                    atoms = m.atoms()
+                    for atom in atoms:
+                        acoordinates = m.getAtomAttributes(atom).getCoord()
+                        # determinar si acoordinates chocan con alguien en diccionario de listaCoordenadas
+                    
                 
                 
                 
                 # JORDAN
-        		
-        		#si choca entonces anade
-        		if JORDAN:
-        			collidingMolecules.add(mol)
-        			
+                
+                #si choca entonces anade
+                if JORDAN:
+                    collidingMolecules.add(mol)
+                    
         
         return collidingMolecules
         
@@ -1025,23 +1130,23 @@ class Mixture(Graph):
         '''
         ml = set()
         for mol in self:
-	        #print "overlapingMolecules ", mol
-	        m = self.getMolecule(mol)
-	        atoms = m.atoms()
-	        collides = False
-	        for atom in atoms:
-		        ac = m.getAtomAttributes(atom).getCoord()
-		        #if (ac[0] >= refBox[0][0] and ac[0] <= refBox[1][0]) and (ac[1] >= refBox[0][1] and ac[1] <= refBox[1][1]) and (ac[2] >= refBox[0][2] and ac[2] <= refBox[1][2]): 
-		        vdWr1 = m.getForceField().nonBond(m.getAtomAttributes(atom).getInfo().getType())[NonBond._SIGMA] 
-		        for atom2 in refMol:
-			        d = m.getAtomAttributes(atom).distanceTo(refMol.getAtomAttributes(atom2),pbc)
-			        vdWr2 = refMol.getForceField().nonBond(refMol.getAtomAttributes(atom2).getInfo().getType())[NonBond._SIGMA] 
-			        if 2*d < vdWr1 + vdWr2:
-				        #print m.getAtomAttributes(atom).getType(),refMol.getAtomAttributes(atom2).getType(),(vdWr1 + vdWr2)/2
-				        ml.add(mol)
-				        collides = True
-				        break
-		        if collides: break
+            #print "overlapingMolecules ", mol
+            m = self.getMolecule(mol)
+            atoms = m.atoms()
+            collides = False
+            for atom in atoms:
+                ac = m.getAtomAttributes(atom).getCoord()
+                #if (ac[0] >= refBox[0][0] and ac[0] <= refBox[1][0]) and (ac[1] >= refBox[0][1] and ac[1] <= refBox[1][1]) and (ac[2] >= refBox[0][2] and ac[2] <= refBox[1][2]): 
+                vdWr1 = m.getForceField().nonBond(m.getAtomAttributes(atom).getInfo().getType())[NonBond._SIGMA] 
+                for atom2 in refMol:
+                    d = m.getAtomAttributes(atom).distanceTo(refMol.getAtomAttributes(atom2),pbc)
+                    vdWr2 = refMol.getForceField().nonBond(refMol.getAtomAttributes(atom2).getInfo().getType())[NonBond._SIGMA] 
+                    if 2*d < vdWr1 + vdWr2:
+                        #print m.getAtomAttributes(atom).getType(),refMol.getAtomAttributes(atom2).getType(),(vdWr1 + vdWr2)/2
+                        ml.add(mol)
+                        collides = True
+                        break
+                if collides: break
         #print "overlapingMolecules ", len(ml)
         return ml
 
@@ -1143,16 +1248,16 @@ class Mixture(Graph):
 
         mol = self.getMolecule(molID)
         #try:
-	        #mol = self.getMolecule(molID)
+            #mol = self.getMolecule(molID)
         #except KeyError:
-	        #print "Mixture.remove(): Tried to remove ineistent molecule ", molID
-	        #return  #nothing to remove
+            #print "Mixture.remove(): Tried to remove ineistent molecule ", molID
+            #return  #nothing to remove
 
         molname = mol.molname()
         self.remove_node(molID)
         if not molname in self.moleculeNames() and molname in self.molNameIndex.keys():
-	        del self.molNameIndex[molname]
-	        #print "remove deleted", mol.molname(), self.molNameIndex.keys()
+            del self.molNameIndex[molname]
+            #print "remove deleted", mol.molname(), self.molNameIndex.keys()
 
         #self.__buildTranslatorTable__()
 
@@ -1172,9 +1277,9 @@ class Mixture(Graph):
         self.remove_nodes_from(molIDs)
         """
         for molname in molIDs:
-	        if not molname in self.moleculeNames() and molname in self.molNameIndex.keys():
-		        del self.molNameIndex[molname]
-		        print "remove deleted", molname, self.molNameIndex.keys()
+            if not molname in self.moleculeNames() and molname in self.molNameIndex.keys():
+                del self.molNameIndex[molname]
+                print "remove deleted", molname, self.molNameIndex.keys()
         """
 
         #self.__buildTranslatorTable__()
@@ -1197,20 +1302,20 @@ class Mixture(Graph):
             #currentMolecule = self.getMolecule(molName)
             molName = self.getMoleculeID(currentMolecule)
             if molName != None:
-	            molecules       = currentMolecule.removeAtomsFromSphere(coord, radius)
-	            #print 'removeAtomsFromSphere',molName, [m.molname() for m in molecules]
-	            #print 'Mixture.removeAtomsFromSphere',molName, currentMolecule.getForceField().getTypes()
-	            
-	            # finally, add the pieces to the mixture
-	            for m in molecules:
-	                mol = Molecule(currentMolecule.molname(), molecule=m)
-	                #print "removeAtomsFromSphere  pieces" , m,mol.order()
-	                mol.setForceField(currentMolecule.getForceField())
-	                self.add(mol)
-	            self.remove(molName)
-	            shownMolecules.remove(currentMolecule)
+                molecules       = currentMolecule.removeAtomsFromSphere(coord, radius)
+                #print 'removeAtomsFromSphere',molName, [m.molname() for m in molecules]
+                #print 'Mixture.removeAtomsFromSphere',molName, currentMolecule.getForceField().getTypes()
+                
+                # finally, add the pieces to the mixture
+                for m in molecules:
+                    mol = Molecule(currentMolecule.molname(), molecule=m)
+                    #print "removeAtomsFromSphere  pieces" , m,mol.order()
+                    mol.setForceField(currentMolecule.getForceField())
+                    self.add(mol)
+                self.remove(molName)
+                shownMolecules.remove(currentMolecule)
         del centerAt
-		
+        
     def removeBonds(self, molecule, edgesList,shownMolecules=[]):
         """
         Remove bonds.  Removing bonds may split or empty molecules.
@@ -1404,10 +1509,13 @@ class Mixture(Graph):
     
         #print "Mixture writePDB writing coordinates", time.clock() - start
         renumbering = dict()  
+        print("Mixture.writePDB moleculas:", list(self))
         for molecule in self:
             mol = self.getMolecule(molecule)
             renumbering[mol] = dict()
+            print("Mixture.writePDB mol: {} ({})".format(mol, len(mol)))
             for atom in mol:
+                #print("Mixture.writePDB mol:", mol, atom)
                 atr = mol.getAtomAttributes(atom)
                 fd.write(atr.PDBline(count, self.trad[molecule], molecule in fixedMolecules)+"\n")
                 self.atomOrder.append(atr)
@@ -1425,8 +1533,8 @@ class Mixture(Graph):
                 if len(neighbors) > 0:
                     fd.write("CONECT%5i" % (renumbering[mol][atom]))
                     for bond in neighbors:
-                    	if renumbering[mol][bond] > renumbering[mol][atom]:
-	                        fd.write("%5i" % (renumbering[mol][bond]))
+                        if renumbering[mol][bond] > renumbering[mol][atom]:
+                            fd.write("%5i" % (renumbering[mol][bond]))
                     fd.write("\n")
         #count = 1
         #for molecule in self:
