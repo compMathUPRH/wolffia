@@ -96,6 +96,7 @@ class Container:
     
             return n
 
+
 # ===========================================
 class Box(Container):
     '''
@@ -160,6 +161,25 @@ class Box(Container):
         self.maxsMins = maxsMins
         self.setCellOrigin((maxsMins[0], maxsMins[2], maxsMins[4]))
         
+    def writeXSC(self, xscFile=None):
+        """
+        Writes a periodic boundary conditions file (.xsc in NAMD).
+    
+        @type  xscFile: string
+        @param xscFile: XSC filename.  If None it will write to sys.stdout.
+        """
+    
+        if xscFile==None:
+            fd = sys.stdout
+        else:
+            fd = open(xscFile, 'w')
+        
+        fd.write("# NAMD extended system configuration file written by Wolffia\n")
+        fd.write("0 {:.4f} 0 0 0 {:.4f} 0 0 0 {:.4f} {:.4f} {:.4f} {:.4f}".format(
+                self.maxsMins[1], self.maxsMins[3], self.maxsMins[5],
+                self.maxsMins[0], self.maxsMins[2], self.maxsMins[4]))
+        if xscFile != None: fd.close()
+
     def volume(self):
             '''
             volume
@@ -167,6 +187,7 @@ class Box(Container):
             return (self.maxsMins[1]-self.maxsMins[0]) * \
                 (self.maxsMins[3]-self.maxsMins[2]) * \
                 (self.maxsMins[5]-self.maxsMins[4])
+
 
 #==========================================
 class Prism(Container):
