@@ -182,12 +182,11 @@ class History(list):
     
     
 class HistoryException(Exception):
-    def __init__(self, value):
-        self.value = value
-    
-    def __str__(self):
-        return repr(self.value)
+    pass
 
+
+class WolffiaStateException(Exception):
+    pass
 
 
 
@@ -272,8 +271,10 @@ class WolffiaState(object):
             filename = self.getBuildDirectory()+"/"+self.getMixtureName()
         #print "WolffiaState writeFiles,", filename
         
-        try: self.getMixture().writeFiles(filename, self.fixedMolecules.fixedList())
-        except : raise
+        #try: 
+        self.getMixture().writeFiles(filename, self.fixedMolecules.fixedList())
+        self.getContainer().writeXSC(filename + ".xsc")
+        #except : raise WolffiaStateException("Error writing Wolffia files.")
     
     
     #--------------------------------------------------------------------------------
