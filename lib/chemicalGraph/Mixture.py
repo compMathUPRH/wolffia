@@ -1481,8 +1481,7 @@ class Mixture(Graph):
         #print "Mixture writeFiles writePDB", time.process_time() - start
         self.writePSF(baseFilename+".psf")
         #print "Mixture writeFiles writePSF", time.process_time() - start
-        try: self.writePRM(baseFilename+".prm")
-        except : raise
+        self.writePRM(baseFilename+".prm")
 
         #print "Mixture writeFiles writePRM", time.process_time() - start
     
@@ -1509,11 +1508,11 @@ class Mixture(Graph):
     
         #print "Mixture writePDB writing coordinates", time.process_time() - start
         renumbering = dict()  
-        print("Mixture.writePDB moleculas:", list(self))
+        #print("Mixture.writePDB moleculas:", list(self))
         for molecule in self:
             mol = self.getMolecule(molecule)
             renumbering[mol] = dict()
-            print("Mixture.writePDB mol: {} ({})".format(mol, len(mol)))
+            #print("Mixture.writePDB mol: {} ({})".format(mol, len(mol)))
             for atom in mol:
                 #print("Mixture.writePDB mol:", mol, atom)
                 atr = mol.getAtomAttributes(atom)
