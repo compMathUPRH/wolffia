@@ -42,10 +42,10 @@ Created on Feb 8, 2012
 
 import sys, os, time, copy, tempfile
 import logging
-from lib.chemicalGraph.Mixture import Mixture #@UnresolvedImport
-from lib.Container import Container
+from wolffialib.chemicalGraph.Mixture import Mixture #@UnresolvedImport
+from wolffialib.Container import Container
 from conf.Wolffia_conf import WOLFFIA_DEFAULT_MIXTURE_LOCATION, WOLFFIA_DEFAULT_MIXTURE_NAME, WOLFFIA_DIR, WOLFFIA_VERSION #@UnresolvedImport
-from lib.chemicalGraph.molecule.Molecule import Molecule
+from wolffialib.chemicalGraph.Molecule import Molecule
 import pickle as pickle #Tremenda aportación por carlos cortés.
 
 from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
@@ -266,7 +266,7 @@ class WolffiaState(object):
     
     #--------------------------------------------------------------------------------
     def writeFiles(self, filename=None):  
-        from chemicalGraph.io.PRM import PRMError
+        from wolffialib.chemicalGraph.io.PRM import PRMError
         if filename == None:
             filename = self.getBuildDirectory()+"/"+self.getMixtureName()
         #print "WolffiaState writeFiles,", filename

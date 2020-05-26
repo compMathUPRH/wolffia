@@ -23,6 +23,6 @@ setuptools.setup(
 	"Topic :: Scientific/Engineering :: Chemistry",
     ],
     keywords='molecular dynamics',
-    install_requires=['matplotlib', 'numpy', 'networkx>=2.4'],
+    install_requires=['matplotlib', 'numpy', 'networkx>=2.4', 'scipy'],
     python_requires='>=3.6',
 )

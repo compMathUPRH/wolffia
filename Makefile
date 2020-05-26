@@ -35,8 +35,9 @@ uninstall:
 
 clean:
 	cd interface ; make clean
-	cd lib ; make clean
+	cd wolffialib ; make clean
 	cd doc; make clean
 	cd builds ; make clean
 	cd conf ; make clean
+	@rm -R wolffialib.egg-info
 
