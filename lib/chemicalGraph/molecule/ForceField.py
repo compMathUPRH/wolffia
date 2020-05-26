@@ -36,8 +36,8 @@ import sys,os, time
 #	sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
 #	print sys.path
 from conf.Wolffia_conf import CHARMM_FORCE_FIELDS
-from lib.chemicalGraph.io.PRM import PRM
-from lib.chemicalGraph.io.PRM import PRMError
+from wolffialib.chemicalGraph.io.PRM import PRM
+from wolffialib.chemicalGraph.io.PRM import PRMError
 
 
 #_CHARMM_PARAMETER_FILES_=["par_all27_prot_na.prm","par_all32_lipid.prm","par_all35_ethers.prm","par_all36_carb.prm","par_all36_cgenff.prm"]

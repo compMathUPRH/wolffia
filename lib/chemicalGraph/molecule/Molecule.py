@@ -31,9 +31,9 @@ import sys,os, warnings
 #sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
 
 #if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
-from lib.chemicalGraph.ChemicalGraph import ChemicalGraph
-from lib.chemicalGraph.molecule.ForceField import ForceField, NonBond
-from lib.chemicalGraph.molecule.AtomAttributes import AtomAttributes,AtomInfo
+from wolffialib.chemicalGraph.ChemicalGraph import ChemicalGraph
+from wolffialib.chemicalGraph.molecule.ForceField import ForceField, NonBond
+from wolffialib.chemicalGraph.molecule.AtomAttributes import AtomAttributes,AtomInfo
 from networkx import NetworkXError, isomorphism
 import numpy as np
 
