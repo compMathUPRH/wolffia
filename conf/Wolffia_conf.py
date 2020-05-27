@@ -33,7 +33,7 @@ import os, sys, platform
 WOLFFIA_VERSION = "1.5"
 
 NANOCAD_BASE            = os.path.realpath(os.path.dirname(os.path.realpath(__file__))+"/..").replace("\\","/")
-NANOCAD_PDB_DIR         = NANOCAD_BASE		   +"/data/coordinates/"
+NANOCAD_PDB_DIR         = NANOCAD_BASE		   +"wolffialib/data/coordinates/"
 NANOCAD_MOLECULES       = NANOCAD_BASE		   +"/lib/"
 NANOCAD_INTERFACE       = NANOCAD_BASE		   +"/interface/main"
 NANOCAD_CLASSIFIER      = NANOCAD_BASE		   +"/interface/classifier"
@@ -41,10 +41,10 @@ NANOCAD_NANOTUBE_EDITOR = NANOCAD_BASE		   +"/interface/nanotubeEditor"
 NANOCAD_GRAPHENE_EDITOR = NANOCAD_BASE		   +"/interface/grapheneEditor"
 NANOCAD_PANI_EDITOR     = NANOCAD_BASE		   +"/interface/PANI"
 NANOCAD_HOMOPOLY_EDITOR = NANOCAD_BASE		   +"/interface/homopolyEditor"
-NANOCAD_FORCE_FIELDS    = NANOCAD_BASE         +"/data/forceFields"
+NANOCAD_FORCE_FIELDS    = NANOCAD_BASE         +"wolffialib/data/forceFields"
 CHARMM_FORCE_FIELDS     = NANOCAD_FORCE_FIELDS +"/CHARMM/"
 
-WOLFFIA_WFY_DIR		    = NANOCAD_BASE		   +"/data/wfm/"
+WOLFFIA_WFY_DIR		    = NANOCAD_BASE		   +"wolffialib/data/wfm/"
 
 WOLFFIA_STYLESHEET      = NANOCAD_BASE         +"/conf/Wolffia.css"
 C_MOLECULE_CATALOG      = os.path.expanduser(".cMolecule")  
