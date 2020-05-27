@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/compMathUPRH/wolffia",
     packages=setuptools.find_packages(),
+    package_data={'wolffialib': ['data/forceFields/*.prm', 'data/forceFields/CHARMM/*.prm', 'data/wfm/*.wfm', 'data/coordinates/*/*']},
     classifiers=[
 	"Development Status :: 2 - Pre-Alpha",
         "Programming Language :: Python :: 3",
