@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wolffialib",
-    version="0.0.1",
+    version="0.0.11",
     author="José O. Sotero Esteva et. al.",
     author_email="jose.sotero@upr.edu",
     description="A set of modules to setup and analyze molecular dynamics simulations.",

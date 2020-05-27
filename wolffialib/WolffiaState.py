@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #---------------------------------------------------------------------------
 #  WolffiaState.py
-#  Version 0.1, November, 2011
+#  Version , May 2020
 #
 #  NanoCAD state update.
 #
