@@ -24,6 +24,6 @@ setuptools.setup(
 	"Topic :: Scientific/Engineering :: Chemistry",
     ],
     keywords='molecular dynamics',
-    install_requires=['matplotlib', 'numpy', 'networkx>=2.4', 'scipy', 'scikit-learn', 'progressbar'],
+    install_requires=['matplotlib', 'numpy', 'networkx>=2.4', 'scipy', 'scikit-learn', 'progressbar2'],
     python_requires='>=3.6',
 )
