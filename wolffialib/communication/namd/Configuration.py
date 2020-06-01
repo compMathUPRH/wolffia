@@ -13,8 +13,8 @@ class Configuration(object):
 	NO_IMD_WAIT    = True
 	
 	_CHECKED_BOOL_TO_WORD_    = {True:"yes", False:"no"}
-	MINIMIZATION_DEFAULT_PARAMETERS = {'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-3', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':100,'outputEnergies':100, 'switching':True,'exclude':'1-3', 'pairlistdist':9,'switchdist':9}
-	SIMULATION_DEFAULT_PARAMETERS = {'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325, 'DCDfreq':100,'seed':random.randint(1,40000), 'temperature':295.0, 'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen','scaling':1,'exclude':'1-3', 'pairlistdist':9,'switchdist':9, 'switching':True, 'timeSteps':1.0, 'numSteps':1000, 'startStep':0, 'stepsCycle':1,'restartSteps':100, 'DCDfreq':100,'outputEnergies':100,'cutoff':10}
+	MINIMIZATION_DEFAULT_PARAMETERS = {'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-3', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':1000,'outputEnergies':1000, 'switching':True,'exclude':'1-3', 'pairlistdist':13,'switchdist':9}
+	SIMULATION_DEFAULT_PARAMETERS = {'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325, 'DCDfreq':1000,'seed':random.randint(1,40000), 'temperature':295.0, 'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen','scaling':1,'exclude':'1-3', 'pairlistdist':13,'switchdist':9, 'switching':True, 'timeSteps':1.0, 'numSteps':1000, 'startStep':0, 'stepsCycle':1,'restartSteps':1000,'outputEnergies':1000,'cutoff':10}
     
 	def __init__(self, parameters=None, container=Container(), fixedAtoms=False, simType=SIMULATION, confOptions=0x0):
 		#self.__dict__.update(parameters.__dict__)
@@ -300,10 +300,10 @@ class Configuration(object):
 	    conf.write("   binaryrestart no\n")
 	    conf.write("\n   outputname   \""    +    mixtureName + "\"\n")
 	    conf.write("   DCDfile   \"$basedir/%s\"\n   DCDfreq %s\n" % (str(mixtureName + ".dcd"), str(self.DCDfreq)))
-	    if WOLFFIA_USES_IMD:
+	    try:
 	        conf.write("\n   IMDon on\n   IMDport " + str(self.imdPort)  + "\n   IMDfreq " + str(self.DCDfreq) +  "\n   IMDwait " + self.imdWait + "\n   IMDignore no\n")
-	    else:
-	        conf.write("\n   IMDon off\n   IMDport 3000\n   IMDfreq " + str(self.DCDfreq.value()) +  "\n   IMDwait no\n   IMDignore no\n")
+	    except:
+	        conf.write("\n   IMDon off\n")
 	    conf.write("\n   outputEnergies " + str(self.outputEnergies) +  "\n")
 	    #print("writeIOSection", self.restartSteps.value())
 	    conf.write("\n   outputTiming  " + str(self.outputEnergies) +  "\n")
