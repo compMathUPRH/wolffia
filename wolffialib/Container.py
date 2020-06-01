@@ -75,6 +75,9 @@ class Container:
         ''' to be done '''
         pass
 
+    def hasCell(self):
+            return False
+
     def getCellOrigin(self):
         return self.cellOrigin
 
@@ -110,6 +113,9 @@ class Box(Container):
     
         self.setMaxsMins(maxsMins)
     
+    def hasCell(self):
+            return True
+
     def getMaxsMins(self): return self.maxsMins
     
     def getBoxDimension(self):
