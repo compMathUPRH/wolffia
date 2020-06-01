@@ -1,30 +1,41 @@
 
 from conf.Wolffia_conf import _WOLFFIA_OS, WOLFFIA_USES_IMD
+from wolffialib.Container import Container
+
 import random
+
 
 class Configuration(object):
 	SIMULATION   = 1
 	MINIMIZATION = 2
 	
 	CURRENT_FOLDER = 0x1
-	NO_IMD_WAIT    = 0x2
+	NO_IMD_WAIT    = True
 	
 	_CHECKED_BOOL_TO_WORD_    = {True:"yes", False:"no"}
-	
-	def __init__(self, parameters, drawer, fixedAtoms=False, simType=SIMULATION, confOptions=0x0):
-	    #self.__dict__.update(parameters.__dict__)
-	    self.__dict__.update(parameters)
-	    self.drawer         = drawer
-	    self.fixedAtoms     = fixedAtoms
-	    self.filename       = None
-	    self.buildDirectory = None
-	    self.simType        = simType
-	    random.seed()
-	    self.imdPort        = random.randint(30000,40000)
+	MINIMIZATION_DEFAULT_PARAMETERS = {'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-3', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':100,'outputEnergies':100, 'switching':True,'exclude':'1-3', 'pairlistdist':9,'switchdist':9}
+	SIMULATION_DEFAULT_PARAMETERS = {'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325, 'DCDfreq':100,'seed':random.randint(1,40000), 'temperature':295.0, 'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen','scaling':1,'exclude':'1-3', 'pairlistdist':9,'switchdist':9, 'switching':True, 'timeSteps':1.0, 'numSteps':1000, 'startStep':0, 'stepsCycle':1,'restartSteps':100, 'DCDfreq':100,'outputEnergies':100,'cutoff':10}
+    
+	def __init__(self, parameters=None, container=Container(), fixedAtoms=False, simType=SIMULATION, confOptions=0x0):
+		#self.__dict__.update(parameters.__dict__)
+
+		if parameters == None:
+		    if simType == self.MINIMIZATION:
+		        self.__dict__.update(self.MINIMIZATION_DEFAULT_PARAMETERS)
+		    else:
+		        self.__dict__.update(self.SIMULATION_DEFAULT_PARAMETERS)
+        
+		self.container         = container
+		self.fixedAtoms     = fixedAtoms
+		self.filename       = None
+		self.buildDirectory = None
+		self.simType        = simType
+		random.seed()
+		self.imdPort        = random.randint(30000,40000)
 	    
-	    #print "Configuration __init__ ", confOptions
-	    if confOptions & self.NO_IMD_WAIT: self.imdWait = "no"
-	    else: self.imdWait = "yes"
+		#print("Configuration __init__ ", confOptions)
+		if confOptions & self.NO_IMD_WAIT: self.imdWait = "no"
+		else: self.imdWait = "yes"
 	    
 	
 	
@@ -51,81 +62,58 @@ class Configuration(object):
 
 	    self.mixtureName = mixtureName
 	    self.filename =    self.buildDirectory  + mixtureName + ".conf"
-	    conf          =    file(self.filename, mode="w")
+	    conf          =    open(self.filename, mode="w")
 	
 	    return conf
 	
 	def writeCutOffs(self, conf):
 	    conf.write("\n# CutOffs\n")
-	    conf.write("   cutoff   " + str(self.cutoff.value()) + "\n")
-	    conf.write("   switching   " + str(self._CHECKED_BOOL_TO_WORD_[self.useSwitch.isChecked()]) + "\n")
-	    if self.useSwitch.isChecked():
-	        conf.write("   switchdist   " + str(self.switchDist.value()) + "\n")
-	    conf.write("   pairlistdist   " + str(self.pairListDist.value()) + "\n")
-	    conf.write("   exclude   %s\n" % (self.exclude.itemText(self.exclude.currentIndex())))
-	    conf.write("   1-4scaling   %.10f" % ( self.scaling.value()))
+	    conf.write("   cutoff   " + str(self.cutoff) + "\n")
+	    conf.write("   switching   " + str(self._CHECKED_BOOL_TO_WORD_[self.switching]) + "\n")
+	    if self.switching:
+	        conf.write("   switchdist   " + str(self.switchdist) + "\n")
+	    conf.write("   pairlistdist   " + str(self.pairlistdist) + "\n")
+	    conf.write("   exclude   %s\n" % (self.exclude))
+	    conf.write("   1-4scaling   %.2f" % ( self.scaling))
 	    
 	    
 	def writeMinimizationParameters(self, conf):
 	    conf.write("\n\n#Parameters for minimization, some of these will be passed on to the actual simulation configuration file\nminBabyStep   %.10f\nminTinyStep   %.10f\nminLineGoal   %.10f\nnumsteps   %d\n" % 
-	               (self.minBabyStep.value(), 
-	                self.minTinyStep.value(), 
-	                self.minLineGoal.value(), 
-	                self.minSteps.value()))
+	               (self.minBabyStep, 
+	                self.minTinyStep, 
+	                self.minLineGoal, 
+	                self.minSteps))
 	
-	
+	def _writeIfDefined(self, conf, pars):
+	    for k in pars:
+	        try: conf.write(str(k) + '   ' + str(self.__dict__[k]))
+	        except KeyError:  pass
+
 	def writeConf(self, conf):
 	    conf.write("\n#TIMESTEP PARAMETERS\n")
-	    conf.write("   timestep   %.4f\n   numsteps   %d\n   firsttimestep   %d\n   stepspercycle   %d\n" % (self.timeSteps.value(), self.numSteps.value(), self.startStep.value(), self.stepsCycle.value()))
+	    conf.write("   timestep   %.4f\n   numsteps   %d\n   firsttimestep   %d\n   stepspercycle   %d\n" % (self.timeSteps, self.numSteps, self.startStep, self.stepsCycle))
 	    
 	    
 	    conf.write("\n#SIMULATION SPACE PARTITIONING\n")
-	    conf.write("   splitPatch   %s\n   hgroupCutoff   %.8f\n   margin   %.8f\n   pairlistMinProcs   %d\n   pairlistsPerCycle   %d\n   outputPairlists   %d\n   pairlistShrink   %.8f\n   pairlistGrow   %.8f\n   pairlistTrigger   %.8f" % (self.splitPatch.itemText(self.splitPatch.currentIndex()), self.hCutoff.value(), self.margin.value(), self.pairMin.value(), self.pairCycle.value(), self.pairOut.value(), self.pairShrink.value(), self.pairGrow.value(), self.pairTrigger.value()))
-	
-	    
-	    conf.write("\n\n###Basic Dynamics###\n   temperature   %.10f\n   COMmotion   %s\n   dielectric   %.8f\n   seed   %d\n   rigidBonds   %s\n   rigidTolerance   %.10f\n   rigidIterations   %d\n   useSettle   %s" % 
-	               (self.temperature.value(), 
-	                (self._CHECKED_BOOL_TO_WORD_[self.COMmotion.isChecked()]), 
-	                self.dielectric.value(), 
-	                self.seed.value(), 
-	                self.rigidBonds.itemText(self.rigidBonds.currentIndex()), 
-	                self.rigidTol.value(), 
-	                self.rigidIter.value(),
-	                (self._CHECKED_BOOL_TO_WORD_[ self.settle.isChecked()])))
-	    
-	    
+	    # all of these have default values
+	    self._writeIfDefined(conf, ['splitPatch', 'hgroupCutoff', 'margin', 'pairlistMinProcs', 'pairlistsPerCycle', 'outputPairlists', 'pairShrink', 'pairGrow', 'pairTrigger'])
+
+	    conf.write("\n\n###Basic Dynamics###\n   temperature   %.10f\n   seed   %d\n" % (self.temperature, self.seed))
+	    self._writeIfDefined(conf, ['COMmotion', 'dielectric','rigidBonds','rigidTolerance','rigidIterations','useSettle'])
+    
 	    #PME params
-	    if self.pme.isChecked():
-	        conf.write("\n\n###PME PARMS###\n   PMEGridSpacing    %s\n   PME   %s\n   PMETolerance   %.8f\n   PMEInterpOrder   %d" % (str(self.pmeGridSp.value()), (self._CHECKED_BOOL_TO_WORD_[self.pme.isChecked()]), self.pmeTol.value(), self.pmeIn.value()))
-	        if self.gridX.value() != 0: 
-	            conf.write("\n   PMEGridSizeX   " + str(self.gridX.value()))
-	        if self.gridY.value() != 0:
-	            conf.write("\n   PMEGridSizeY   " + str(self.gridY.value()))
-	        if self.gridZ.value() != 0:
-	            conf.write("\n   PMEGridSizeZ   " + str(self.gridZ.value()))
-	        if self.FFTProc.value() != 0:
-	            conf.write("\n   PMEProcessors   " + str(self.FFTProc.value()))
-	        conf.write("\n   FFTWEstimate   %s\n   FFTWUseWisdom   %s" % ((self._CHECKED_BOOL_TO_WORD_[self.FFTOp.isChecked()]), (self._CHECKED_BOOL_TO_WORD_[self.FFTW.isChecked()])))
-	        if hasattr(self.FFTFile,"text") and  self.FFTFile.text() != "default" and self.FFTFile.text() != '':
-	            conf.write("\n   FFTWWisdomFile   " + str(self.FFTFile.text()))
+	    if 'PME' in self.__dict__ and self.PME == 'yes':
+	        conf.write("\n\n###PME PARMS###\n   PME   yes\n")
+	        self._writeIfDefined(conf, ['PMEGridSpacing','PMETolerance','PMEInterpOrder','PMEGridSizeX','PMEGridSizeY','PMEGridSizeZ','PMEProcessors','FFTWEstimate','FFTWUseWisdom','FFTWWisdomFile'])
 	    
 	    #FULL DIRECT PARAMS
-	    if self.elc.isChecked():
-	        conf.write("\n\n###FULL DIRECT PARAMS###\nFullDirect   yes")
+	    self._writeIfDefined(conf, ['FullDirect'])
 	    
 	    #Multiple timesteps # 
 	    conf.write("\n\n###Multiple timestep parameters###")
-	    if self.numElc.value() != 0:
-	        conf.write("\n   fullElectFrequency   " + str(self.numElc.value()))
-	    if self.timeBond.value() != 0:
-	        conf.write("\n   nonBondedFreq   " + str(self.timeBond.value()))
-	    conf.write("\n   MTSAlgorithm   " + str(self.MTSalg.itemText(self.MTSalg.currentIndex())))
-	    conf.write("\n   longSplitting   " + str(self.rforce.itemText(self.rforce.currentIndex())))
-	    conf.write("\n   molly   " + str((self._CHECKED_BOOL_TO_WORD_[self.moll.isChecked()])))
-	    conf.write("\n   mollyTolerance   " + str(self.molltol.value()))
-	    conf.write("\n   mollyIterations   " + str(self.mollitr.value()))
+	    self._writeIfDefined(conf, ['fullElectFrequency','nonBondedFreq','MTSAlgorithm','longSplitting','molly','mollyTolerance','mollyIterations'])
 	    
-	    
+	    ''' TO BE CHANGED............
 	    #Harmonic constraint params
 	    if self.const.isChecked():
 	        conf.write("\n\n####HARMONIC CONSTRAINT PARAMETERS###\nconstraints   on\nconsexp   " + str(self.harExp.value()))
@@ -146,27 +134,27 @@ class Configuration(object):
 	        conf.write("\nconskcol   " + str(self.pdbcol1.itemText(self.pdbcol1.currentIndex()))) 
 	        if self.selCons.isChecked():
 	            conf.write("\nselectConstraints   %s\nselectConstrX   %s\nselectConstrY   %s\nselectConstrZ   %s" % ((self._CHECKED_BOOL_TO_WORD_[self.selCons.isChecked()]), (self._CHECKED_BOOL_TO_WORD_[self.selConsX.isChecked()]), (self._CHECKED_BOOL_TO_WORD_[self.selConsY.isChecked()]), (self._CHECKED_BOOL_TO_WORD_[self.selConsZ.isChecked()])))
-	    
+	    '''
+        
 	    #langevin dynamics 
-	    if self.useLang.isChecked():
+	    if 'langevin' in self.__dict__ and self.langevin == 'on':
 	        conf.write("\n\n###LANGEVIN DYNAMICS###\n   langevin   on")
-	        if self.langTemp == 0:
-	            print "You did not set a temperature for langevin calculations!\nTemperature will be set to 1 to avoid error."
-	            conf.write("\n   langevinTemp   1")
+	        if 'langevinTemp' not in  self.__dict__:
+	            print("You did not set a temperature for langevin calculations!\nTemperature will be set to 295.")
+	            conf.write("\n   langevinTemp   295")
+	            self.langevinTemp = 295
 	        else:
-	            conf.write("\n   langevinTemp   " + str(self.langTemp.value()))
-	        if self.langDamp.value() != 0:
-	            conf.write("\n   langevinDamping   " + str(self.langDamp.value()))
-	        conf.write("\n   langevinHydrogen   " + str(self._CHECKED_BOOL_TO_WORD_[self.langHyd.isChecked()]))
-	        if  hasattr(self.pdbLang,"text") and  self.pdbLang.text() != "default" and self.pdbLang.text(f) != '':
-	            conf.write("\n   langevinFile   " + str(self.pdbLang.text()))
-	            conf.write("\n   langevinCol   " + str(self.pdbCol.itemText(self.fixAtmCol.currentIndex())))
-	    
+	            conf.write("\n   langevinTemp   " + str(self.langTemp))
+	        self._writeIfDefined(conf, ['langevinDamping','langevinHydrogen','langevinFile','langevinCol'])
+                
+
+
+	    ''' TO BE CHANGED............ 
 	    #temperature coupling
 	    if self.tempCoup.isChecked():
 	        conf.write("\n\n###Temperature Coupling###\ntCouple   on")
 	        if self.tempBath.value() == 0:
-	            print "No values given to tCoupleTemp! \nGiving it a default value of 1."
+	            print("No values given to tCoupleTemp! \nGiving it a default value of 1.")
 	            conf.write("\ntCoupleTemp   1.00")
 	        else:
 	            conf.write("\ntCoupleTemp   " + str(self.tempBath.value()))
@@ -178,7 +166,7 @@ class Configuration(object):
 	    if self.timeTRes.value() != 0:
 	        conf.write("\n\n###Temperature Rescaling###\nrescaleFreq   " + str(self.timeTRes.value()))
 	        if self.tempEq.value() == 0:
-	            print "No value given to rescaleTemp! \n Giving it a default value of 1."
+	            print("No value given to rescaleTemp! \n Giving it a default value of 1.")
 	            conf.write("\nrescaleTemp   1")
 	        else:
 	            conf.write("\nrescaleTemp   " + str(self.tempEq.value()))
@@ -191,7 +179,7 @@ class Configuration(object):
 	            conf.write("\nreassignTemp   " + str(self.tempResEq.value()))
 	        conf.write("\nreassignIncr   " + str(self.tempInc.value()))
 	        if self.resHold.value() == 0:
-	            print "No value given to reassignHold! \n Giving it a default value of 1."
+	            print("No value given to reassignHold! \n Giving it a default value of 1.")
 	            conf.write("\nreassignHold   1")
 	        else:
 	            conf.write("\nreassignHold   " + str(self.resHold.value()))
@@ -210,33 +198,38 @@ class Configuration(object):
 	    if self.useBeren.isChecked() != False:
 	        conf.write("\n\n###Berendsen Pressure Bath Coupling###\n   BerendsenPressure   on")
 	        if self.targPress.value() == 0:
-	            print "No value given to target pressure for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
+	            print("No value given to target pressure for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
 	            conf.write("\n   BerendsenPressureTarget   1")
 	        else:
 	            conf.write("\n   BerendsenPressureTarget   " + str(self.targPress.value()))
 	        if self.berenComp.value() == 0:
-	            print "No value given to compressibility for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
+	            print("No value given to compressibility for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
 	            conf.write("\n   BerendsenPressureCompressibility   1")
 	        else:
 	            conf.write("\n   BerendsenPressureCompressibility   " + str(self.berenComp.value()))
 	        if self.berenRelx.value() == 0:
-	            print "No value given to relaxation time for Berendsen Pressure Bath coupling \n Giving it a default value of 1."
+	            print("No value given to relaxation time for Berendsen Pressure Bath coupling \n Giving it a default value of 1.")
 	            conf.write("\n   BerendsenPressureRelaxationTime   1")
 	        else:
 	            conf.write("\n   BerendsenPressureRelaxationTime   " + str(self.berenRelx.value()))
 	        if self.berenPress.value() != 0:
 	            conf.write("\n   BerendsenPressureFreq   " + str(self.berenPress.value()))
-	
+        '''
+        
 	    #nose hooving something machinka
-	    if self.useLangP.isChecked():
-	        conf.write("\n\n###Nose-Hoover Langevin Piston Pressure Control###\n   LangevinPiston   on")
+	    if 'LangevinPiston' in self.__dict__ and self.LangevinPiston == 'on':
+	        conf.write("\n\n###Nose-Hoover Langevin Piston Pressure Control###\n   LangevinPiston   on\n")
 	        try:
-	            conf.write("\n   LangevinPistonTarget   " + str(self.langTarg.value()))
+	            conf.write("   LangevinPistonTarget   " + str(self.langTarg.value()))
 	            conf.write("\n   LangevinPistonPeriod   " + str(self.oscilPer.value()))
 	            conf.write("\n   LangevinPistonDecay   " + str(self.langDecay.value()))
-	            conf.write("\n   LangevinPistonTemp   " + str(self.langPTemp.value()))
-	            conf.write("\n   SurfaceTensionTarget   " + str(self.surfTen.value()))
-	            conf.write("\n   StrainRate   " + str(self.strainX.value()) + " " + str(self.strainY.value()) + " " + str(self.strainZ.value()))
+                
+	            try: conf.write("\n   LangevinPistonTemp   " + str(self.LangevinPistonTemp))
+	            except:
+	                try: conf.write("\n   LangevinPistonTemp   " + str(self.langevinTemp))
+	                except: conf.write("\n   LangevinPistonTemp   295")
+                    
+	            self._writeIfDefined(conf, ['SurfaceTension','TargetStrainRate','StrainRate'])
 	        except:
 	            print("Message from Wolffia:\n \n You did not give a required value to Nose-Hoover Langevin Piston Pressure Control!\n")
 	        #if self.exclPress.isChecked():
@@ -245,6 +238,7 @@ class Configuration(object):
 	         #       conf.write("\nExcludeFromPressureFile   " + str(self.exclPressFile.text()))
 	         #   conf.write("\nExcludeFromPressureCol   " + str(self.exclPressCol.itemText(self.exclPressCol.currentIndex())))
 	    
+	    ''' TO BE CHANGED............
 	    #External electric field
 	    if self.useEField.isChecked():
 	        conf.write("\n\n###External Electric Field###\neFieldOn   yes")
@@ -267,7 +261,7 @@ class Configuration(object):
 	    if self.smd.isChecked():
 	        conf.write("\n\n###Steered molecular dynamics###\nSMD   on")
 	        if self.smdFile.text() == "default":
-	            print "Hey, you forgot to name the file for SMD constraints! \nExit"
+	            print("Hey, you forgot to name the file for SMD constraints! \nExit")
 	            return
 	        else:
 	            conf.write("\nSMDFile   " + self.smdFile.text())
@@ -275,7 +269,8 @@ class Configuration(object):
 	        conf.write("\nSMDVel   " + str(self.smdVel.value())) 
 	        conf.write("\nSMDDir   " + str(self.smdDirX.value()) + " " + str(self.smdDirY.value()) + " " + str(self.smdDirZ.value()))
 	        conf.write("\nSMDOutputFreq   " + str(self.smdOut.value()))
-	        
+        '''
+	       
 	
 	def writeFixedAtomsParameters(self, conf):
 	    #fixed atoms parameters
@@ -300,18 +295,18 @@ class Configuration(object):
 	    conf.write("\n   parameters    \"$basedir/"  + mixtureName + ".prm\"\n")
 	    conf.write("   paraTypeCharmm on\n")
 	    conf.write("\n   restartname \"$basedir/" + mixtureName  + "\"\n")
-	    #print self.__dict__.keys()
-	    conf.write("   restartfreq " + str(self.restartSteps.value()) +  "\n")
+	    #print(self.__dict__.keys())
+	    conf.write("   restartfreq " + str(self.restartSteps) +  "\n")
 	    conf.write("   binaryrestart no\n")
 	    conf.write("\n   outputname   \""    +    mixtureName + "\"\n")
-	    conf.write("   DCDfile   \"$basedir/%s\"\n   DCDfreq %s\n" % (str(mixtureName + ".dcd"), str(self.trajectorySteps.value())))
+	    conf.write("   DCDfile   \"$basedir/%s\"\n   DCDfreq %s\n" % (str(mixtureName + ".dcd"), str(self.DCDfreq)))
 	    if WOLFFIA_USES_IMD:
-	        conf.write("\n   IMDon on\n   IMDport " + str(self.imdPort)  + "\n   IMDfreq " + str(self.trajectorySteps.value()) +  "\n   IMDwait " + self.imdWait + "\n   IMDignore no\n")
+	        conf.write("\n   IMDon on\n   IMDport " + str(self.imdPort)  + "\n   IMDfreq " + str(self.DCDfreq) +  "\n   IMDwait " + self.imdWait + "\n   IMDignore no\n")
 	    else:
-	        conf.write("\n   IMDon off\n   IMDport 3000\n   IMDfreq " + str(self.trajectorySteps.value()) +  "\n   IMDwait no\n   IMDignore no\n")
-	    conf.write("\n   outputEnergies " + str(self.energySteps.value()) +  "\n")
-	    #print "writeIOSection", self.restartSteps.value()
-	    conf.write("\n   outputTiming  " + str(self.energySteps.value()) +  "\n")
+	        conf.write("\n   IMDon off\n   IMDport 3000\n   IMDfreq " + str(self.DCDfreq.value()) +  "\n   IMDwait no\n   IMDignore no\n")
+	    conf.write("\n   outputEnergies " + str(self.outputEnergies) +  "\n")
+	    #print("writeIOSection", self.restartSteps.value())
+	    conf.write("\n   outputTiming  " + str(self.outputEnergies) +  "\n")
 	
 	
 	def writePBCsection(self, conf, boudary):
@@ -342,14 +337,14 @@ class Configuration(object):
 	    """
 	     Writes the configuration file for the MD simulation. 
 	    """
-	    print "Configuration writeSimulationConfig", buildDirectory, mixtureName
+	    #print("Configuration writeSimulationConfig", buildDirectory, mixtureName)
 	    confFile = self.openFile(buildDirectory, mixtureName)
 	    self.writeHeader(confFile)
 	    self.writeSimulationType(confFile)
 	    self.writeIOSection(confFile, buildDirectory, mixtureName)
 	    self.writeCutOffs(confFile)
 	    self.writeFixedAtomsParameters(confFile)
-	    self.writePBCsection(confFile, self.drawer)
+	    self.writePBCsection(confFile, self.container)
 	    
 	    if self.simType == Configuration.SIMULATION:
 	        self.writeConf(confFile)
