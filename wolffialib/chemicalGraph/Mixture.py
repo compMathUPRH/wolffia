@@ -1156,7 +1156,10 @@ class Mixture(Graph):
         for molecule in self:
             res += self.getMolecule(molecule).order()
         return res
+        #return sum([self.getMolecule(molecule).order() for molecule in self])
 
+    def atomsCount(self):
+        return self.order()
     
     def readFiles(self, pdbFile=None,psfFile=None,moleculeFile=None,fileType=None,id=None):
         """
@@ -1392,7 +1395,8 @@ class Mixture(Graph):
             f = open(filename, "r")
         else:
             f = filename
-            
+        
+        updateInfo = []
         for line in f:
             if line[:4] == "ATOM" or line[:6] == "HETATM":
                 try:
@@ -1401,10 +1405,17 @@ class Mixture(Graph):
                     x = float(line[30:38])
                     y = float(line[38:46])
                     z = float(line[46:54])
-                    self.atomOrder[num].setCoord([x,y,z])
+                    #self.atomOrder[num].setCoord([x,y,z])
+                    updateInfo.append([num,x,y,z])
                 except (IndexError,ValueError):
                     print("Mixture.updateCoordinates failed to update atom ",num)
                     break
+        if len(updateInfo) != self.atomsCount():
+            print(len(updateInfo), self.number_of_nodes())
+            raise MixtureError("Inconsistent atom counts between mixture and read file in Mixture.updateCoordinates().")
+        for atom in updateInfo:
+            self.atomOrder[atom[0]].setCoord([atom[1],atom[2],atom[3]])
+            
         f.close()
 
 
