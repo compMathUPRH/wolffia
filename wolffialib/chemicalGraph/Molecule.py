@@ -761,7 +761,7 @@ class  Molecule(ChemicalGraph):
 		cy /= M
 		cz /= M
 		
-		return [cx, cy, cz]
+		return np.array([cx, cy, cz])
     
 	def center(self):
 		cx = 0.0
@@ -783,7 +783,7 @@ class  Molecule(ChemicalGraph):
 		cy /= count
 		cz /= count
 		
-		return [cx, cy, cz]
+		return np.array([cx, cy, cz])
     
 	
 	#-------------------------------------------------------------
