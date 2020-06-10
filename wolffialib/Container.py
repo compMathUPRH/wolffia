@@ -43,6 +43,7 @@
 #import NanoCAD_conf
 import sys, os, math
 from wolffialib.chemicalGraph.solvent.WATER import WATER
+import numpy as np
 
 #sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../conf')
 #from conf.Wolffia_conf import NANOCAD_MOLECULES
@@ -99,6 +100,48 @@ class Container:
     
             return n
 
+
+## ===========================================
+class Sphere(Container):
+    '''
+        Defines a sphere (similar to ? in LAMMPS)
+    '''
+    def __init__(self, radius, center=np.array([0,0,0]), cid=1):
+        '''        
+            center = np.array([x,t,z])
+        '''
+        super().setId(cid)
+    
+        self.center = center
+        self.radius = radius
+    
+    def hasCell(self):
+            return True
+
+    def volume(self):
+            '''
+            volume
+            '''
+            return 4 * np.pi * self.radius ** 3 / 3
+
+    def randomPoints(self):
+        from numpy.linalg import norm
+        from numpy.random import uniform
+        
+        while True:
+            #rdr  = np.random.rand() * self.radius
+            #rda1 = np.random.rand() * np.pi
+            #rda2 = np.random.rand() * 2*np.pi
+            #rdx  = rdr * np.sin(rda1) * np.cos(rda2) + self.center[0]
+            #rdy  = rdr * np.sin(rda1) * np.sin(rda2) + self.center[1]
+            #rdz  = rdr * np.cos(rda1) + self.center[2]
+            rd  = uniform(-self.radius,self.radius, 3)
+            while norm(rd) > self.radius:
+                rd  = uniform(-self.radius,self.radius, 3)
+            yield rd + self.center
+
+    def getBoxVolume(self):
+            return self.volume()
 
 # ===========================================
 class Box(Container):
@@ -163,6 +206,17 @@ class Box(Container):
     def lammpsCommand(self):
         return "region {:d} style block {}".format(self.id, ' '.join(self.maxsMins))
     
+    
+    def randomPoints(self):
+        from numpy.random import uniform
+        
+        while True:
+            rdx = uniform(self.maxsMins[0], self.maxsMins[1])
+            rdy = uniform(self.maxsMins[2], self.maxsMins[3])
+            rdz = uniform(self.maxsMins[4], self.maxsMins[5])
+            yield np.array([rdx, rdy, rdz])
+
+
     def setMaxsMins(self, maxsMins):
         self.maxsMins = maxsMins
         self.setCellOrigin((maxsMins[0], maxsMins[2], maxsMins[4]))
@@ -185,6 +239,7 @@ class Box(Container):
                 self.maxsMins[1], self.maxsMins[3], self.maxsMins[5],
                 self.maxsMins[0], self.maxsMins[2], self.maxsMins[4]))
         if xscFile != None: fd.close()
+
 
     def volume(self):
             '''
