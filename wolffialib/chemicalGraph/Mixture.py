@@ -1520,10 +1520,10 @@ class Mixture(Graph):
                 #print "Mixture writePDB writing neighbors", mol, atom
                 neighbors = list(mol.neighbors(atom))
                 if len(neighbors) > 0:
-                    fd.write("CONECT %i" % (renumbering[mol][atom]))
+                    fd.write("CONECT %4i" % (renumbering[mol][atom]))
                     for bond in neighbors:
                         if renumbering[mol][bond] > renumbering[mol][atom]:
-                            fd.write(" %i" % (renumbering[mol][bond]))
+                            fd.write(" %4i" % (renumbering[mol][bond]))
                     fd.write("\n")
         #count = 1
         #for molecule in self:
