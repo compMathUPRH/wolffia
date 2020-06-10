@@ -29,7 +29,6 @@
 """
 
 import sys,os, warnings
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 
 import numpy as np
 from wolffialib.chemicalGraph.Molecule import Molecule
@@ -56,13 +55,37 @@ class Solvent(Molecule):
 
 
     def getAtomAttributes(self, atom):
-        solvAtom = atom % super(Solvent, self).order()
-        molID    = int(atom / super(Solvent, self).order())
-        molAttr = super(Solvent, self).getAtomAttributes(solvAtom+1) # indices in networkx start at 1
-        attributes = SolventAtomAttributes(molAttr.getInfo(), self.coordinates, molID, solvAtom)
-        #attributes.setCoord(self.coordinates[molID][solvAtom])
+        import copy
+        #solvAtom = atom % super(Solvent, self).order()
+        solvAtom = int(atom) % super().order()
+        molID    = int(atom /super().order())
+        #print("Solvent getAtomAttributes , ", atom,molID, solvAtom)
+        molAttr = super().getAtomAttributes(solvAtom+1) # indices in networkx start at 1
+        #assert(type(atom) == int)
+        #attributes = molAttr.copy()
+        attributes = copy.deepcopy(molAttr)
+        #attributes = SolventAtomAttributes(molAttr.getInfo(), self.coordinates, molID, solvAtom)
+        attributes.setCoord(self.coordinates[molID][solvAtom])
         return attributes
 
+    def setAtomCoordinates(self, atom, coords):
+        solvAtom = int(atom) % super().order()
+        molID    = int(atom /super().order())
+        #print("Solvent setAtomAttributes , ", atom,molID, solvAtom)
+        self.coordinates[molID][solvAtom] = coords
+
+    def moveBy(self, displ):
+        """Moves the atoms in the Solvent (self).
+
+        @type displ: list of three floats
+        @param displ: np.array displacement of the atoms in the graph.
+        """
+
+        if len(displ) != 3:
+            raise self.MoleculeError("Argument \"displ\" in Molecule.moveby(self, displ) should a list of 3 numbers.")
+        for coords in self.coordinates:
+            coords += displ
+        
     def addCoordinates(self, molecule):
         ''' assumes molecule is the same as base molecule. '''
         #print("Solvent.addCoordinates molecule  {} with {} atoms.... ".format(molecule, len(molecule)))
@@ -120,20 +143,20 @@ class Solvent(Molecule):
     def edges(self):
         #import copy
 
-        solvBonds = [(par[0]-1, par[1]-1) for par in super(Solvent, self).edges()]  # indices in networkx start at 1
+        solvBonds = [(par[0]-1, par[1]-1) for par in super().edges()]  # indices in networkx start at 1
         bonds = []
 
-        solvAtoms = super(Solvent, self).order()
+        solvAtoms = super().order()
         numMols = int(self.order() / solvAtoms)
         for molID in range(numMols):
             bonds += [(par[0]+solvAtoms*molID, par[1]+solvAtoms*molID) for par in solvBonds]
         return bonds
 
     def neighbors(self, atom):
-        solvAtoms = super(Solvent, self).order()
+        solvAtoms = super().order()
         solvAtom = atom % solvAtoms
         baseID    = atom / solvAtoms * solvAtoms - 1
-        neigh = super(Solvent, self).neighbors(solvAtom+1) # indices in networkx start at 1
+        neigh = super().neighbors(solvAtom+1) # indices in networkx start at 1
         neigh = [a + baseID for a in neigh]
         return neigh
 
@@ -167,10 +190,11 @@ class SolventAtomIterator:
 
 class SolventAtomAttributes(AtomAttributes):
     def __init__(self, atomInfo, coordsTable, molID, coordsPos):
-        super(SolventAtomAttributes, self).__init__(atomInfo, None)
         self.coordsPos = coordsPos
         self.coordsTable = coordsTable
+        #print("SolventAtomAttributes.__init__ , ", self.coordsTable)
         self.molID = molID
+        super(SolventAtomAttributes, self).__init__(atomInfo, [0,0,0])
 
     def setCoord(self, coords):
         #if isinstance(coords, list) and isinstance(coords[0], np.ndarray): # detecting solvent, I hope we can get rid of it soon
@@ -182,8 +206,8 @@ class SolventAtomAttributes(AtomAttributes):
         #else:
         #    print "SolventAtomAttributes.setCoord: coords == None"
 
-        if coords != None:
-            self.coordsTable[self.molID][self.coordsPos,:] = coords    
+        print("SolventAtomAttributes.setCoord ," , self.molID, self.coordsPos)
+        self.coordsTable[self.molID][self.coordsPos,:] = coords    
         
 
     #-------------------------------------------------------------
