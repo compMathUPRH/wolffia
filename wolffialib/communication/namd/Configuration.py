@@ -13,8 +13,8 @@ class Configuration(object):
 	NO_IMD_WAIT    = True
 	
 	_CHECKED_BOOL_TO_WORD_    = {True:"yes", False:"no"}
-	MINIMIZATION_DEFAULT_PARAMETERS = {'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-3', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':1000,'outputEnergies':1000, 'switching':True,'exclude':'1-3', 'pairlistdist':13,'switchdist':9}
-	SIMULATION_DEFAULT_PARAMETERS = {'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325, 'DCDfreq':1000,'seed':random.randint(1,40000), 'temperature':295.0, 'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen','scaling':1,'exclude':'1-3', 'pairlistdist':13,'switchdist':9, 'switching':True, 'timeSteps':1.0, 'numSteps':1000, 'startStep':0, 'stepsCycle':1,'restartSteps':1000,'outputEnergies':1000,'cutoff':10}
+	MINIMIZATION_DEFAULT_PARAMETERS = {'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-2', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':1000,'outputEnergies':1000, 'switching':True,'exclude':'1-2', 'pairlistdist':13,'switchdist':9,'IMDon':'off'}
+	SIMULATION_DEFAULT_PARAMETERS = {'langevin':'on','langevinTemp':295, 'langevinDamping':1.0, 'langevinHydrogen':'yes', 'LangevinPiston':'off', 'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325, 'DCDfreq':1000,'seed':random.randint(1,40000), 'temperature':295.0, 'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen','scaling':1,'exclude':'1-2', 'pairlistdist':13,'switchdist':9, 'switching':True, 'timeSteps':1.0, 'numSteps':10000, 'startStep':0, 'stepsCycle':1,'restartSteps':1000,'outputEnergies':1000,'cutoff':12,'IMDon':'off'}
     
 	def __init__(self, parameters=None, container=Container(), fixedAtoms=False, simType=SIMULATION, confOptions=0x0):
 		#self.__dict__.update(parameters.__dict__)
@@ -86,7 +86,7 @@ class Configuration(object):
 	
 	def _writeIfDefined(self, conf, pars):
 	    for k in pars:
-	        try: conf.write(str(k) + '   ' + str(self.__dict__[k]))
+	        try: conf.write('   ' + str(k) + '   ' + str(self.__dict__[k]) + '\n')
 	        except KeyError:  pass
 
 	def writeConf(self, conf):
@@ -144,7 +144,7 @@ class Configuration(object):
 	            conf.write("\n   langevinTemp   295")
 	            self.langevinTemp = 295
 	        else:
-	            conf.write("\n   langevinTemp   " + str(self.langTemp))
+	            conf.write("\n   langevinTemp   " + str(self.langevinTemp)+"\n")
 	        self._writeIfDefined(conf, ['langevinDamping','langevinHydrogen','langevinFile','langevinCol'])
                 
 
@@ -220,18 +220,19 @@ class Configuration(object):
 	    if 'LangevinPiston' in self.__dict__ and self.LangevinPiston == 'on':
 	        conf.write("\n\n###Nose-Hoover Langevin Piston Pressure Control###\n   LangevinPiston   on\n")
 	        try:
-	            conf.write("   LangevinPistonTarget   " + str(self.langTarg.value()))
-	            conf.write("\n   LangevinPistonPeriod   " + str(self.oscilPer.value()))
-	            conf.write("\n   LangevinPistonDecay   " + str(self.langDecay.value()))
+	            conf.write("   LangevinPistonTarget   " + str(self.LangevinPistonTarget))
+	            conf.write("\n   LangevinPistonPeriod   " + str(self.LangevinPistonPeriod))
+	            conf.write("\n   LangevinPistonDecay   " + str(self.LangevinPistonDecay))
                 
 	            try: conf.write("\n   LangevinPistonTemp   " + str(self.LangevinPistonTemp))
 	            except:
 	                try: conf.write("\n   LangevinPistonTemp   " + str(self.langevinTemp))
 	                except: conf.write("\n   LangevinPistonTemp   295")
                     
-	            self._writeIfDefined(conf, ['SurfaceTension','TargetStrainRate','StrainRate'])
 	        except:
 	            print("Message from Wolffia:\n \n You did not give a required value to Nose-Hoover Langevin Piston Pressure Control!\n")
+	    if 'sasa' in self.__dict__ and self.sasa == 'on':
+	            self._writeIfDefined(conf, ['sasa','SurfaceTension'])
 	        #if self.exclPress.isChecked():
 	        #    conf.write("\nExcludeFromPressure   on")
 	         #   if self.exclPressFile.text() != "default" and self.exclPressFile.text() != '':
@@ -301,7 +302,7 @@ class Configuration(object):
 	    conf.write("\n   outputname   \""    +    mixtureName + "\"\n")
 	    conf.write("   DCDfile   \"$basedir/%s\"\n   DCDfreq %s\n" % (str(mixtureName + ".dcd"), str(self.DCDfreq)))
 	    try:
-	        conf.write("\n   IMDon on\n   IMDport " + str(self.imdPort)  + "\n   IMDfreq " + str(self.DCDfreq) +  "\n   IMDwait " + self.imdWait + "\n   IMDignore no\n")
+	        conf.write("\n   IMDon " + self.IMDon + "\n   IMDport " + str(self.imdPort)  + "\n   IMDfreq " + str(self.DCDfreq) +  "\n   IMDwait " + self.imdWait + "\n   IMDignore no\n")
 	    except:
 	        conf.write("\n   IMDon off\n")
 	    conf.write("\n   outputEnergies " + str(self.outputEnergies) +  "\n")
