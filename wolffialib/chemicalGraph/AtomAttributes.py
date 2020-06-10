@@ -272,7 +272,7 @@ class AtomAttributes(object):
 		"""
 		return self._attributes
 	#-------------------------------------------------------------
-	def copy(self):
+	def copy2(self):
 		"""Copy of the atom attributes.
 
 		@rtype:  list

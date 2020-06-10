@@ -634,6 +634,12 @@ class  Molecule(ChemicalGraph):
 		print("Molecule.removeBonds() produjo ", len(newMolsList), " moleculas")
 		return newMolsList
 	
+
+	#-------------------------------------------------------------
+	def setAtomCoordinates(self, atom, coords):
+	    self.getAtomAttributes(atom).setCoord(coords)
+
+
 	#-------------------------------------------------------------
 	def merge(self, mol, bonds=[], keepTypes=True):
 		"""
@@ -802,6 +808,7 @@ class  Molecule(ChemicalGraph):
 		for atom in self:
 			ta = self.getAtomAttributes(atom).getInfo().getType()
 			neigh = self.neighbors(atom)
+			#print ("Molecule.bondTypes  Neighbours: ", atom, ", ", neigh)
 			#print "Neighbours: ", atom, ", ", neigh
 			for n1 in neigh:
 				tn1 = self.getAtomAttributes(n1).getInfo().getType()
@@ -825,7 +832,7 @@ class  Molecule(ChemicalGraph):
 		for atom in self:
 			ta = self.getAtomAttributes(atom).getInfo().getType()
 			neigh = self.neighbors(atom)
-			#print "Neighbours: ", atom, ", ", neigh
+			#print ("Molecule.angleTypes  Neighbours: ", atom, ", ", neigh)
 			for n1 in neigh:
 				tn1 = self.getAtomAttributes(n1).getInfo().getType()
 				for n2 in neigh:

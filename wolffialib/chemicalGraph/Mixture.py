@@ -541,49 +541,31 @@ class Mixture(Graph):
         import math, random
         import numpy as np
         from wolffialib.chemicalGraph.solvent.Solvent import Solvent
+        from wolffialib.Container import Sphere, Box
+        from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
         
         solventMolecules = Solvent(solv)#.__class__)
-        
-        remaining = -1   # to track removng collissions
-        
-        totalDim = box.getBoxDimension()
-        boxmin = box.getCellOrigin()
-        boxmax =[ boxmin[0]+totalDim[0], boxmin[1]+totalDim[1], boxmin[2]+totalDim[2] ]
+
+        randomPoint = box.randomPoints()
         
         #calculate the volume for a single solvent molecule
-        center = [0., 0., 0.]
+        solvCenter = [0., 0., 0.]
         pos = solv.massCenter()
-        solv.moveBy([center[0]-pos[0], center[1]-pos[1], center[2]-pos[2]])
-        #solvDiameter = solv.diameter()+ _SEPARATION_BETWEEN_SOLVENTS_
+        solv.moveBy([solvCenter[0]-pos[0], solvCenter[1]-pos[1], solvCenter[2]-pos[2]])
         solvDiameter = math.pow(box.getBoxVolume() / molNum, 1./3.)
         if solvDiameter == 0: return
-        
-        row = math.floor(totalDim[1]/solvDiameter)
-        col = math.floor(totalDim[0]/solvDiameter)
-        dep = math.floor(totalDim[2]/solvDiameter)
         
         progressMax   = molNum
         progressCount = 0
         if progress != None:    
             progress.setLabelText("Adding solvent")
-            progress.setRange(0,molNum-1)
+            progress.setRange(0,molNum)
             progress.setValue(0)
         
         solvRadius = solvDiameter / 2
         newPos = solv.massCenter()
-        refCoor = boxmin
-        
-        #boxmax[0] -= solvDiameter/2.
-        #boxmax[1] -= solvDiameter/2.
-        #boxmax[2] -= solvDiameter/2.
-        
-        if progress != None:    
-            progress.setLabelText("Adding solvent")
-            progress.setRange(progressCount,progressMax)
-            progress.setValue(progressCount)
         
         # lopps over a sequence of adding solvent and removing collisions
-        originalMolecules = self.molecules()
         originalCoords = self.getAtomsCoordinatesAsArray()
         solvRadius = solvDiameter / 2.0 + 1.5
         
@@ -596,26 +578,24 @@ class Mixture(Graph):
             rz = random.uniform(0, 360)
             
             #random displacement for solvent atoms
-            rdx = random.uniform(boxmin[0], boxmax[0])
-            rdy = random.uniform(boxmin[1], boxmax[1])
-            rdz = random.uniform(boxmin[2], boxmax[2])
-            
+            newPos = next(randomPoint)
+           
             #generate new molecule and assign next position
             mol = solv.copy()
             mol.rotateDeg(rx, ry, rz)
-            newPos = np.array([[rdx, rdy, rdz]])
         
             if checkCollisions:
-                from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
-                atomDistances = euclidean_distances(originalCoords, newPos)
+                if len(originalCoords) > 0:
+                    atomDistances = euclidean_distances(originalCoords, newPos)
+                else:
+                    atomDistances = solvRadius + 1
                 if np.min(atomDistances) > solvRadius:
                     #print 'fillBox: añadiendo', progressCount, np.min(atomDistances), newPos
-                    mol.moveBy(list(newPos)[0])
+                    mol.moveBy(newPos)
                     #nodeName = self.addMolecule(mol, checkForInconsistentNames=False)
                     #self.shownMolecules.show(nodeName)
                     solventMolecules.addCoordinates(mol)
                 else:
-                    #print 'fillBox: colision'
                     if replaceCollisions: progressCount -= 1
         
             progressCount += 1
@@ -632,11 +612,7 @@ class Mixture(Graph):
         solv.rename(solventMolecules.molname())
         progressMax -= 1
         
-        #self.setCurrentMixtureSaved(False)
         
-        #print "tiempo ", time.clock() - start
-        #print "Molecules after cleaning: ",mix.order()
-
     def getMixtureName(self):
         return self.mixName
 
@@ -690,12 +666,12 @@ class Mixture(Graph):
         logger.info("Loading molecule from " + filename)
         
         #print "History.load_ importing cPickle"
-        import cPickle as pickle #Tremenda aportación por carlos cortés
+        import pickle #Tremenda aportación por carlos cortés
         #print "History.load_ imported cPickle, starting to load"
 
-        f = open(filename, "r")
         mix = Mixture()
-        mix.__dict__ = pickle.load(f)
+        with open(filename, "rb") as f:
+            mix = pickle.load(f)
         self.merge(mix, checkForInconsistentNames=False)
         f.close()
         self.setChanged()
@@ -1389,6 +1365,7 @@ class Mixture(Graph):
         @type: string
         @param: coordinates file's name
         """
+        import numpy as np
         #print "Mixture updateCoordinates "
         self.setChanged()
         if isinstance(filename, str):
@@ -1401,10 +1378,10 @@ class Mixture(Graph):
             if line[:4] == "ATOM" or line[:6] == "HETATM":
                 try:
                     num = int(line[6:11])-1
-                    #print "updateCoordinates ", num
                     x = float(line[30:38])
                     y = float(line[38:46])
                     z = float(line[46:54])
+                    #print ("Mixture.updateCoordinates ", num,x,y,z)
                     #self.atomOrder[num].setCoord([x,y,z])
                     updateInfo.append([num,x,y,z])
                 except (IndexError,ValueError):
@@ -1414,7 +1391,9 @@ class Mixture(Graph):
             print(len(updateInfo), self.number_of_nodes())
             raise MixtureError("Inconsistent atom counts between mixture and read file in Mixture.updateCoordinates().")
         for atom in updateInfo:
-            self.atomOrder[atom[0]].setCoord([atom[1],atom[2],atom[3]])
+            molecule, atomNum = self.atomOrder[atom[0]]
+            self.getMolecule(molecule).setAtomCoordinates(atomNum,np.array([atom[1],atom[2],atom[3]]))
+            #print ("Mixture.updateCoordinates 2 ", atom[0],atom[1],atom[2],atom[3])
             
         f.close()
 
@@ -1504,8 +1483,8 @@ class Mixture(Graph):
         @type  pdbFile: string
         @param pdbFile: PDB filename.  If None it will write to sys.stdout.
         """
-        start = time.process_time()
-        #print "Mixture writePDB __buildTranslatorTable__", time.process_time() - start
+        #start = time.process_time()
+        #print ( "Mixture writePDB __buildTranslatorTable__", fixedMolecules)
         self.__buildTranslatorTable__()
         if pdbFile==None:
             fd = sys.stdout
@@ -1525,10 +1504,10 @@ class Mixture(Graph):
             renumbering[mol] = dict()
             #print("Mixture.writePDB mol: {} ({})".format(mol, len(mol)))
             for atom in mol:
-                #print("Mixture.writePDB mol:", mol, atom)
+                #print("Mixture.writePDB mol:", mol, atom, molecule in fixedMolecules)
                 atr = mol.getAtomAttributes(atom)
                 fd.write(atr.PDBline(count, self.trad[molecule], molecule in fixedMolecules)+"\n")
-                self.atomOrder.append(atr)
+                self.atomOrder.append((molecule, atom))
                 renumbering[mol][atom] = count
                 count += 1
         
@@ -1541,10 +1520,10 @@ class Mixture(Graph):
                 #print "Mixture writePDB writing neighbors", mol, atom
                 neighbors = list(mol.neighbors(atom))
                 if len(neighbors) > 0:
-                    fd.write("CONECT%5i" % (renumbering[mol][atom]))
+                    fd.write("CONECT %i" % (renumbering[mol][atom]))
                     for bond in neighbors:
                         if renumbering[mol][bond] > renumbering[mol][atom]:
-                            fd.write("%5i" % (renumbering[mol][bond]))
+                            fd.write(" %i" % (renumbering[mol][bond]))
                     fd.write("\n")
         #count = 1
         #for molecule in self:
@@ -1659,6 +1638,13 @@ class Mixture(Graph):
     
         fd.close()
             
+    def writeWFM(self, filename=None):
+        import pickle
+        if filename == None:
+            filename = self.getMixtureFileName()
+        
+        with open(filename, "wb") as f:
+            pickle.dump(self, f)
     
         
 #-------------------------------------------------------------
