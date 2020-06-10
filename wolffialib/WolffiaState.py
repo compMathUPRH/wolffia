@@ -192,21 +192,22 @@ class WolffiaStateException(Exception):
 
 
 class WolffiaState(object):
-    def __init__(self, parent=None, filename=None, log=None):
+    #def __init__(self, parent=None, filename=None, log=None):
+    def __init__(self, filename=None):
         #import inspect
         #print "WolffiaState.init, caller=",inspect.stack()[1]
-        self.parent            =    parent
-        self.log            =   log
-        self.wolffiaVerion  =   WOLFFIA_VERSION
+        #self.parent            =    parent
+        #self.log            =   log
+        self.wolffiaVersion  =   WOLFFIA_VERSION
         self.mixture        =    Mixture(mixName = WOLFFIA_DEFAULT_MIXTURE_NAME)
         self.workingDir     =   WOLFFIA_DEFAULT_MIXTURE_LOCATION + "/" 
         self.container            =    Container()
-        self.simTabValues    =    None
-        self.minTabValues    =    None
+        #self.simTabValues    =    None
+        #self.minTabValues    =    None
         self.shownMolecules =   None
         self.fixedMolecules =   None
 
-        self.currentMixtureSaved = True
+        #self.currentMixtureSaved = True
 
         self.reset()
         if not filename == None:
@@ -218,9 +219,9 @@ class WolffiaState(object):
         #self.forceFieldStorage    =    None
         #self.mixture        =    Mixture(mixName = WOLFFIA_DEFAULT_MIXTURE_NAME)
         self.mixture        =    Mixture(mixName = self.mixture.getMixtureName())
-        self.wolffiaVerion = WOLFFIA_VERSION
-        self.simTabValues    =    None
-        self.minTabValues    =    None
+        self.wolffiaVersion = WOLFFIA_VERSION
+        #self.simTabValues    =    None
+        #self.minTabValues    =    None
     
         #self.mixture.setChanged()
         #self.forceFieldStorage = dict()
@@ -231,7 +232,7 @@ class WolffiaState(object):
         self.shownMolecules = ShownMoleculesSet(self.mixture)
         self.fixedMolecules = FixedMolecules()
         #print "WolffiaState reset"
-        self.setCurrentMixtureSaved(True)
+        #self.setCurrentMixtureSaved(True)
     
     #--------------------------------------------------------------------
 
@@ -272,7 +273,7 @@ class WolffiaState(object):
         #print "WolffiaState writeFiles,", filename
         
         #try: 
-        self.getMixture().writeFiles(filename, self.fixedMolecules.fixedList())
+        self.getMixture().writeFiles(filename, self.fixedMolecules)
         self.getContainer().writeXSC(filename + ".xsc")
         #except : raise WolffiaStateException("Error writing Wolffia files.")
     
@@ -698,11 +699,14 @@ class ShownMolecules(dict):
     '''
 
 
-class FixedMolecules(dict):
+class FixedMolecules(set):
+    ''' Contains names of the fixed molecules in the mixture.
+    '''
     def __init__(self):
         pass
         #print "ShownMolecules", self.modified
     
+    '''
     def fix(self, mol):
         #print "ShownMolecules show",mol
         self[mol] = True
@@ -742,8 +746,8 @@ class FixedMolecules(dict):
         for mol in self.keys():
             if not mol in mixture:
                 self.pop(mol)
+    '''
 
     def updateMixture(self,mixture):
-        self.addMolecules(mixture)
-
+        self.intersection_update(mixture.moleculeNames())
         
