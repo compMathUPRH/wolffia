@@ -31,9 +31,9 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../conf')
 #print sys.path
 from conf.Wolffia_conf import NANOCAD_PDB_DIR, NANOCAD_FORCE_FIELDS
 
-from wolfialib.chemicalGraph.Molecule import Molecule
-from wolfialib.chemicalGraph.ForceField import ForceField, NonBond
-from wolfialib.chemicalGraph.AtomAttributes import AtomInfo,AtomAttributes
+from wolffialib.chemicalGraph.Molecule import Molecule
+from wolffialib.chemicalGraph.ForceField import ForceField, NonBond
+from wolffialib.chemicalGraph.AtomAttributes import AtomInfo,AtomAttributes
 
 '''
 References: 
@@ -173,3 +173,8 @@ class Na(Element):
 class Au(Element):
     def __init__(self):
         Element.__init__(self, "AU")
+        
+
+if __name__ == '__main__':
+    h = Element('H')
+    c = Element('C')
