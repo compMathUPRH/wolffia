@@ -497,6 +497,8 @@ class  Molecule(ChemicalGraph):
 		self.setAtomAttributes(atom, attr)
 		for n in neighbors:
 			self.add_edge((atom, n))
+        
+		return atom
 
 	#-------------------------------------------------------------
 	def add_edge(self, atoms):
