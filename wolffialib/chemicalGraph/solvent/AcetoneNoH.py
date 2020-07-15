@@ -30,8 +30,8 @@ import sys, os
 if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 from conf.Wolffia_conf import NANOCAD_PDB_DIR, NANOCAD_FORCE_FIELDS
 
-from wollfialib.chemicalGraph.Molecule import Molecule
-from wollfialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.Molecule import Molecule
+from wolffialib.chemicalGraph.ForceField import ForceField
 #=========================================================================
 
 class AcetoneNoH(Molecule):

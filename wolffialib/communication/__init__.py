@@ -1,4 +1,3 @@
-# wollfialib.py
 # -*- coding: utf-8 -*-
 """
     Copyright 2011, 2012: José O.  Sotero Esteva, Mirgery  Medina Cuadrado, 

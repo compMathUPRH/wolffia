@@ -1,7 +1,7 @@
 	
-from wollfialib.chemicalGraph.Mixture import Mixture
-from wollfialib.chemicalGraph.AtomAttributes import *
-from wollfialib.chemicalGraph.ChemicalGraph import ChemicalGraph
+from wolffialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.AtomAttributes import *
+from wolffialib.chemicalGraph.ChemicalGraph import ChemicalGraph
 
 def readfile(filename):
 	import re
@@ -26,12 +26,12 @@ def readfile(filename):
 		
 		ai  = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
 		atr = AtomAttributes(ai, coords, [])
-		print atr
+
 		chemicalGraphMixed.add_node(i + 1, attrs=[atr])
 		adjLists[i+1] = list()
 		for e in line[9:]:
 			adjLists[i+1].append(e)
-	print adjLists
+
 	for n in adjLists:
 		for e in adjLists[n]:
 			chemicalGraphMixed.add_edge([n,e])

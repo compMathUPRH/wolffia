@@ -32,9 +32,9 @@ import sys, os
 
 if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 from conf.Wolffia_conf import WOLFFIA_WFY_DIR
-from wollfialib.chemicalGraph.ForceField import ForceField
-from wollfialib.chemicalGraph.Mixture import Mixture
-from wollfialib.chemicalGraph.polymer.Polymer import Polymer
+from wolffialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.polymer.Polymer import Polymer
 import math
 
 #-----------------------------------------------------------------------------------

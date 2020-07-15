@@ -30,9 +30,9 @@ import sys, os
 if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 from conf.Wolffia_conf import NANOCAD_PDB_DIR, NANOCAD_FORCE_FIELDS
 
-from wollfialib.chemicalGraph.Mixture import Mixture
-from wollfialib.chemicalGraph.ForceField import ForceField
-from wollfialib.chemicalGraph.AtomAttributes import AtomAttributes
+from wolffialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.AtomAttributes import AtomAttributes
 #=========================================================================
 
 class SDS(Mixture):

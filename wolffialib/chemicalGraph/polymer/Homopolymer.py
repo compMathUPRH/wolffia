@@ -27,12 +27,8 @@
     by the UPR-Penn Partnership for Research and Education in Materials program, 
     USA National Science Foundation grant number DMR-0934195. 
 """
-from wollfialib.chemicalGraph.polymer.Polymer import Polymer
-
-
-from networkx import draw
-import math
-
+from wolffialib.chemicalGraph.polymer.Polymer import Polymer
+from wolffialib.chemicalGraph.Molecule import Molecule
 
 class Homopolymer(Polymer):
 	"""
@@ -47,10 +43,10 @@ class Homopolymer(Polymer):
 		except AttributeError:  # if old style fails then try new style
 			self.MONOMERS_MOLS={'Ps':self.START_MONOMER_MOL,'P':self.BACKBONE_MONOMER_MOL,'Pe':self.END_MONOMER_MOL,'P1':self.ONE_MONOMER_MOL}
 	
-		chain = ['Ps']
-		for i in range(1,numMonomers-1):
-			chain.append('P')
-		chain.append('Pe')
+		chain = ['Ps'] + (numMonomers-2) * ['P'] + ['Pe']
+		#for i in range(1,numMonomers-1):
+			#chain.append('P')
+		#chain.append('Pe')
 
 		Polymer.__init__(self, chain, molname)
 		if molname == None:

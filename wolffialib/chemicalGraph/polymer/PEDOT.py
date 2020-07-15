@@ -30,11 +30,10 @@
 import sys, os
 
 
-if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 from conf.Wolffia_conf import WOLFFIA_WFY_DIR
-from wollfialib.chemicalGraph.ForceField import ForceField, NonBond
-from wollfialib.chemicalGraph.Mixture import Mixture
-from wollfialib.chemicalGraph.polymer.Polymer import Polymer
+from wolffialib.chemicalGraph.ForceField import ForceField, NonBond
+from wolffialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.polymer.Polymer import Polymer
 import math
 
 #-----------------------------------------------------------------------------------
@@ -79,8 +78,6 @@ class PEDOT(Polymer):
 			baseChain.append('Rb')
 		for i in range(m):
 			baseChain.append('Ob')
-		#for i in range(n):
-		#	baseChain.append('Rb')
 		
 		chain = []
 		for i in range(numMonomers):
@@ -131,9 +128,9 @@ class PEDOT(Polymer):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando PEDOT"
+    print("Probando PEDOT")
     m = PEDOT(2,2,2)
-    print m
+    print(m)
     #m.writePDB("/home/wensy/invewstigacion/prueba/chito.pdb")
     #m.writePSF("/home/wensy/invewstigacion/prueba/chito.psf")
 

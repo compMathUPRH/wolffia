@@ -39,7 +39,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../')
 from subprocess import signal, Popen, PIPE
 
 from conf.Wolffia_conf import _WOLFFIA_OS
-import wollfialib.communication.imd.imd as imd
+import wolffialib.communication.imd.imd as imd
 
 class SimThread(threading.Thread):
 	'''
@@ -344,8 +344,8 @@ class dummy:
 if __name__ == '__main__':
 	sys.path.append("/home/jse/inv/Cuchifritos/bazaar/Wolffia")
 	from  interface.main.History import NanoCADState
-	from wollfialib.communication.RemoteHost import RemoteHost
-	from wollfialib.communication.namd.Configuration import Configuration
+	from wolffialib.communication.RemoteHost import RemoteHost
+	from wolffialib.communication.namd.Configuration import Configuration
 	simulatorLocation = "home_inv/inv/namd/"
 	hostnameEdit = "yagrumo.uprh.edu"
 	usernameEdit = "jse"

@@ -68,7 +68,6 @@ class Container:
         self.id = cid
         
         # NAMD-style parameters
-        self.cellOrigin        = None
         self.wrapWater          = False
         self.wrapAllMolecules   = False
         
@@ -82,8 +81,11 @@ class Container:
     def getCellOrigin(self):
         return self.cellOrigin
 
-    def setCellOrigin(self, o):
-            self.cellOrigin = o
+    def getWrapWater(self):
+            return self.wrapWater
+        
+    def getWrapAllMolecules(self):
+            return self.wrapAllMolecules
 
     def setId(self, cid): self.id = cid
     
@@ -110,11 +112,14 @@ class Sphere(Container):
         '''        
             center = np.array([x,t,z])
         '''
-        super().setId(cid)
+        super().__init__(cid)
     
         self.center = center
         self.radius = radius
     
+    def getBoxVolume(self):
+            return self.volume()
+
     def hasCell(self):
             return True
 
@@ -140,8 +145,12 @@ class Sphere(Container):
                 rd  = uniform(-self.radius,self.radius, 3)
             yield rd + self.center
 
-    def getBoxVolume(self):
-            return self.volume()
+    def setWrapWater(self, val):
+            self.wrapWater = val
+            
+    def setWrapAllMolecules(self, val):
+            self.wrapAllMolecules = val
+            
 
 # ===========================================
 class Box(Container):
@@ -152,9 +161,10 @@ class Box(Container):
         '''        
             maxsMins = (xmin, xmax, ymin, ymax, zmin, zmax) or None
         '''
-        super(Box, self).setId(cid)
+        super(Box, self).__init__(cid)
     
         self.setMaxsMins(maxsMins)
+
     
     def hasCell(self):
             return True
@@ -219,8 +229,10 @@ class Box(Container):
 
     def setMaxsMins(self, maxsMins):
         self.maxsMins = maxsMins
-        self.setCellOrigin((maxsMins[0], maxsMins[2], maxsMins[4]))
         
+    def getCellOrigin(self):
+            return (self.maxsMins[0], self.maxsMins[2],self. maxsMins[4])
+
     def writeXSC(self, xscFile=None):
         """
         Writes a periodic boundary conditions file (.xsc in NAMD).
@@ -233,11 +245,17 @@ class Box(Container):
             fd = sys.stdout
         else:
             fd = open(xscFile, 'w')
+
+        [v1,v2,v3] = self.getCellBasisVectors()
+        origin = self.getCellOrigin()
         
         fd.write("# NAMD extended system configuration file written by Wolffia\n")
-        fd.write("0 {:.4f} 0 0 0 {:.4f} 0 0 0 {:.4f} {:.4f} {:.4f} {:.4f}".format(
-                self.maxsMins[1], self.maxsMins[3], self.maxsMins[5],
-                self.maxsMins[0], self.maxsMins[2], self.maxsMins[4]))
+        fd.write("#$LABELS step a_x a_y a_z b_x b_y b_z c_x c_y c_z o_x o_y o_z\n")
+        fd.write("0 {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} {:.4f} ".format(
+                v1[0], v1[1], v1[2],
+                v2[0], v2[1], v2[2],
+                v3[0], v3[1], v3[2],
+                origin[0], origin[1], origin[2]))
         if xscFile != None: fd.close()
 
 
@@ -258,21 +276,6 @@ class Prism(Container):
     def __init__(self):
         self.cellBasisVectors     = None
         
-        self.setWrapAllMolecules(self.wrapAllMolecules)
-        self.setWrapWater(self.wrapWater)
-        
-    def setWrapWater(self, val):
-            self.wrapWater = val
-            
-    def setWrapAllMolecules(self, val):
-            self.wrapAllMolecules = val
-            
-    def getWrapWater(self):
-            return self.wrapWater
-        
-    def getWrapAllMolecules(self):
-            return self.wrapAllMolecules
-
     def getCenter(self):
             x = (self.cellBasisVectors[0][0]+self.cellBasisVectors[1][0]+self.cellBasisVectors[2][0])/2
             y = (self.cellBasisVectors[0][1]+self.cellBasisVectors[1][1]+self.cellBasisVectors[2][1])/2
@@ -293,7 +296,9 @@ class Prism(Container):
             else: return False
             return True
 
-    def readNAMD(self,archivo):
+    def readNAMD(self,archivo): return self.readXSC(archivo)  # backward compatibility
+
+    def readXSC(self,archivo):
             from wolffialib.communication.namd.SimThread import  NAMDcell
             try:
                 cell = NAMDcell(archivo)
@@ -408,4 +413,6 @@ if __name__ == "__main__":
     print("box.volume()", end='')       ; assert box.volume() == 8,       " Failed." ; print(" ... passed")
     print("box.getBoxVolume()", end='') ; assert box.getBoxVolume() == 8, " Failed." ; print(" ... passed")
     print("box.getCenter()", end='') ; assert box.getCenter() == [1.0, 1.0, 1.0], " Failed." ; print(" ... passed")
+    print("box.getWrapWater()", end='') ; assert box.getWrapWater() == False, " Failed." ; print(" ... passed")
+    print("box.getWrapAllMolecules()", end='') ; assert box.getWrapAllMolecules() == False, " Failed." ; print(" ... passed")
     

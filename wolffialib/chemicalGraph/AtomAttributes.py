@@ -194,7 +194,7 @@ class AtomAttributes(object):
 	#def __init__(self, name, elmt, elttype, coord, ch, m, bfactor = '',occup = 1,altloc = ' ',fullname = 'X',res='XXX',chain='A', res_seq = 1, attrs=[]):
 	
 	#def __init__(self, elttype, coord, attrs=[]):
-	def __init__(self, arg1, arg2, arg3=[], coord=[0,0,0], ch=0., m=0., bfactor = '',occup = 1,altloc = ' ',fullname = 'X',res='XXX',chain='A', res_seq = 1, attrs=[]):
+	def __init__(self, arg1, arg2, arg3=[], coord=[0,0,0], ch=0., m=0., bfactor = '',occup = 1,altloc = ' ',fullname = 'X',res='XXX',chain='A', res_seq = 1, fixed=False, attrs=[]):
 		if isinstance(arg1, AtomInfo):
 			"""Atom Attributes.
 			@type	coord:	list of 3 floats
@@ -208,6 +208,7 @@ class AtomAttributes(object):
 			self._attributes = arg3
 			self.setCoord(numpy.array(arg2))
 			self._info = arg1
+			self.fixed = fixed
 		else:
 			import inspect
 			global DEPRECATED_CALLS
@@ -219,6 +220,27 @@ class AtomAttributes(object):
 	#-------------------------------------------------------------
 	def PDBline(self, ser_num, trad={}, fixedAtom=False):
 		"""ATOM line corresponding to this atom (self) for a PDB file.
+        
+            Record Format (http://www.wwpdb.org/documentation/file-format-content/format33/sect9.html#ATOM)
+    
+            COLUMNS        DATA  TYPE    FIELD        DEFINITION
+            -------------------------------------------------------------------------------------
+             1 -  6        Record name   "ATOM  "
+             7 - 11        Integer       serial       Atom  serial number.
+            13 - 16        Atom          name         Atom name.
+            17             Character     altLoc       Alternate location indicator.
+            18 - 20        Residue name  resName      Residue name.
+            22             Character     chainID      Chain identifier.
+            23 - 26        Integer       resSeq       Residue sequence number.
+            27             AChar         iCode        Code for insertion of residues.
+            31 - 38        Real(8.3)     x            Orthogonal coordinates for X in Angstroms.
+            39 - 46        Real(8.3)     y            Orthogonal coordinates for Y in Angstroms.
+            47 - 54        Real(8.3)     z            Orthogonal coordinates for Z in Angstroms.
+            55 - 60        Real(6.2)     occupancy    Occupancy.
+            61 - 66        Real(6.2)     tempFactor   Temperature  factor.
+            77 - 78        LString(2)    element      Element symbol, right-justified.
+            79 - 80        LString(2)    charge       Charge  on the atom.
+
 
 		@type ser_num:	int
 		@param ser_num:	sequence number to be used.
@@ -227,13 +249,21 @@ class AtomAttributes(object):
 		@return: ATOM line.
 		"""
 		#print "PDBline ", self
+		# Backward compatibility:
+		if not hasattr(self,'fixed'):
+		    self.fixed = False
+            
 		tObj = self.getInfo()
-		if fixedAtom:
-			#return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%1.4f" % ("ATOM  ",ser_num,self._name,' ',self._residue,self._chain,1,' ',self._coordinates[0],self._coordinates[1],self._coordinates[2],1              ,0.0,self._element,self._charge)
-			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self.getCoord()[0],self.getCoord()[1],self.getCoord()[2],1              ,0.0,tObj._element)
+		if fixedAtom or self.fixed:
+			fixed = 1
 		else:
+			fixed = 0
 			#return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s%1.4f" % ("ATOM  ",ser_num,self._name,' ',self._residue,self._chain,1,' ',self._coordinates[0],self._coordinates[1],self._coordinates[2],0,0.0,self._element,self._charge)
-			return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self.getCoord()[0],self.getCoord()[1],self.getCoord()[2],0,0.0,tObj._element)
+			#return "%s%5i %-4s%c%3s %c%4i%c   %8.3f%8.3f%8.3f%6.2f%6.2f          %2s" % ("ATOM  ",ser_num%100000,tObj._name,' ',tObj._residue,tObj._chain,1,' ',self.getCoord()[0],self.getCoord()[1],self.getCoord()[2],0,0.0,tObj._element)
+		return "{:<6s}{:>5d} {:>4s}{:1s}{:3>3s} {:1s}{:4d}{:1s}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}{:6.2f}          {:2s}{:2.0f}".format(
+                "ATOM  ", ser_num%100000, tObj._name, ' ', tObj._residue,
+                tObj._chain, 1, ' ', self.getCoord()[0], self.getCoord()[1],
+                self.getCoord()[2], fixed, 0.0, tObj._element, tObj._charge)
 
 	def getType(self):
 		print("WARNING: Deprecated call to AtomAttributes.getType() from ", inspect.stack()[1])
@@ -407,6 +437,8 @@ class AtomAttributes(object):
 		"""
 		self._coordinates = numpy.array(newCoords)
 
+	def setFixed(self, val):
+		self.fixed = val
 
 	#-------------------------------------------------------------
 	def __eq__(self, node2):
@@ -477,3 +509,8 @@ class AtomAttributes(object):
 			return repr(self.value)
 
 
+# ============================================================================
+class Atom(AtomAttributes):
+    pass
+
+# ============================================================================

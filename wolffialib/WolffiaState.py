@@ -256,10 +256,10 @@ class WolffiaState(object):
             #print "History.save_ imported cPickle, starting to save"
             #print "History.save_ self.getBuildDirectory(), self.getMixtureName() ", self.getBuildDirectory(), self.getMixtureName()
             try: 
-                f = open(filename, "w")
+                f = open(filename, "wb")
             except IOError:
                 print( filename + ": File does not exist.")
-            pickle.dump(self.__dict__, f)
+            pickle.dump(self.__dict__, f,protocol=pickle.HIGHEST_PROTOCOL)
             f.close()
 
         #print "WolffiaState.save, save sucessful", f.name
@@ -274,8 +274,150 @@ class WolffiaState(object):
         
         #try: 
         self.getMixture().writeFiles(filename, self.fixedMolecules)
-        self.getContainer().writeXSC(filename + ".xsc")
+        try:
+            self.getContainer().writeXSC(filename + ".xsc")
+        except:
+            import sys
+            sys.stderr.write("WARNING: Current Container subclass has no method writeXSC (in ColffiaState.writeXSC())")
         #except : raise WolffiaStateException("Error writing Wolffia files.")
+    
+    def writeLammps(self, filename):
+        ''' writes data file for LAMMPS'''
+
+        cfile = open(filename, "w")
+
+
+        # Sección automática
+        overview_section = '{0:>12}  atoms\n{1:>12}  bonds\n{2:>12}  angles\n{3:>12}  dihedrals\n{4:>12}  impropers\n\n{5:>12}  atom types\n' \
+                           '{6:>12}  bond types\n{7:>12}  angle types\n{8:>12}  dihedral types\n{9:>12}  improper types\n\n' \
+                           .format( \
+                                len(self.mixture.atomsCount()), len(self.mixture.bondsCount()), len(self.mixture.angleCount()), len(self.mixture.dihedralTypesCount()), 0, len(self.mixture.atomproperty.masses), \
+                                len(self.mixture.forceField.bondCoeffs), len(self.mixture.forceField.angleCoeffs), len(self.mixture.forceField.dihedralCoeffs), len(self.mixture.forceField.improperCoeffs)) 
+
+        try:
+            maxminstr = [str(x) for x in self.region.maxsMins]
+            box_section =  ' '.join(maxminstr[:2])  + ' xlo xhi\n' + \
+                           ' '.join(maxminstr[2:4]) + ' ylo yhi\n' + \
+                           ' '.join(maxminstr[4:])  + ' zlo zhi\n'
+        except:
+            # Improve and ask from where we get this data
+            box_section =  ' ' + str(self.atomproperty.atoms['x'].min()-2) + ' ' + str(self.atomproperty.atoms['x'].max()+2) + ' xlo xhi\n' + \
+                           ' ' + str(self.atomproperty.atoms['y'].min()-2) + ' ' + str(self.atomproperty.atoms['y'].max()+2) + ' ylo yhi\n' + \
+                           ' ' + str(self.atomproperty.atoms['z'].min()-2) + ' ' + str(self.atomproperty.atoms['z'].max()+2) + ' zlo zhi\n'   
+                       
+        # Header
+        cfile.write("LAMMPS Description\n\n")
+        cfile.write(overview_section + box_section)
+
+
+        #Masses
+        if len(self.atomproperty.masses) > 0:
+            cfile.write('\nMasses\n\n')
+            cfile.write(self.atomproperty.masses.to_string(index=False, columns=self.atomproperty.masses.columns, header=False))
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No atom mass values to write. Simulation unlikely to run with this file.")
+
+
+        #Pair Coeffs
+        if len(self.forceField.pairCoeffs) > 0:
+            cfile.write('\nPair Coeffs\n\n')
+            #print("Pair Coeffs:", self.pairCoeffs.columns)
+            #[cfile.write('{:>3d}{:>12}{:>12}{:>12}{:>12}\n'.format(row['ID'], row['Charge'], row['Energy'],
+            # row['Charge'], row['Energy'])) for index, row in self['Pair Coeffs'].iterrows()]
+            cfile.write(self.forceField.pairCoeffs.to_string(index=False, columns=self.forceField.pairCoeffs.columns, header=False))        
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No Pair coefficients to write.\n")
+
+
+        #Bond Coeffs
+        if len(self.forceField.bondCoeffs) > 0:
+            cfile.write('\nBond Coeffs\n\n')
+            cfile.write(self.forceField.bondCoeffs.to_string(index=False, columns=self.forceField.bondCoeffs.columns, header=False))        
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No bond coefficients to write.\n")
+
+
+        #Angle Coeffs
+        if len(self.forceField.angleCoeffs) > 0:
+            cfile.write('\nAngle Coeffs\n\n')
+            cfile.write(self.forceField.angleCoeffs.to_string(index=False, columns=self.forceField.angleCoeffs.columns, header=False))        
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No angle coefficients to write.\n")
+
+
+        #Dihedral Coeffs
+        if len(self.forceField.dihedralCoeffs) > 0:
+            cfile.write('\nDihedral Coeffs\n\n')
+            cfile.write(self.forceField.dihedralCoeffs.to_string(index=False, columns=self.forceField.dihedralCoeffs.columns, header=False))        
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No dihedral coefficients to write.\n")
+
+
+        #Improper Coeffs
+        if len(self.forceField.improperCoeffs) > 0:
+            cfile.write('\nImproper Coeffs\n\n') 
+            cfile.write(self.forceField.improperCoeffs.to_string(index=False, columns=self.forceField.improperCoeffs.columns, header=False))        
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No improper coefficients to write.\n")
+
+
+        #Atoms
+        cfile.write('\nAtoms\n\n') 
+        #cfile.write(self.atomproperty.atoms.to_string(index=False, columns=self.atomproperty.atoms.columns, header=False))
+        cfile.write(self.atomproperty.atoms.to_string(index=False, columns=self.atomproperty.atoms.columns, header=False))
+        cfile.write("\n")
+
+
+        #Velocities
+        if len(self.atomproperty.velocities) > 0:
+            cfile.write('\nVelocities\n\n')
+            cfile.write(self.atomproperty.velocities.to_string(index=False, columns=self.atomproperty.velocities.columns, header=False))        
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No velocities to write.\n")
+
+
+        #Bonds
+        if len(self.topologia.bonds) > 0:
+            cfile.write('\nBonds\n\n')
+            cfile.write(self.topologia.bonds.to_string(index=False, columns=self.topologia.bonds.columns, header=False))
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No bonds to write.\n")
+
+        
+        #Angles
+        if len(self.topologia.angles) > 0:
+            cfile.write('\nAngles\n\n') 
+            cfile.write(self.topologia.angles.to_string(index=False, columns=self.topologia.angles.columns, header=False))
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No angles to write.\n")
+
+
+        #Dihedrals
+        if len(self.topologia.dihedrals) > 0:
+            cfile.write('\nDihedrals\n\n') 
+            cfile.write(self.topologia.dihedrals.to_string(index=False, columns=self.topologia.dihedrals.columns, header=False))
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No dihedrals to write.\n")
+
+
+        #Impropers
+        if len(self.topologia.impropers) > 0:
+            cfile.write('\nImpropers\n\n') 
+            cfile.write(self.topologia.impropers.to_string(index=False, columns=self.topologia.impropers.columns, header=False))
+            cfile.write("\n")
+        else:
+            sys.stderr.write("WARNING: No impropers to write.\n")
+    
     
     
     #--------------------------------------------------------------------------------
@@ -319,7 +461,7 @@ class WolffiaState(object):
     
     #--------------------------------------------------------------------
     def load(self, filename=None):
-        import cPickle as pickle #Tremenda aportación por carlos cortés
+        import pickle
         #import inspect
         #print "WolffiaState.load, caller1=",inspect.stack()[1]
         #print "WolffiaState.load, caller2=",inspect.stack()[2]
@@ -344,44 +486,45 @@ class WolffiaState(object):
             #print "History.load_ imported cPickle, starting to load"
             
             try:
-                f = open(filename, "r")
+                f = open(filename, "rb")
                 self.__dict__ = pickle.load(f)
                 f.close()
             except Exception as e:
                 import traceback
                 traceback.print_exc()
                 #print "WolffiaState.load_ Exeption ", e, " when unpickling file."
-                from PyQt4 import QtGui
-                gui = QtGui.QErrorMessage.qtHandler()
-                QtGui.QErrorMessage.showMessage( gui, "Error: could not open configuration file " 
-                    + filename + "." )
-                logger.warning("Error: could not open configuration file " + filename + "." )
+                #from PyQt4 import QtGui
+                #gui = QtGui.QErrorMessage.qtHandler()
+                #QtGui.QErrorMessage.showMessage( gui, "Error: could not open configuration file " 
+                #    + filename + "." )
+                #logger.warning("Error: could not open configuration file " + filename + "." )
+                raise WolffiaStateException("Error: could not open configuration file " + filename + "." )
         
         if not hasattr(self, "fixedMolecules"):  # introduced in v 0.24
             self.fixedMolecules = FixedMolecules()
-        if self.wolffiaVerion < "0.24-4":
+        if self.wolffiaVersion < "0.24-4":
             self.simTabValues["pmeGridSp"] = 1.0
         
-        logger.info( "Loaded mixture from version " + self.wolffiaVerion + ". Current version is " + WOLFFIA_VERSION)
+        logger.info( "Loaded mixture from version " + self.wolffiaVersion + ". Current version is " + WOLFFIA_VERSION)
         
-        if self.wolffiaVerion < "0.24-42":
+        if self.wolffiaVersion < "0.24-42":
         #if True:
             #print "YES, mixture=",self.getMixture().molecules()
             for mol in self.getMixture():
                 #print "load ", self.getMixture().getMolecule(mol).getForceField()._NONBONDED
                 molecule = self.getMixture().getMolecule(mol)
                 self.getMixture().getMolecule(mol).copyChargesToForceField()
-                self.wolffiaVerion =  "0.24-42"
+                self.wolffiaVersion =  "0.24-42"
                 #print "load ", self.getMixture().getMolecule(mol).getForceField()._NONBONDED
         #else: print "NO"
         
-        if self.wolffiaVerion < "0.24-43":
+        if self.wolffiaVersion < "0.24-43":
             temp = ShownMoleculesSet(self.getMixture())
             temp.addDictionary(self.shownMolecules)
             del self.shownMolecules
             self.shownMolecules = temp
             
-        if self.wolffiaVerion < "0.24-44":
+        if self.wolffiaVersion < "0.24-44":
             #print "History.load_ fixing self bonds"
             for m in self.mixture:  #remove bonds to self
                 molecule = self.mixture.getMolecule(m)
@@ -399,7 +542,7 @@ class WolffiaState(object):
                 molecule.__class__ = Molecule
                 #print "molecule class changed", molecule.__class__
         
-        if self.wolffiaVerion < "1.13":      # until further versions
+        if self.wolffiaVersion < "1.13":      # until further versions
                                             # self.mixture.mixName should be the same as 
                                             # self.parent.settings.currentMixtureName.
             print ("History.load_ self.mixture.mixName should be the same as self.parent.settings.currentMixtureName")
@@ -407,7 +550,7 @@ class WolffiaState(object):
                 self.mixture.setMixtureName(self.parent.settings.currentMixtureName) 
             except: pass
         
-        if self.wolffiaVerion < "1.131":      # fix for 1.13 did not work. 
+        if self.wolffiaVersion < "1.131":      # fix for 1.13 did not work. 
                                             # self.parent.settings.currentMixtureName is being
                                             # eliminated in this version.
             print( "History.load_ self.mixture.mixName should be the same as self.parent.settings.currentMixtureName")
@@ -421,17 +564,17 @@ class WolffiaState(object):
              self.shownMolecules = ShownMoleculesSet(self.getMixture())
         # end other fixes ===========================
             
-        if self.wolffiaVerion < "1.31": 
-            self.getMixture().upgrade(self.wolffiaVerion)
+        if self.wolffiaVersion < "1.31": 
+            self.getMixture().upgrade(self.wolffiaVersion)
             
-        if self.wolffiaVerion < "1.5": 
+        if self.wolffiaVersion < "1.5": 
             self.setBuildDirectory(os.path.dirname(str(filename)))
 
         #from PyQt4 import QtGui
-        if self.wolffiaVerion < WOLFFIA_VERSION: 
-            #QtGui.QMessageBox.information(self.parent,"Wolffia", "Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION))
-            print( "WolffiaState.load: Simulation version updated from "+str(self.wolffiaVerion)+" to "+str(WOLFFIA_VERSION))
-        self.wolffiaVerion =  WOLFFIA_VERSION
+        if self.wolffiaVersion < WOLFFIA_VERSION: 
+            #QtGui.QMessageBox.information(self.parent,"Wolffia", "Simulation version updated from "+str(self.wolffiaVersion)+" to "+str(WOLFFIA_VERSION))
+            print( "WolffiaState.load: Simulation version updated from "+str(self.wolffiaVersion)+" to "+str(WOLFFIA_VERSION))
+        self.wolffiaVersion =  WOLFFIA_VERSION
 
         self.setCurrentMixtureSaved(True)
 

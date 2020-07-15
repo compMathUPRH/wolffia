@@ -32,10 +32,10 @@ import sys,os
 if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 from conf.Wolffia_conf import *
 
-from wollfialib.chemicalGraph.allotrope.Hexagonal2D import Hexagonal2D
-from wollfialib.chemicalGraph.ForceField import ForceField
-from wollfialib.chemicalGraph.Molecule import Molecule
-from wollfialib.chemicalGraph.AtomAttributes import AtomAttributes
+from wolffialib.chemicalGraph.allotrope.Hexagonal2D import Hexagonal2D
+from wolffialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.Molecule import Molecule
+from wolffialib.chemicalGraph.AtomAttributes import AtomAttributes
 #==========================================================================================
 class  Graphene(Hexagonal2D):
 	_FORCE_FIELD = None

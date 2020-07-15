@@ -29,8 +29,8 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../conf')
 
 from conf.Wolffia_conf import NANOCAD_FORCE_FIELDS
-from wollfialib.chemicalGraph.ForceField import ForceField
-from wollfialib.chemicalGraph.polymer.Homopolymer import Homopolymer
+from wolffialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.polymer.Homopolymer import Homopolymer
 import math
 
 #-------------------------------------------------------------------------------

@@ -41,7 +41,7 @@ class Solvent(Molecule):
     '''
 
     def __init__(self, molecule, ident="Unknown"):
-        print( "Solvent.__init__(): ", molecule.__class__)
+        #print( "Solvent.__init__(): ", molecule.__class__)
         #super(Solvent, self).__init__(molecule=moleculeClass())
         #self.solventClass = moleculeClass
         super(Solvent, self).__init__(molecule=molecule)
@@ -138,7 +138,7 @@ class Solvent(Molecule):
     def isSolvent(self):  return True
 
     def molname(self):
-        return super(Solvent, self).molname() + "(solvent)"
+        return super().molname() + "(solvent)"
 
     def edges(self):
         #import copy

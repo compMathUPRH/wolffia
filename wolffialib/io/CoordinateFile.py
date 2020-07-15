@@ -31,11 +31,11 @@
 
 import openbabel, pybel, os, sys
 sys.path.append("/home/jse/inv/Cuchifritos/bazaar/Wolffia")
-from wollfialib.chemicalGraph.Mixture import Mixture, MixtureError
-from wollfialib.chemicalGraph.ChemicalGraph import ChemicalGraph
-from wollfialib.chemicalGraph.io.PSF import PSF
-from wollfialib.chemicalGraph.AtomAttributes import AtomAttributes, AtomInfo
-from wollfialib.chemicalGraph.Molecule import Molecule
+from wolffialib.chemicalGraph.Mixture import Mixture, MixtureError
+from wolffialib.chemicalGraph.ChemicalGraph import ChemicalGraph
+from wolffialib.chemicalGraph.io.PSF import PSF
+from wolffialib.chemicalGraph.AtomAttributes import AtomAttributes, AtomInfo
+from wolffialib.chemicalGraph.Molecule import Molecule
 
 class CoordinateFile:
 	def __init__(self, mixtureFile, fileType=None, psfFile=None, mixtureName=None):

@@ -39,11 +39,11 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 
 from math import *
 from collections import defaultdict
-from wollfialib.chemicalGraph.Mixture import Mixture
-from wollfialib.chemicalGraph.Molecule import Molecule
+from wolffialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.Molecule import Molecule
 from conf.Wolffia_conf import *
-from wollfialib.chemicalGraph.element.Element import Element
-from wollfialib.chemicalGraph.ForceField import ForceField, NonBond
+from wolffialib.chemicalGraph.element.Element import Element
+from wolffialib.chemicalGraph.ForceField import ForceField, NonBond
 
 TOLERANCE=0.0001
 
@@ -188,8 +188,8 @@ class Diamond(Molecule):
 import sys, os
 
 if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
-from wollfialib.chemicalGraph.molecule.Molecule import Molecule
-from wollfialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.molecule.Molecule import Molecule
+from wolffialib.chemicalGraph.Mixture import Mixture
 from conf.Wolffia_conf import WOLFFIA_WFY_DIR
 
 #-----------------------------------------------------------------------------------

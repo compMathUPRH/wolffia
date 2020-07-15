@@ -13,20 +13,23 @@ class Configuration(object):
 	NO_IMD_WAIT    = True
 	
 	_CHECKED_BOOL_TO_WORD_    = {True:"yes", False:"no"}
-	MINIMIZATION_DEFAULT_PARAMETERS = {'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-2', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':1000,'outputEnergies':1000, 'switching':True,'exclude':'1-2', 'pairlistdist':13,'switchdist':9,'IMDon':'off'}
-	SIMULATION_DEFAULT_PARAMETERS = {'langevin':'on','langevinTemp':295, 'langevinDamping':1.0, 'langevinHydrogen':'yes', 'LangevinPiston':'off', 'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325, 'DCDfreq':1000,'seed':random.randint(1,40000), 'temperature':295.0, 'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen','scaling':1,'exclude':'1-2', 'pairlistdist':13,'switchdist':9, 'switching':True, 'timeSteps':1.0, 'numSteps':10000, 'startStep':0, 'stepsCycle':1,'restartSteps':1000,'outputEnergies':1000,'cutoff':12,'IMDon':'off'}
+	MINIMIZATION_DEFAULT_PARAMETERS = {'numsteps':10000, 'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-2', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':1000,'outputEnergies':1000, 'switching':True,'exclude':'1-2', 'pairlistdist':13,'switchdist':9,'IMDon':'off'}
+	SIMULATION_DEFAULT_PARAMETERS = {
+            'langevin':'on','langevinTemp':295, 'langevinDamping':1.0, 'langevinHydrogen':'yes', 
+            'LangevinPiston':'off', 'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325,
+            'pressureControl':'off','useGroupPressure':'no','useFlexibleCell':'no', 'useConstantRatio':'no', 'useConstantArea':'no',
+            'DCDfreq':1000,'seed':random.randint(1,40000), 'temperature':295.0, 
+            'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen',
+            'cutoff':12,'scaling':1,'exclude':'1-2', 'pairlistdist':13,'switchdist':9, 'switching':True, 
+            'timestep':1.0, 'numsteps':10000, 'startStep':0, 'stepsCycle':1,'restartSteps':1000,'outputEnergies':1000,
+            'IMDon':'off'}
     
 	def __init__(self, parameters=None, container=Container(), fixedAtoms=False, simType=SIMULATION, confOptions=0x0):
 		#self.__dict__.update(parameters.__dict__)
-
-		if parameters == None:
-		    if simType == self.MINIMIZATION:
-		        self.__dict__.update(self.MINIMIZATION_DEFAULT_PARAMETERS)
-		    else:
-		        self.__dict__.update(self.SIMULATION_DEFAULT_PARAMETERS)
         
 		self.container         = container
 		self.fixedAtoms     = fixedAtoms
+		self.useXSCfile     = False
 		self.filename       = None
 		self.buildDirectory = None
 		self.simType        = simType
@@ -37,6 +40,13 @@ class Configuration(object):
 		if confOptions & self.NO_IMD_WAIT: self.imdWait = "no"
 		else: self.imdWait = "yes"
 	    
+
+		if simType == self.MINIMIZATION:
+		    self.__dict__.update(self.MINIMIZATION_DEFAULT_PARAMETERS)
+		else:
+		    self.__dict__.update(self.SIMULATION_DEFAULT_PARAMETERS)
+        
+		if parameters != None: self.__dict__.update(parameters)
 	
 	
 	def getImdPort(self): return self.imdPort
@@ -82,7 +92,7 @@ class Configuration(object):
 	               (self.minBabyStep, 
 	                self.minTinyStep, 
 	                self.minLineGoal, 
-	                self.minSteps))
+	                self.numsteps))
 	
 	def _writeIfDefined(self, conf, pars):
 	    for k in pars:
@@ -91,7 +101,7 @@ class Configuration(object):
 
 	def writeConf(self, conf):
 	    conf.write("\n#TIMESTEP PARAMETERS\n")
-	    conf.write("   timestep   %.4f\n   numsteps   %d\n   firsttimestep   %d\n   stepspercycle   %d\n" % (self.timeSteps, self.numSteps, self.startStep, self.stepsCycle))
+	    conf.write("   timestep   %.4f\n   numsteps   %d\n   firsttimestep   %d\n   stepspercycle   %d\n" % (self.timestep, self.numsteps, self.startStep, self.stepsCycle))
 	    
 	    
 	    conf.write("\n#SIMULATION SPACE PARTITIONING\n")
@@ -184,16 +194,6 @@ class Configuration(object):
 	        else:
 	            conf.write("\nreassignHold   " + str(self.resHold.value()))
 	    
-	    #pressure control up the wazhoozy
-	    if self.grpPress.isChecked() or self.antiCell.isChecked():
-	        conf.write("\n\n###Pressure Control Parameters###")
-	    if self.grpPress.isChecked():
-	        conf.write("\n\n###Pressure Control Parameters###\n   useGroupPressure   on")
-	    if self.antiCell.isChecked():
-	        conf.write("\n   useFlexibleCell   " + str((self._CHECKED_BOOL_TO_WORD_[self.antiCell.isChecked()])))
-	        conf.write("\n   useConstantRatio   " + str((self._CHECKED_BOOL_TO_WORD_[self.consRat.isChecked()]))) 
-	        conf.write("\n   useConstantArea   " + str((self._CHECKED_BOOL_TO_WORD_[self.consArea.isChecked()]))) 
-	    
 	    #berendsen pressara bath
 	    if self.useBeren.isChecked() != False:
 	        conf.write("\n\n###Berendsen Pressure Bath Coupling###\n   BerendsenPressure   on")
@@ -217,20 +217,33 @@ class Configuration(object):
         '''
         
 	    #nose hooving something machinka
-	    if 'LangevinPiston' in self.__dict__ and self.LangevinPiston == 'on':
-	        conf.write("\n\n###Nose-Hoover Langevin Piston Pressure Control###\n   LangevinPiston   on\n")
-	        try:
-	            conf.write("   LangevinPistonTarget   " + str(self.LangevinPistonTarget))
-	            conf.write("\n   LangevinPistonPeriod   " + str(self.LangevinPistonPeriod))
-	            conf.write("\n   LangevinPistonDecay   " + str(self.LangevinPistonDecay))
+	    #pressure control up the wazhoozy
+	    if self.pressureControl == 'on':
+	        conf.write("\n\n###Pressure Control Parameters###")
+	        if self.useGroupPressure == 'yes' or self.useFlexibleCell == 'yes' or self.useConstantRatio == 'yes' or self.useConstantArea == 'yes':
+	            conf.write("\n   useGroupPressure   "+ self.useGroupPressure)
+	            conf.write("\n   useFlexibleCell   " + self.useFlexibleCell)
+	            conf.write("\n   useConstantRatio   " + self.useConstantRatio) 
+	            conf.write("\n   useConstantArea   " + self.useConstantArea) 
+	    
+	        if 'LangevinPiston' in self.__dict__ and self.LangevinPiston == 'on':
+	            conf.write("\n\n###Nose-Hoover Langevin Piston Pressure Control###\n   LangevinPiston   on\n")
+	            try:
+	                conf.write("   LangevinPistonTarget   " + str(self.LangevinPistonTarget))
+	                conf.write("\n   LangevinPistonPeriod   " + str(self.LangevinPistonPeriod))
+	                conf.write("\n   LangevinPistonDecay   " + str(self.LangevinPistonDecay))
                 
-	            try: conf.write("\n   LangevinPistonTemp   " + str(self.LangevinPistonTemp))
-	            except:
-	                try: conf.write("\n   LangevinPistonTemp   " + str(self.langevinTemp))
-	                except: conf.write("\n   LangevinPistonTemp   295")
+	                try: conf.write("\n   LangevinPistonTemp   " + str(self.LangevinPistonTemp))
+	                except:
+	                    try: conf.write("\n   LangevinPistonTemp   " + str(self.langevinTemp))
+	                    except: conf.write("\n   LangevinPistonTemp   295")
                     
-	        except:
-	            print("Message from Wolffia:\n \n You did not give a required value to Nose-Hoover Langevin Piston Pressure Control!\n")
+	            except:
+	                print("Message from Wolffia:\n \n You did not give a required value to Nose-Hoover Langevin Piston Pressure Control!\n")
+	        else:
+	            raise Exception("Pressure control is selected but no pressure control method.")
+
+
 	    if 'sasa' in self.__dict__ and self.sasa == 'on':
 	            self._writeIfDefined(conf, ['sasa','SurfaceTension'])
 	        #if self.exclPress.isChecked():
@@ -291,7 +304,10 @@ class Configuration(object):
 	    conf.write("\n   #File names, types and update frequencies.\n")
 	    conf.write("   structure     \"$basedir/"  +    mixtureName + ".psf\"\n")
 	    conf.write("   coordinates   \"$basedir/"  + mixtureName + ".pdb\"\n")
-	    conf.write("   #extendedSystem   \"$basedir/"  + mixtureName + ".xsc\"\n")
+	    if self.useXSCfile:
+	        conf.write("   extendedSystem   \"$basedir/"  + mixtureName + ".xsc\"\n")
+	    else:
+	        conf.write("   #extendedSystem   \"$basedir/"  + mixtureName + ".xsc\"\n")
 	    conf.write("   binaryoutput no\n") #Needs to be off to be able to read the coordinates
 	    conf.write("\n   parameters    \"$basedir/"  + mixtureName + ".prm\"\n")
 	    conf.write("   paraTypeCharmm on\n")
@@ -319,10 +335,11 @@ class Configuration(object):
 	        conf.write("\n#Periodic Boundary Conditions section\n")
 	        [v1,v2,v3] = boudary.getCellBasisVectors()
 	        origin = boudary.getCellOrigin()
-	        conf.write("   cellBasisVector1 " + str(v1[0]) + "  "  + str(v1[1]) + "  "  + str(v1[2]) + "\n")
-	        conf.write("   cellBasisVector2 " + str(v2[0]) + "  "  + str(v2[1]) + "  "  + str(v2[2]) + "\n")
-	        conf.write("   cellBasisVector3 " + str(v3[0]) + "  "  + str(v3[1]) + "  "  + str(v3[2]) + "\n")
-	        conf.write("   cellOrigin "       + str(origin[0]) + "  "  + str(origin[1]) + "  "  + str(origin[2]) + "\n")
+	        if not self.useXSCfile:
+	            conf.write("   cellBasisVector1 " + str(v1[0]) + "  "  + str(v1[1]) + "  "  + str(v1[2]) + "\n")
+	            conf.write("   cellBasisVector2 " + str(v2[0]) + "  "  + str(v2[1]) + "  "  + str(v2[2]) + "\n")
+	            conf.write("   cellBasisVector3 " + str(v3[0]) + "  "  + str(v3[1]) + "  "  + str(v3[2]) + "\n")
+	            conf.write("   cellOrigin "       + str(origin[0]) + "  "  + str(origin[1]) + "  "  + str(origin[2]) + "\n")
 	        conf.write("   wrapWater "        + self._CHECKED_BOOL_TO_WORD_[boudary.getWrapWater()] + "\n")
 	        conf.write("   wrapAll "        + self._CHECKED_BOOL_TO_WORD_[boudary.getWrapAllMolecules()] + "\n")
 	

@@ -54,7 +54,7 @@ class  Molecule(ChemicalGraph):
 		
 		if isinstance(molecule, Molecule):
 			if self._name == "Unknown": self._name = molecule.molname()
-			#print "Molecule Init", molecule.molname()
+			#print("Molecule Init", molecule.molname())
 			self.merge(molecule.copy())
 		elif isinstance(molecule, ChemicalGraph):  # atoms in ChemicalGraph cannot be assumed to be [1:N]
 			# build inverse function
@@ -117,6 +117,19 @@ class  Molecule(ChemicalGraph):
 				#print "Atoms with same types but different charges have been found in molecule \'" + self.molname() + ".  The charge for type " + t + "has been set to " + str(charge) + ".", SyntaxWarning
 			#ff.setCharge(t, charge)
 
+	def fixSelection(self, value=True, **kwargs):
+		''' Sets atoms that match the selaction as fixed or loose if value is False.
+		'''
+		#print(self.molname(), kwargs['molecule'] )
+		if 'molecule' in kwargs and self.molname() == kwargs['molecule']:
+			for atom in self:
+			     self.getAtomAttributes(atom).setFixed(value)                
+		else:
+    			for atom in self:
+    			    for sel,val in kwargs.items():
+    			        if sel == 'type' and mol.getAttributes(atom).getInfo().getType(sel) ==  val:
+    			            self.getAtomAttributes(atom).setFixed(value)
+
 	def charge(self):
 		totalCharge = 0
 		for atom in self:
@@ -157,7 +170,7 @@ class  Molecule(ChemicalGraph):
 	def writePSF(self, psfFile=None, count=1):
 		"""
 		"""
-		from wollfialib.chemicalGraph.Mixture import Mixture
+		from wolffialib.chemicalGraph.Mixture import Mixture
 
 		mix = Mixture()
 		mix.add(self)
@@ -220,9 +233,22 @@ class  Molecule(ChemicalGraph):
 		"""
 		return self.nodes()
 
-	def atomsGenerator(self):
+	def atomsGenerator(self, atomTypes=None, elements=None, fixed=None):
+		'''
+		Atom generator.
+		Optional parameters added to filter according to different criteria.
+		Eventually this will be able to handle regular expressions.
+            atomTypes: object that responds to the 'in' operator with of atom types or None for all types.
+            elements: object that responds to the 'in' operator with of element symbols or None for all elements.
+            fixed: boolean or None.
+		'''
 		for atom in self:
-			yield self.getAtomAttributes(atom)
+			attr = self.getAtomAttributes(atom)
+			info = attr.getInfo()
+			if atomTypes != None and info.getType() not in atomTypes: continue
+			if elements != None and info.getElement() not in elements: continue
+			if fixed != None and attr.fixed != fixed: continue
+			yield attr
 
 	def bonds(self):
 		"""Returns bonds.
@@ -331,6 +357,20 @@ class  Molecule(ChemicalGraph):
 					angleMeasures.append(np.degrees(angle))
 			ff.setAngle(at,sum(angleMeasures)/len(angleMeasures), 1)
 	
+	#-------------------------------------------------------------
+	def getCoordinates(self):
+		import numpy as np
+		coordArray = np.empty((self.order(), 3))
+		i = 0
+		for atom in self:
+			atr = self.getAtomAttributes(atom)
+			#print 'getAtomsCoordinatesAsArray: ', i
+			coordArray[i,:] = atr.getCoord()
+			i += 1
+
+		return coordArray
+
+
 	#-------------------------------------------------------------
 	''' Ahora heredado de ChemicalGraph
 	def getAtomAttributes(self, atom):
@@ -855,7 +895,12 @@ class  Molecule(ChemicalGraph):
 	
 	
 	#-------------------------------------------------------------
+	def dihedralTypesCount(self):
+		''' Returns the number of unique dihedral types.'''
+		return len(self.dihedralTypes())
+
 	def dihedralTypes(self):
+		''' Returns a list of unique dihedral types.'''
 		#from chemicalGraph import Mixture
 		#print "molecula: '", molecule, "'"
 		
@@ -982,6 +1027,24 @@ class  Molecule(ChemicalGraph):
 			self.value = value
 		def __str__(self):
 			return repr(self.value)
+
+
+# ===================================================================
+class Particle(Molecule):
+    '''
+    Class Particle: represents a monoatomic molecule consisting of a
+        particle that is not a standard element.
+        Intended to be used in coarse grain simulations.
+    '''
+    def __init__(self, name='Bead', atomType='PCH', atomElement='Xx', mass=1, charge=0):
+        super().__init__(ident=name)
+
+        ai  = AtomInfo(atomType, atomElement, atomType, charge, mass, 1, 1, 1, name, atomType)
+        #ai  = AtomInfo('AN', 'AE', 'AT', 0, 1, 1, 1, 1, 'RE', 'CH')
+        attr = AtomAttributes(ai, [0,0,0], fixed=False)
+        self.add_atom(attr, [])
+        self.getForceField().setNonBond(atomType, 1.0, NonBond._SIGMA)
+        self.getForceField().setNonBond(atomType, -0.1, NonBond._EPSILON)
 
 
 

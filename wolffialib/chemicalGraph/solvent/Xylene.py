@@ -30,9 +30,9 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../conf')
 from conf.Wolffia_conf import NANOCAD_PDB_DIR, NANOCAD_FORCE_FIELDS
 
-from wollfialib.chemicalGraph.Molecule import Molecule
-from wollfialib.chemicalGraph.ForceField import ForceField
-from wollfialib.chemicalGraph.AtomAttributes import AtomAttributes
+from wolffialib.chemicalGraph.Molecule import Molecule
+from wolffialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.AtomAttributes import AtomAttributes
 #=========================================================================
 #_FORCE_FIELD = ForceField("THF", NANOCAD_FORCE_FIELDS + "/Xylene.prm")
 

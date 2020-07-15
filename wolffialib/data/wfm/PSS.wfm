@@ -11,7 +11,7 @@ p6
 ccopy_reg
 _reconstructor
 p8
-(clib.chemicalGraph.molecule.Molecule
+(cwolffialib.chemicalGraph.Molecule
 Molecule
 p9
 c__builtin__
@@ -26,7 +26,7 @@ I3
 g6
 (lp15
 g8
-(clib.chemicalGraph.molecule.AtomAttributes
+(cwolffialib.chemicalGraph.AtomAttributes
 AtomAttributes
 p16
 g10
@@ -35,7 +35,7 @@ NtRp17
 S'_info'
 p19
 g8
-(clib.chemicalGraph.molecule.AtomAttributes
+(cwolffialib.chemicalGraph.AtomAttributes
 AtomInfo
 p20
 g10
@@ -1218,7 +1218,7 @@ g290
 sssS'forceField'
 p307
 g8
-(clib.chemicalGraph.molecule.ForceField
+(cwolffialib.chemicalGraph.ForceField
 ForceField
 p308
 g10

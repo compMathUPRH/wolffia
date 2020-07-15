@@ -30,11 +30,11 @@
 import sys, os
 
 
-if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
+#if __name__ == '__main__': sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../')
 from conf.Wolffia_conf import WOLFFIA_WFY_DIR
-from wollfialib.chemicalGraph.ForceField import ForceField
-from wollfialib.chemicalGraph.Mixture import Mixture
-from wollfialib.chemicalGraph.polymer.Polymer import Polymer
+from wolffialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.polymer.Polymer import Polymer
 import math
 
 #-----------------------------------------------------------------------------------
@@ -42,7 +42,8 @@ import math
 
 class PSS(Polymer):
 	ALL_MONOMERS = Mixture()
-	ALL_MONOMERS.loadWFM(WOLFFIA_WFY_DIR + "/PSS.wfm")
+    # WARNING: PSS.wfm is from a previous incompatible version of Wolffia
+	ALL_MONOMERS.loadOldWFM(WOLFFIA_WFY_DIR + "/PSS2.wfm") 
 	
 	'''
 	BACKBONE_MONOMER_MOL = ALL_MONOMERS.getMolecule('PSS_1')
@@ -111,7 +112,11 @@ class PSS(Polymer):
 
 #==========================================================================
 if __name__ == '__main__':
-    print "Probando PSS"
+    import pickle
+    f = open(WOLFFIA_WFY_DIR + "/PSS2.wfm", 'rb')
+    mix = pickle.load(f, encoding='latin1')  
+    
+    print( "Probando PSS")
     m = PSS(2,2,3)
     #m = PSS.MONOMERS_MOLS['Oe']
     #print [m.getAtomAttributes(a) for a in m.atoms()]

@@ -75,7 +75,11 @@ class ForceField(object):
 	_ANGLES
 	_DIHEDRALS
 	"""
-	
+
+	# Positions of bond constants
+	KR = 0
+	R0 = 1
+
 	def __init__(self,molecule=None,filename=None):
 		self.filename   = filename
 		#self._CHARGES   = dict()
@@ -129,7 +133,7 @@ class ForceField(object):
 	    
 	
 	def __tr__(self, elt):
-	    if self.trad == None or not self.trad.has_key(elt):
+	    if self.trad == None or not elt in self.trad:
 	        return elt
 	    else:
 	        return self.trad[elt]
@@ -210,17 +214,17 @@ class ForceField(object):
 		This is a temporary fix for removing unused types from the data fields.
 		'''
 		#types = [t.typeName() for t in typesObj]
-		for t in self._NONBONDED.keys():
+		for t in list(self._NONBONDED.keys()):
 		    if not t in types: del self._NONBONDED[t]
 		
-		for b in self._BONDS.keys():
+		for b in list(self._BONDS.keys()):
 			#print "FF clean bond",b
 			if not(b[0] in types or b[1] in types): del self._BONDS[b]
 		
-		for a in self._ANGLES.keys():
+		for a in list(self._ANGLES.keys()):
 			if not(a[0] in types or a[1] in types or a[2] in types): del self._ANGLES[a]
 			
-		for d in self._DIHEDRALS.keys():
+		for d in list(self._DIHEDRALS.keys()):
 			if not(d[0] in types or d[1] in types or d[2] in types or d[3] in types): 
 				del self._DIHEDRALS[d]
 		
@@ -304,7 +308,7 @@ class ForceField(object):
 	    return pairings
 	
 	def isDefined(self, k):
-	    return self._NONBONDED.has_key(k)
+	    return k in self._NONBONDED
 	
 	
 	def hasType(self,t):
@@ -427,7 +431,7 @@ class ForceField(object):
 	    #print "renameTypes  ", nameTable, self._NONBONDED.keys()
 	    resultDict = dict()
 	    for nonb in self._NONBONDED.keys():
-	        if nameTable.has_key(nonb):
+	        if nonb in nameTable:
 	            #resultDict[nameTable[nonb]] = nameTable.getForceField()._NONBONDED[nameTable[nonb]]
 	            resultDict[nameTable[nonb]] = self._NONBONDED[nonb]
 	        else:
@@ -468,7 +472,7 @@ class ForceField(object):
 		assert(isinstance(t,tuple))
 		if t[2] < t[0]:
 		    t = (t[2], t[1], t[0])
-		if not self._ANGLES.has_key(t):
+		if not t in self._ANGLES:
 		    self._ANGLES[t] = [0,0]
 		self._ANGLES[t][pos] = val
 		
@@ -480,7 +484,7 @@ class ForceField(object):
 		assert(isinstance(t,tuple))
 		if t[1] < t[0]:
 		    t = (t[1],t[0])
-		if not self._BONDS.has_key(t):
+		if not t in self._BONDS:
 		    self._BONDS[t] = [0,0]
 		self._BONDS[t][pos] = val
 		
@@ -499,7 +503,7 @@ class ForceField(object):
 	def setDihedral(self, t, val, pos):
 		assert(isinstance(t,tuple))
 		t = self.sortDihedral(t[0], t[1], t[2], t[3])
-		if not self._DIHEDRALS.has_key(t):
+		if not t in self._DIHEDRALS:
 		    self._DIHEDRALS[t] = [0,0,0]
 		self._DIHEDRALS[t][pos] = val
 		
@@ -507,10 +511,17 @@ class ForceField(object):
 		#    self._DIHEDRALS.pop(t)
 	
 	
-	def setNonBond(self, t, val, pos):
+	def setNonBond(self, t, val, nbPar):
+	    '''
+	    Sets the non-bond parameters associated to type 't'
+        
+	    str t: a type name
+	    float val: a value for the parameter.
+	    NonBond pos: one of the static values in NonBond class defined above.
+	    '''
 	    if not t in self._NONBONDED:
 	        self._NONBONDED[t] = [0,0,0]
-	    self._NONBONDED[t][pos] = val
+	    self._NONBONDED[t][nbPar] = val
 	    #print "setNonBond ", t, val, pos, id(self), id(self._NONBONDED[t])
 	    
 	    #if self._NONBONDED[t] == [0,0,0]:
@@ -731,7 +742,7 @@ class FFPairings(threading.Thread):
         for bond in self.molecule.bonds():
             t1 = self.molecule.getAtomAttributes(bond[0]).getInfo().getType()
             t2 = self.molecule.getAtomAttributes(bond[1]).getInfo().getType()
-            if pareo.has_key(t1) and pareo.has_key(t2):
+            if t1 in pareo and t2 in pareo:
             	#print " molOK ",
                 t1 = pareo[t1]
                 t2 = pareo[t2]

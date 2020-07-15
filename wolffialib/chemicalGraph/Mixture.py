@@ -44,7 +44,6 @@ from wolffialib.chemicalGraph.Molecule import Molecule
 #from pybel import *
 #from openbabel import *
 from wolffialib.chemicalGraph.ChemicalGraph import ChemicalGraph
-#from wollfialib.chemicalGraph.molecule.ForceField import ForceField
 from wolffialib.chemicalGraph.AtomAttributes import AtomAttributes, AtomInfo
 from wolffialib.chemicalGraph.io.PSF import PSF
 from wolffialib.chemicalGraph.io.PRM import PRM
@@ -332,7 +331,7 @@ class Mixture(Graph):
         returns a pair of molecules: (augmentedMolecule, removedMolecule)
         """
         self.setChanged()
-        #print "Mixture addBond", atom1, atom2
+        #print("Mixture addBond", atom1, atom2)
         endAtom     = atom2[1]
         endMol      = self.getMolecule(atom2[0])
         startAtom   = atom1[1]
@@ -349,18 +348,29 @@ class Mixture(Graph):
 
     
     def angleCount(self):
+        ''' Counts all angles'''
+        '''
         res = 0
         for molecule in self:
             res += len(self.getMolecule(molecule).angles())
         return res
-    
-    def atomsGenerator(self):
         '''
-        Atom generator
+        return sum([len(self.getMolecule(molecule).angles()) for molecule in self])
+    
+    def atomsGenerator(self, molecules=None, atomTypes=None, elements=None, fixed=None):
+        '''
+        Atom generator.
+        Optional parameters added to filter according to different criteria.
+        Eventually this will be able to handle regular expressions.
+        
+        parameters:
+            molecules: object that responds to the 'in' operator with names of molecules or None for all molecules.
+            atomTypes, elements, fixed: sent to Molecule.atomsGenerator()
         '''
         for m in self.moleculeGenerator():
-            for a in m.atomsGenerator():
-                yield a
+            if molecules == None or m.molname() in molecules:
+                for a in m.atomsGenerator(atomTypes=None, elements=None):
+                    yield a
 
     def bonds(self):
         res = 0
@@ -586,7 +596,8 @@ class Mixture(Graph):
         
             if checkCollisions:
                 if len(originalCoords) > 0:
-                    atomDistances = euclidean_distances(originalCoords, newPos)
+                    #print("fillBox: " , originalCoords.shape, newPos.shape)
+                    atomDistances = euclidean_distances(originalCoords, [newPos])
                 else:
                     atomDistances = solvRadius + 1
                 if np.min(atomDistances) > solvRadius:
@@ -597,6 +608,8 @@ class Mixture(Graph):
                     solventMolecules.addCoordinates(mol)
                 else:
                     if replaceCollisions: progressCount -= 1
+            else:
+                solventMolecules.addCoordinates(mol)
         
             progressCount += 1
             if progress != None:    progress.setValue(progressCount)
@@ -613,6 +626,10 @@ class Mixture(Graph):
         progressMax -= 1
         
         
+    def fixSelection(self, value=True, **kwargs):
+        for mol in self.molecules():
+            self.getMolecule(mol).fixSelection(value=value, **kwargs)
+            
     def getMixtureName(self):
         return self.mixName
 
@@ -638,7 +655,8 @@ class Mixture(Graph):
 
     def getMoleculeID(self, molecule):
         for n in self.nodes():
-            if self.node[n]['attrs'][0] == molecule:
+            #print("getMoleculeID =", n)
+            if self.getMolecule(n) == molecule:
                 return n
         return None
     
@@ -657,15 +675,10 @@ class Mixture(Graph):
         return self.add(newMol)
 
     def loadWFM(self, filename):
-        #import inspect
-        #print "NanoCADState.load, caller1=",inspect.stack()[1]
-        #print "NanoCADState.load, caller2=",inspect.stack()[2]
-        #print "NanoCADState.load, caller3=",inspect.stack()[3]
-            
         logger = logging.getLogger(self.__class__.__name__)
         logger.info("Loading molecule from " + filename)
         
-        #print "History.load_ importing cPickle"
+        print("Mixture.load_ importing cPickle")
         import pickle #Tremenda aportación por carlos cortés
         #print "History.load_ imported cPickle, starting to load"
 
@@ -673,6 +686,24 @@ class Mixture(Graph):
         with open(filename, "rb") as f:
             mix = pickle.load(f)
         self.merge(mix, checkForInconsistentNames=False)
+        f.close()
+        self.setChanged()
+            
+    def loadOldWFM(self, filename):
+        ''' Loads WFM files pickled with Python2
+        '''
+        logger = logging.getLogger(self.__class__.__name__)
+        logger.info("Loading molecule from " + filename)
+        
+        print("Mixture.load_ importing cPickle")
+        import pickle 
+        
+        mix = Mixture()
+        with open(filename, "rb") as f:
+            mix = pickle.load(f, encoding='latin1')
+        for mol in mix['node']:
+            print(mol)
+            self.add(mix['node'][mol]['attrs'])
         f.close()
         self.setChanged()
             
@@ -696,7 +727,7 @@ class Mixture(Graph):
         Connectivity will be determined by the PSF file is present.
         moleculeFile should have the content of the coordinate file if pdbFile == None.
         """
-        from wollfialib.io.CoordinateFile import CoordinateFile, CoordinateString
+        from wolffialib.io.CoordinateFile import CoordinateFile, CoordinateString
 
         if pdbFile != None:
             reader = CoordinateFile(pdbFile,fileType,psfFile,id)
@@ -1342,7 +1373,6 @@ class Mixture(Graph):
         #print "Mixture.save_ imported cPickle, save sucessful"
 
             
-
     def setChanged(self):
         '''
         should be calld when the composition of the mixture changes.
@@ -1374,16 +1404,18 @@ class Mixture(Graph):
             f = filename
         
         updateInfo = []
+        num = 0
         for line in f:
             if line[:4] == "ATOM" or line[:6] == "HETATM":
                 try:
-                    num = int(line[6:11])-1
+                    #num = int(line[6:11])-1 # produces error when system has more than 99999 atoms
                     x = float(line[30:38])
                     y = float(line[38:46])
                     z = float(line[46:54])
                     #print ("Mixture.updateCoordinates ", num,x,y,z)
                     #self.atomOrder[num].setCoord([x,y,z])
                     updateInfo.append([num,x,y,z])
+                    num += 1
                 except (IndexError,ValueError):
                     print("Mixture.updateCoordinates failed to update atom ",num)
                     break
@@ -1506,7 +1538,9 @@ class Mixture(Graph):
             for atom in mol:
                 #print("Mixture.writePDB mol:", mol, atom, molecule in fixedMolecules)
                 atr = mol.getAtomAttributes(atom)
-                fd.write(atr.PDBline(count, self.trad[molecule], molecule in fixedMolecules)+"\n")
+                try:    fixed = molecule in fixedMolecules
+                except: fixed = False
+                fd.write(atr.PDBline(count, self.trad[molecule], fixed)+"\n")
                 self.atomOrder.append((molecule, atom))
                 renumbering[mol][atom] = count
                 count += 1
@@ -1644,7 +1678,7 @@ class Mixture(Graph):
             filename = self.getMixtureFileName()
         
         with open(filename, "wb") as f:
-            pickle.dump(self, f)
+            pickle.dump(self, f,protocol=pickle.HIGHEST_PROTOCOL)
     
         
 #-------------------------------------------------------------

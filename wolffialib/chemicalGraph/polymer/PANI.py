@@ -30,10 +30,10 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../../../conf')
 from conf.Wolffia_conf import NANOCAD_PDB_DIR, NANOCAD_FORCE_FIELDS
-from wollfialib.chemicalGraph.ForceField import ForceField
-from wollfialib.chemicalGraph.Molecule import Molecule
+from wolffialib.chemicalGraph.ForceField import ForceField
+from wolffialib.chemicalGraph.Molecule import Molecule
 
-from wollfialib.chemicalGraph.molecule.polymer.Polymer import Polymer
+from wolffialib.chemicalGraph.molecule.polymer.Polymer import Polymer
 import math
 
 #-----------------------------------------------------------------------------------
