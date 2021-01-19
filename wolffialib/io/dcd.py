@@ -42,7 +42,7 @@ class DCDReader(object):
 	def readHeaders(self):
 		# == HEADER block ==
 		assert(unpack('i', self.dcdfile.read(INT_SIZE))[0] == 84    ) # first integer is 84
-		assert(self.dcdfile.read(4)                        == 'CORD') #next 4 bytes are 'CORD'
+		assert(self.dcdfile.read(4)                        == b'CORD') #next 4 bytes are 'CORD'
 
 		self.nset    = unpack('i', self.dcdfile.read(INT_SIZE))[0]    # num of sets of coords
 		self.istart  = unpack('i', self.dcdfile.read(INT_SIZE))[0]    # starting timestep

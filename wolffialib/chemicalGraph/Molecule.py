@@ -576,7 +576,9 @@ class  Molecule(ChemicalGraph):
 		mind = sys.float_info.max
 		if atomsSubset == None: atomsSubset = self.atoms()
 		for atom1 in atomsSubset:
+			#print(self.getAtomAttributes(atom1))
 			for atom2 in mol:
+				#print(mol.getAtomAttributes(atom2))
 				d = self.getAtomAttributes(atom1).distanceTo(mol.getAtomAttributes(atom2))
 				if d < mind:
 					mind = d
@@ -719,7 +721,7 @@ class  Molecule(ChemicalGraph):
 			count += 1
 
 		for atom in self.atoms():
-			fd.write("CONNECT%5d" % (atom))
+			fd.write("CONECT%5d" % (atom))
 			for neighbor in self.neighbors(atom):
 				fd.write("%5d" % (neighbor))
 			fd.write("\n")

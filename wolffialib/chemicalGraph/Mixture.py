@@ -609,6 +609,7 @@ class Mixture(Graph):
                 else:
                     if replaceCollisions: progressCount -= 1
             else:
+                mol.moveBy(newPos)
                 solventMolecules.addCoordinates(mol)
         
             progressCount += 1
@@ -1431,8 +1432,9 @@ class Mixture(Graph):
 
 
     def updateCoordinatesFromArray(self, coordsArray):
+        import numpy as np
         #start = time.process_time()
-        #print "Mixture updateCoordinatesFromArray len(coordsArray)", len(coordsArray)
+        #print("Mixture updateCoordinatesFromArray len(coordsArray)", len(coordsArray))
         for i in range(self.order()):
             try:
                 #print "updateCoordinatesFromArray ", i
@@ -1440,8 +1442,10 @@ class Mixture(Graph):
                 x = coordsArray[p]
                 y = coordsArray[p+1]
                 z = coordsArray[p+2]
-                #print "updateCoordinatesFromArray xyz", x,y,z
-                self.atomOrder[i].setCoord([x,y,z])
+                #print("updateCoordinatesFromArray xyz", x,y,z)
+                #self.atomOrder[i].setCoord([x,y,z])
+                molecule, atomNum = self.atomOrder[i]
+                self.getMolecule(molecule).setAtomCoordinates(atomNum,np.array([x,y,z]))
             except (IndexError,ValueError):
                 print("Mixture.updateCoordinatesFromArray failed to update atom ",i)
                 break
@@ -1507,7 +1511,12 @@ class Mixture(Graph):
 
         #print "Mixture writeFiles writePRM", time.process_time() - start
     
-
+    def setAtomOrder(self):
+        self.atomOrder = []
+        for molecule in self:
+            for atom in self.getMolecule(molecule):
+                self.atomOrder.append((molecule, atom))
+        
     def writePDB(self, pdbFile=None, fixedMolecules=[]):
         """
         Writes a PDB coordinates file.
@@ -1518,6 +1527,8 @@ class Mixture(Graph):
         #start = time.process_time()
         #print ( "Mixture writePDB __buildTranslatorTable__", fixedMolecules)
         self.__buildTranslatorTable__()
+        self.setAtomOrder()
+        
         if pdbFile==None:
             fd = sys.stdout
             #print "writePDB imprimiendo stdout"
@@ -1525,7 +1536,7 @@ class Mixture(Graph):
             fd = open(pdbFile, 'w')
             #print "writePDB(",pdbFile,")"
     
-        self.atomOrder = []
+        #self.atomOrder = []
         count = 1
     
         #print "Mixture writePDB writing coordinates", time.process_time() - start
@@ -1541,7 +1552,7 @@ class Mixture(Graph):
                 try:    fixed = molecule in fixedMolecules
                 except: fixed = False
                 fd.write(atr.PDBline(count, self.trad[molecule], fixed)+"\n")
-                self.atomOrder.append((molecule, atom))
+                #self.atomOrder.append((molecule, atom))
                 renumbering[mol][atom] = count
                 count += 1
         
@@ -1559,14 +1570,6 @@ class Mixture(Graph):
                         if renumbering[mol][bond] > renumbering[mol][atom]:
                             fd.write(" %4i" % (renumbering[mol][bond]))
                     fd.write("\n")
-        #count = 1
-        #for molecule in self:
-        #    for atom in mol.atoms():
-        #        fd.write("CONNECT%5d" % (atom+count))
-        #        for neighbor in mol.neighbors(atom):
-        #            fd.write("%5d" % (neighbor+count))
-        #        fd.write("\n")
-        #    count += self.getMolecule(molecule).order()
             
         #print "Mixture writePDB writing finished", time.process_time() - start
         if pdbFile != None:

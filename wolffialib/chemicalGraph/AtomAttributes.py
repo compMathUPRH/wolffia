@@ -248,7 +248,7 @@ class AtomAttributes(object):
 		@rtype:  string
 		@return: ATOM line.
 		"""
-		#print "PDBline ", self
+		#print("PDBline ", self)
 		# Backward compatibility:
 		if not hasattr(self,'fixed'):
 		    self.fixed = False

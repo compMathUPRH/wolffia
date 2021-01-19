@@ -16,7 +16,7 @@ class Configuration(object):
 	MINIMIZATION_DEFAULT_PARAMETERS = {'numsteps':10000, 'restartSteps':1000, 'trajectorySteps':1000,'energySteps':20,'cutoff':12.0, 'useSwitch':True, 'switchDist':11.0, 'pairListDist':13.0, 'exclude':'1-2', 'scaling':1.0,'minTinyStep':1.0e-6,'minBabyStep':1.0e-2,'minLineGoal':1.0e-4,'minSteps':10000, 'DCDfreq':1000,'outputEnergies':1000, 'switching':True,'exclude':'1-2', 'pairlistdist':13,'switchdist':9,'IMDon':'off'}
 	SIMULATION_DEFAULT_PARAMETERS = {
             'langevin':'on','langevinTemp':295, 'langevinDamping':1.0, 'langevinHydrogen':'yes', 
-            'LangevinPiston':'off', 'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325,
+            'LangevinPiston':'off', 'LangevinPistonDecay':100,'LangevinPistonPeriod':200,'LangevinPistonTarget':1.01325,'LangevinPistonTemp':295,
             'pressureControl':'off','useGroupPressure':'no','useFlexibleCell':'no', 'useConstantRatio':'no', 'useConstantArea':'no',
             'DCDfreq':1000,'seed':random.randint(1,40000), 'temperature':295.0, 
             'pairlistsPerCycle':2,'pairlistMinProcs':1,'margin':0,'hgroupCutoff':2.5,'splitPatch':'hydrogen',

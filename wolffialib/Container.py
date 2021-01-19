@@ -228,6 +228,10 @@ class Box(Container):
 
 
     def setMaxsMins(self, maxsMins):
+        '''        
+            maxsMins = (xmin, xmax, ymin, ymax, zmin, zmax) or None
+        '''
+        assert(len(maxsMins) == 6 and maxsMins[0] <= maxsMins[1] and maxsMins[2] <= maxsMins[3] and maxsMins[4] <= maxsMins[5])
         self.maxsMins = maxsMins
         
     def getCellOrigin(self):
