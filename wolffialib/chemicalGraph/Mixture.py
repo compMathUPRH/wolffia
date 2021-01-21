@@ -304,10 +304,11 @@ class Mixture(Graph):
         @type  mol: Molecule.
         @param mol: Molecule to be added to the mixture.
         """
+        from wolffialib.chemicalGraph.solvent.Solvent import Solvent
         #import inspect
         #print "Mixture.add, caller=",inspect.stack()[1]#[3]
         self.setChanged()
-        #print "add ", mol.__class__
+        print("Mixture.add ", mol.__class__)
 
         assert(isinstance(mol, Molecule))
 
@@ -315,7 +316,7 @@ class Mixture(Graph):
         nodeName = self.newMolName(mol.molname())
         self.add_node(nodeName, attrs=[mol])
         
-        if checkForInconsistentNames and mol.molname()[:8] != "SOLVENT(":
+        if checkForInconsistentNames and mol.molname()[:8] != "SOLVENT(" and not isinstance(mol, Solvent):
             self.checkExistingMoleculeNames(mol)
         
         #print "Mixture.add mol.molname() ============> added", mol.molname()
@@ -421,8 +422,9 @@ class Mixture(Graph):
         returns True if molecule was renamed AND it is a new species
         '''
         #import inspect
-        #print "Mixture.checkExistingMoleculeNames, caller=",inspect.stack()[1]
+        #print("Mixture.checkExistingMoleculeNames, caller=",inspect.stack()[1])
 
+        #print("checkExistingMoleculeNames starting")
         molecules = [m for m in self.moleculeGenerator() if m != mol]
         oldName = mol.molname()
         while molecules:  # find conflict
@@ -434,6 +436,7 @@ class Mixture(Graph):
         if not molecules: return False  # no problem
         
         while molecules:  # find compatible molecule
+            #print("checkExistingMoleculeNames find compatible molecule")
             existingMolecule = molecules.pop()
             if existingMolecule.getForceField() == mol.getForceField() and existingMolecule.sameSpeciesAs(mol):
                 #print "checkExistingMoleculeNames", existingMolecule.getForceField()._ANGLES.keys(), mol.getForceField()._ANGLES.keys()
