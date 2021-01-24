@@ -308,7 +308,7 @@ class Mixture(Graph):
         #import inspect
         #print "Mixture.add, caller=",inspect.stack()[1]#[3]
         self.setChanged()
-        print("Mixture.add ", mol.__class__)
+        #print("Mixture.add ", mol.__class__)
 
         assert(isinstance(mol, Molecule))
 
@@ -550,12 +550,13 @@ class Mixture(Graph):
 	#   .setRange(0,molNum)
 	#   .setValue(0)
 
-    def fillBox(self, box, solv, molNum, checkCollisions=False, replaceCollisions=False, applyPCBs=True, progress=None):
+    def fillBox(self, box, solv, molNum, checkCollisions=False, replaceCollisions=False, applyPCBs=True, progressTitle=None):
         import math, random
         import numpy as np
         from wolffialib.chemicalGraph.solvent.Solvent import Solvent
         from wolffialib.Container import Sphere, Box
         from sklearn.metrics.pairwise import euclidean_distances  # used in fillBox()
+        from wolffialib.io.PrintBar import PrintBar
         
         solventMolecules = Solvent(solv)#.__class__)
 
@@ -570,10 +571,13 @@ class Mixture(Graph):
         
         progressMax   = molNum
         progressCount = 0
-        if progress != None:    
-            progress.setLabelText("Adding solvent")
+        if progressTitle != None:    
+            progress = PrintBar(0, progressMax)
+            progress.setLabelText(progressTitle)
             progress.setRange(0,molNum)
             progress.setValue(0)
+        else:
+            progress = None
         
         solvRadius = solvDiameter / 2
         newPos = solv.massCenter()
@@ -597,12 +601,10 @@ class Mixture(Graph):
             mol = solv.copy()
             mol.rotateDeg(rx, ry, rz)
         
-            if checkCollisions:
-                if len(originalCoords) > 0:
-                    #print("fillBox: " , originalCoords.shape, newPos.shape)
-                    atomDistances = euclidean_distances(originalCoords, [newPos])
-                else:
-                    atomDistances = solvRadius + 1
+            if checkCollisions and len(originalCoords) > 0:
+                #print("fillBox: " , originalCoords.shape, newPos.shape)
+                atomDistances = euclidean_distances(originalCoords, [newPos])
+
                 if np.min(atomDistances) > solvRadius:
                     #print 'fillBox: añadiendo', progressCount, np.min(atomDistances), newPos
                     mol.moveBy(newPos)
@@ -628,6 +630,8 @@ class Mixture(Graph):
         #print "fillBox ", mol.molname(),progressMax
         solv.rename(solventMolecules.molname())
         progressMax -= 1
+        if progress != None: progress.close()
+
         
         
     def fixSelection(self, value=True, **kwargs):
