@@ -266,14 +266,14 @@ class WolffiaState(object):
     
     
     #--------------------------------------------------------------------------------
-    def writeFiles(self, filename=None):  
+    def writeFiles(self, filename=None, progressTitle=None):  
         from wolffialib.chemicalGraph.io.PRM import PRMError
         if filename == None:
             filename = self.getBuildDirectory()+"/"+self.getMixtureName()
         #print "WolffiaState writeFiles,", filename
         
         #try: 
-        self.getMixture().writeFiles(filename, self.fixedMolecules)
+        self.getMixture().writeFiles(filename, self.fixedMolecules, progressTitle=progressTitle)
         try:
             self.getContainer().writeXSC(filename + ".xsc")
         except:

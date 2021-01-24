@@ -1506,15 +1506,29 @@ class Mixture(Graph):
                     #molecule.setAtomAttributes(atom,AtomAttributes(t,numpy.array(a.getCoord())))
                 molecule.getForceField().upgrade(version)
 
-    def writeFiles(self,baseFilename, fixedMolecules=[]):
-        from wolffialib.chemicalGraph.io.PRM import PRMError
-        start = time.process_time()
+    def writeFiles(self,baseFilename, fixedMolecules=[], progressTitle=None):
+        from wolffialib.io.PrintBar import PrintBar
+              
+        if progressTitle != None:    
+            progress = PrintBar(0, 4)
+            progress.setLabelText(progressTitle+", writing files")
+            progress.setRange(0,3)
+            progress.setValue(0)
+        else:
+            progress = None
+
+        #start = time.process_time()
         #print "Mixture writeFiles ", baseFilename
         self.writePDB(baseFilename+".pdb",fixedMolecules)
+        if progress != None:    progress.setValue(1)
         #print "Mixture writeFiles writePDB", time.process_time() - start
         self.writePSF(baseFilename+".psf")
+        if progress != None:    progress.setValue(2)
         #print "Mixture writeFiles writePSF", time.process_time() - start
         self.writePRM(baseFilename+".prm")
+        if progress != None:
+            progress.setValue(3)
+            progress.close()
 
         #print "Mixture writeFiles writePRM", time.process_time() - start
     
