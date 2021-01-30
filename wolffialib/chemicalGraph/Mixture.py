@@ -1183,12 +1183,15 @@ class Mixture(Graph):
         @type  pdbFile: string
         @param pdbFile: PDB filename.
         """
+        import openbabel.pybel
+        import openbabel.openbabel as ob
+        
         self.setChanged()
         if not(pdbFile == None):
-            mol          = pybel.readfile("pdb", pdbFile).next()
+            mol          = next(openbabel.pybel.readfile("pdb", pdbFile))
             moleculeName = os.path.basename(pdbFile).split('.')[0]
         elif not(moleculeFile == None):
-            mol          = pybel.readstring(fileType, moleculeFile)
+            mol          = openbabel.pybel.readstring(fileType, moleculeFile)
             
             if fileType   == "pdb" and not(id==None): 
                 moleculeName = id+"_PDB"
@@ -1204,7 +1207,7 @@ class Mixture(Graph):
         
         chemicalGraphMixed  = ChemicalGraph()
         # add nodes
-        etable              = openbabel.OBElementTable()
+        #etable              = ob.OBElementTable()
             
         
         
@@ -1219,10 +1222,10 @@ class Mixture(Graph):
             
             atom=atoms[n]                
             atomType = atom.type # Hay que revisar esto, aqui debe ir otra cosa
-            symbol   = etable.GetSymbol(atom.atomicnum)
+            symbol   = ob.GetSymbol(atom.atomicnum)
             coords   = list(atom.coords)
             #print "Mix load", coords
-            name     = etable.GetName(atom.atomicnum) 
+            name     = ob.GetName(atom.atomicnum) 
             residue  = atom.OBAtom.GetResidue().GetName()
             psfType  = atom.type
             charge   = atom.partialcharge
@@ -1231,9 +1234,9 @@ class Mixture(Graph):
                 psfType  = psf.getType(n)
                 charge   = psf.getCharge(n)
                 mass     = psf.getMass(n)
-        
-        
-            atr = AtomAttributes(    atomType, symbol, psfType, coords, charge, mass, 1, 1, 1, name, residue)
+                
+            ainf = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
+            atr = AtomAttributes(ainf, coords)
             chemicalGraphMixed.add_node(n+1, attrs=[atr])
            
         # add edges
