@@ -29,7 +29,9 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-import openbabel, pybel, os, sys
+import os, sys
+import openbabel.pybel
+import openbabel.openbabel as ob
 sys.path.append("/home/jse/inv/Cuchifritos/bazaar/Wolffia")
 from wolffialib.chemicalGraph.Mixture import Mixture, MixtureError
 from wolffialib.chemicalGraph.ChemicalGraph import ChemicalGraph
@@ -52,7 +54,6 @@ class CoordinateFile:
 		self.fileType = fileType
 		self.fileName = mixtureFile
 		self.mixtureName = mixtureName
-		print "CoordinateFile ", fileType
 
 		if psfFile == None: self.psf = None
 		else: self.psf = PSF(psfFile)
@@ -64,7 +65,7 @@ class CoordinateFile:
 			import cc1
 			self.molIterator = cc1.readfile(self.fileName)
 		else:
-			self.molIterator = pybel.readfile(self.fileType, self.fileName)
+			self.molIterator = openbabel.pybel.readfile(self.fileType, self.fileName)
 		self.currentMolecule = None 
 		self.firstMolecule = True
 		return self
@@ -77,27 +78,25 @@ class CoordinateFile:
 		Raises whichever exception that pybel throws (probably StopIteration).
 		"""
 		
-		mol = self.molIterator.next()
+		mol = next(self.molIterator)
 		chemicalGraphMixed = ChemicalGraph()
-		etable			 = openbabel.OBElementTable()
-
 		
 		n = 0
 		for atom in mol.atoms:
 			atomType = atom.OBAtom.GetResidue().GetAtomID(atom.OBAtom)
-			symbol = etable.GetSymbol(atom.atomicnum)
+			symbol   = ob.GetSymbol(atom.atomicnum)
 			coords = list(atom.coords)
-			name	 = etable.GetName(atom.atomicnum) 
-			residue = atom.OBAtom.GetResidue().GetName()
+			name     = ob.GetName(atom.atomicnum) 
+			residue  = atom.OBAtom.GetResidue().GetName()
 			psfType = atom.OBAtom.GetResidue().GetAtomID(atom.OBAtom).strip()
 			#print "_processFirstFrame: '" + psfType + "'"
 			charge = atom.partialcharge
 			mass	 = atom.atomicmass	
-			if self.psf <> None:
+			if self.psf != None:
 				psfType = self.psf.getType(n)
 				charge = self.psf.getCharge(n)
 				mass	 = self.psf.getMass(n)
-				print "CoordinateFile _processFirstFrame charge  ", charge
+				#print("CoordinateFile _processFirstFrame charge  ", charge)
 		
 		
 			ai  = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
@@ -106,8 +105,8 @@ class CoordinateFile:
 			n += 1
 		
 		# add edges
-		print '_processFirstFrame add edges'
-		if self.psf <> None:
+		#print('_processFirstFrame add edges')
+		if self.psf != None:
 			for b in self.psf.bonds:
 				try:  # avoids adding an edge twice
 					chemicalGraphMixed.add_edge(b)
@@ -120,6 +119,7 @@ class CoordinateFile:
 				chemicalGraphMixed.add_edge([bond.GetBeginAtom().GetIdx(), bond.GetEndAtom().GetIdx()])	   
 					
 		molecules = list(chemicalGraphMixed.connectedComponents())
+		#print("_processFirstFrame molecules", molecules)
 		self.currentMolecule = Mixture()
 		
 		#print '_processFirstFrame Añadir'+  str(list(molecules)) + ' moléculas a mezcla:  ', 
@@ -128,8 +128,9 @@ class CoordinateFile:
 		else:
 			n = 0
 			for m in molecules:
+				newMolecule = chemicalGraphMixed.subgraph(m)
 				self.currentMolecule.add(
-							Molecule(self.mixtureName + "(" + str(n) + ")", molecule=m),
+							Molecule(self.mixtureName + "(" + str(n) + ")", molecule=newMolecule),
 							checkForInconsistentNames=False)
 				n += 1
 
@@ -145,7 +146,7 @@ class CoordinateFile:
 		"""
 		self.currentMolecule = Mixture(self.currentMolecule)  # copy mixture
 		mol = self.molIterator.next()
-		print "_processNextFrame", mol
+		print("_processNextFrame", mol)
 		coordinates = []
 		for atom in mol.atoms:
 			coordinates.append(atom.coords)
@@ -194,7 +195,7 @@ class CoordinatesUpdateFile:
 		"""
 		num = 0
 		line = self.mixFile.readline()
-		while line <> "" and line[:3] <> "END":
+		while line != "" and line[:3] != "END":
 			if line[:4] == "ATOM":
 				try:
 					# print "updateCoordinates ", num
@@ -204,7 +205,7 @@ class CoordinatesUpdateFile:
 					self.mixture.atomOrder[num].setCoord([x, y, z])
 					num += 1
 				except (IndexError, ValueError):
-					print "CoordinatesUpdateFile.updateCoordinates failed to update atom ", num
+					print("CoordinatesUpdateFile.updateCoordinates failed to update atom ", num)
 					break
 			line = self.mixFile.readline()
 		return len(line) > 0

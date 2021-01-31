@@ -1186,6 +1186,7 @@ class Mixture(Graph):
         import openbabel.pybel
         import openbabel.openbabel as ob
         
+        print("readFiles ",pdbFile )
         self.setChanged()
         if not(pdbFile == None):
             mol          = next(openbabel.pybel.readfile("pdb", pdbFile))
@@ -1205,32 +1206,39 @@ class Mixture(Graph):
         flag                = False
 
         
+        print("readFiles mol ",mol )
         chemicalGraphMixed  = ChemicalGraph()
         # add nodes
         #etable              = ob.OBElementTable()
             
         
         
-        if not(psfFile == None):
+        if psfFile != None:
             psf=PSF(psfFile)
         
             if len(atoms) != len(psf.atoms):
                 raise MixtureError("Ammount of atoms in "+pdbFile + " and "+psfFile + " files are different ("+str( len(atoms))+" vs "+str(len(psf.atoms))+").")
-            flag = True
             bonds = psf.bonds
+        else: psf = None
+        
         for n in range(len(atoms)):
+            print("readFiles atoms[n] ",atoms[n]  )
             
             atom=atoms[n]                
             atomType = atom.type # Hay que revisar esto, aqui debe ir otra cosa
+            print("readFiles atomType ",atomType)
             symbol   = ob.GetSymbol(atom.atomicnum)
+            print("readFiles symbol ",symbol)
             coords   = list(atom.coords)
             #print "Mix load", coords
+            print("readFiles coords ",coords)
             name     = ob.GetName(atom.atomicnum) 
             residue  = atom.OBAtom.GetResidue().GetName()
             psfType  = atom.type
             charge   = atom.partialcharge
+            print("readFiles charge ",charge)
             mass     = atom.atomicmass    
-            if flag:
+            if psf:
                 psfType  = psf.getType(n)
                 charge   = psf.getCharge(n)
                 mass     = psf.getMass(n)
@@ -1238,19 +1246,24 @@ class Mixture(Graph):
             ainf = AtomInfo(atomType, symbol, psfType, charge, mass, 1, 1, 1, name, residue)
             atr = AtomAttributes(ainf, coords)
             chemicalGraphMixed.add_node(n+1, attrs=[atr])
+            print("readFiles chemicalGraphMixed ", len(chemicalGraphMixed))
            
         # add edges
         
-        if flag:
+        if psf:
             for b in bonds:
+                 print("readFiles bonds ", b)
                  try:  # avoids adding an edge twice
                     chemicalGraphMixed.add_edge(b)
-                 except AdditionError:
-                    pass
+                 except Exception:
+                     pass
         else:          
             for bond in openbabel.OBMolBondIter(mol.OBMol):   
                 chemicalGraphMixed.add_edge([bond.GetBeginAtom().GetIdx(),bond.GetEndAtom().GetIdx()])
-        return chemicalGraphMixed,moleculeName  
+
+        print("readFiles chemicalGraphMixed ", len(chemicalGraphMixed))
+        print("readFiles moleculeName ",moleculeName )
+        return chemicalGraphMixed, moleculeName  
         
   
                             

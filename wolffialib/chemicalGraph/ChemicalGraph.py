@@ -96,7 +96,7 @@ class ChemicalGraph(Graph):
         @return: List of connected components.
         """
         #print "connectedComponents ",self.__class__
-        return connected_component_subgraphs(self)
+        return connected_components(self)
 
     #-------------------------------------------------------------
     def connectedComponents3(self):

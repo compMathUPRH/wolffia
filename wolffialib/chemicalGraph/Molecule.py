@@ -58,12 +58,13 @@ class  Molecule(ChemicalGraph):
 			self.merge(molecule.copy())
 		elif isinstance(molecule, ChemicalGraph):  # atoms in ChemicalGraph cannot be assumed to be [1:N]
 			# build inverse function
-			#print "Molecule Init ChemicalGraph"
-			nodes = molecule.nodes()
-			newIndex = dict()
+			nodes = list(molecule.nodes())
+			#print("Molecule.__init__ nodes", nodes)
+			newIndex = {}
 			for n in range(1,len(nodes)+1):
 				newIndex[nodes[n-1]] = n
-				self.add_node(n, molecule.node[nodes[n-1]])
+				#print("Molecule.__init__ n, molecule.nodes[nodes[n-1]]", n, molecule.nodes[nodes[n-1]])
+				self.add_node(n, attrs=molecule.nodes[nodes[n-1]]['attrs'])
 			for edge in molecule.edges():
 				try:  # avoids adding an edge twice
 					self.add_edge([newIndex[edge[0]], newIndex[edge[1]]])
