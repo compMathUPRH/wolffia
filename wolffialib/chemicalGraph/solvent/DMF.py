@@ -49,7 +49,7 @@ class DMF(Molecule):
 	ai10 = AtomInfo("H5", "H", "H5", 1.0, 1.0079, 0.0, 1.0, ' ', "H5  ", "XXX", "A", 1)
 	ai11 = AtomInfo("H6", "H", "H6", 1.0, 1.0079, 0.0, 1.0, ' ', "H6  ", "XXX", "A", 1)
 	ai12 = AtomInfo("H7", "H", "H7", 1.0, 1.0079, 0.0, 1.0, ' ', "H7  ", "XXX", "A", 1)
-   	def __init__(self):
+	def __init__(self):
 		Molecule.__init__(self, "DMF")
 		
 		#print NANOCAD_PDB_DIR + "/Solvents/DMF.pdb" , NANOCAD_PDB_DIR + "/Solvents/DMF.psf" 
@@ -87,7 +87,7 @@ class DMF(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando DMF"
+	print("Probando DMF")
 	m = DMF()
-	print m
+	print(m)
 

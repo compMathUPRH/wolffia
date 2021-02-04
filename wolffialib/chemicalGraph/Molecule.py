@@ -82,13 +82,20 @@ class  Molecule(ChemicalGraph):
 
 	def sameSpeciesAs(self, mol):
 		GM = isomorphism.GraphMatcher(self,mol)
+		#it = GM.isomorphisms_iter()
 		#print "Molecule __eq__ ", self, " isomorphic to ", mol, " ", GM.is_isomorphic()
 		if not GM.is_isomorphic(): return False
-		for atom in GM.mapping:
-			#print "Molecule __eq__ getAtomAttributes =",self.getAtomAttributes(atom).getInfo(), mol.getAtomAttributes(GM.mapping[atom]).getInfo()
-			if self.getAtomAttributes(atom) != mol.getAtomAttributes(GM.mapping[atom]): return False
+		for isom in GM.isomorphisms_iter():
+			#print("Molecule sameSpeciesAs isom: ",isom)
+			for atom in GM.mapping:
+				sameSpecies = True
+				#print "Molecule __eq__ getAtomAttributes =",self.getAtomAttributes(atom).getInfo(), mol.getAtomAttributes(GM.mapping[atom]).getInfo()
+				if self.getAtomAttributes(atom) != mol.getAtomAttributes(GM.mapping[atom]): 
+					sameSpecies = False
+					break
+			if sameSpecies: return True
 		#print "Molecule __eq__  isomorphic "
-		return True
+		return False
 		
 	
 	#-------------------------------------------------------------	
@@ -968,10 +975,11 @@ class  Molecule(ChemicalGraph):
 			
 		#check compatibility
 		fftypes = self.forceField.getTypes()
-		#print "Molecule.setForceField types: ",fftypes
+		#print("Molecule.setForceField types: {}\n{}\n{}\n{}\n".format(self._name, sorted(self.getTypes()),  sorted(fftypes), sorted(givenFF.getTypes())))
 		for atom in self:
+			#print("Molecule.setForceField atom: ",atom, self.getAtomAttributes(atom).getInfo().getType())
 			if not self.forceField.hasType(self.getAtomAttributes(atom).getInfo().getType()):
-				print("WARNING: Molecule.setForceField found type ", self.getAtomAttributes(atom).getInfo().getType()," not present in FF", self.getAtomAttributes(atom).getInfo().getTypes(), ".  Setting parameters to zero.")
+				print("WARNING: Molecule.setForceField found type ", self.getAtomAttributes(atom).getInfo().getType()," in molecule ",self._name," not present in FF", list(fftypes), ".  Setting parameters to zero.")
 				#ff.setNonBond(self.getAtomAttributes(atom).getInfo().getType(),0.,0) # sets both parameters to 0.
 				raise Molecule.MoleculeError("Trying to assign incompatible force field to a molecule in Molecule.setForceField()")
 		

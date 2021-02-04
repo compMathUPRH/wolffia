@@ -290,7 +290,31 @@ class Mixture(Graph):
     
         #print self.trad
     
+    def _reduceTypeNames(self):
+        atomTypes = set()
+        for molid in self.molecules():
+            molecule = self.getMolecule(molid)
+            for atom in molecule:
+                atomTypes.add(molecule.getAtomAttributes(atom).getInfo().getType())
+
+        atomTypes = sorted(atomTypes)
+        redAtomTypes = [''.join([i for i in t if not i.isdigit()]) for t in  atomTypes]
+
+        symbol = ''
+        for i in range(len(redAtomTypes)):
+            if symbol != redAtomTypes[i]:
+                ind = 0
+                symbol = redAtomTypes[i]
+                continue
+            redAtomTypes[i] += str(ind)
+            ind += 1
+
+        translation = {atomTypes[i]:redAtomTypes[i] for i in range(len(redAtomTypes))}
+
+        return translation
     
+        
+        
     def _len(self):
         
         return self.__len__()
@@ -306,11 +330,12 @@ class Mixture(Graph):
         """
         from wolffialib.chemicalGraph.solvent.Solvent import Solvent
         #import inspect
-        #print "Mixture.add, caller=",inspect.stack()[1]#[3]
+        #print("Mixture.add, caller=",inspect.stack()[1])#[3]
         self.setChanged()
         #print("Mixture.add ", mol.__class__)
 
-        assert(isinstance(mol, Molecule))
+        #print("Mixture add", type(mol))
+        #assert(isinstance(mol, Molecule))   JSE restore after rescue
 
         #print "Mixture.add mol.molname()", mol.molname(), checkForInconsistentNames
         nodeName = self.newMolName(mol.molname())
@@ -426,32 +451,39 @@ class Mixture(Graph):
 
         #print("checkExistingMoleculeNames starting")
         molecules = [m for m in self.moleculeGenerator() if m != mol]
+        print("Mixture.checkExistingMoleculeNames molecules: ",len(molecules))
         oldName = mol.molname()
         while molecules:  # find conflict
             existingMolecule = molecules.pop()
+            print("Mixture.checkExistingMoleculeNames ", mol.molname(),existingMolecule.molname(),existingMolecule.getForceField() == mol.getForceField(), existingMolecule.sameSpeciesAs(mol))
+            if mol == existingMolecule: continue
             if existingMolecule.molname() == mol.molname() \
             and not ( existingMolecule.sameSpeciesAs(mol)  and existingMolecule.getForceField() == mol.getForceField() ):
-                break
+                # new unique molecule
+                mol.rename(self.newMolName(mol.molname()))
+                mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
+                #warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
+                print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
+                return True
+            if existingMolecule.getForceField() == mol.getForceField() and existingMolecule.sameSpeciesAs(mol):
+                #print "checkExistingMoleculeNames", existingMolecule.getForceField()._ANGLES.keys(), mol.getForceField()._ANGLES.keys()
+                #mol.rename(self.newMolName(mol.molname()))
+                mol.rename(existingMolecule.molname())
+                #warnings.warn("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.", SyntaxWarning)
+                print("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.")
+                #raise MixtureException(MixtureException.SAME_NAME, "Non-isomorphic molecules with same name " + mol.molname())
+                return True
 
+        '''
+        print("Mixture.checkExistingMoleculeNames molecules2: ",len(molecules))
         if not molecules: return False  # no problem
         
         while molecules:  # find compatible molecule
             #print("checkExistingMoleculeNames find compatible molecule")
             existingMolecule = molecules.pop()
-            if existingMolecule.getForceField() == mol.getForceField() and existingMolecule.sameSpeciesAs(mol):
-                #print "checkExistingMoleculeNames", existingMolecule.getForceField()._ANGLES.keys(), mol.getForceField()._ANGLES.keys()
-                mol.rename(self.newMolName(mol.molname()))
-                #warnings.warn("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.", SyntaxWarning)
-                print("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.")
-                #raise MixtureException(MixtureException.SAME_NAME, "Non-isomorphic molecules with same name " + mol.molname())
-                return False
-
-        # new unique molecule
-        mol.rename(self.newMolName(mol.molname()))
-        mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
-        warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
-        print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
-        return True
+            print("Mixture.checkExistingMoleculeNames ", mol.molname(),existingMolecule.molname(),existingMolecule.getForceField() == mol.getForceField(), existingMolecule.sameSpeciesAs(mol))
+        '''
+        return False
 
     
 
@@ -686,15 +718,21 @@ class Mixture(Graph):
         logger = logging.getLogger(self.__class__.__name__)
         logger.info("Loading molecule from " + filename)
         
-        print("Mixture.load_ importing cPickle")
+        #print("Mixture.load_ importing cPickle")
         import pickle #Tremenda aportación por carlos cortés
         #print "History.load_ imported cPickle, starting to load"
 
         mix = Mixture()
         with open(filename, "rb") as f:
-            mix = pickle.load(f)
-        self.merge(mix, checkForInconsistentNames=False)
+            try:
+                mix = pickle.load(f)
+            except UnicodeDecodeError:
+                mix = pickle.load(f, encoding='latin1')
+        #print("loadWFM mix", mix)
+		
         f.close()
+		
+        self.merge(mix, checkForInconsistentNames=False)
         self.setChanged()
             
     def loadOldWFM(self, filename):
@@ -921,6 +959,7 @@ class Mixture(Graph):
         '''
         self.setChanged()
         for mol in mix:
+            print("Mixture.merge merging ", mix.getMolecule(mol).molname())
             self.add(mix.getMolecule(mol), checkForInconsistentNames)
 
     
@@ -972,7 +1011,7 @@ class Mixture(Graph):
     
     
     def node_attributes(self, molid):
-        #print "node_attributes", self.node.keys()
+        #print("node_attributes", self.nodes.keys())
         return self.nodes[molid]['attrs']
 
 
@@ -1176,13 +1215,15 @@ class Mixture(Graph):
     def atomsCount(self):
         return self.order()
     
-    def readFiles(self, pdbFile=None,psfFile=None,moleculeFile=None,fileType=None,id=None):
+    
+    #def readFiles(self, pdbFile=None,psfFile=None,moleculeFile=None,fileType=None,id=None):
         """
         Loads and parses PDB coordinate file.
         
         @type  pdbFile: string
         @param pdbFile: PDB filename.
         """
+        '''
         import openbabel.pybel
         import openbabel.openbabel as ob
         
@@ -1264,7 +1305,7 @@ class Mixture(Graph):
         print("readFiles chemicalGraphMixed ", len(chemicalGraphMixed))
         print("readFiles moleculeName ",moleculeName )
         return chemicalGraphMixed, moleculeName  
-        
+        '''
   
                             
     def remove(self, molID):
@@ -1582,12 +1623,12 @@ class Mixture(Graph):
         for molecule in self:
             mol = self.getMolecule(molecule)
             renumbering[mol] = dict()
-            #print("Mixture.writePDB mol: {} ({})".format(mol, len(mol)))
+            try:    fixed = mol.molname() in fixedMolecules
+            except: fixed = False
+            #print("Mixture.writePDB mol: {} ({},{})".format(molecule, mol,fixed))
             for atom in mol:
                 #print("Mixture.writePDB mol:", mol, atom, molecule in fixedMolecules)
                 atr = mol.getAtomAttributes(atom)
-                try:    fixed = molecule in fixedMolecules
-                except: fixed = False
                 fd.write(atr.PDBline(count, self.trad[molecule], fixed)+"\n")
                 #self.atomOrder.append((molecule, atom))
                 renumbering[mol][atom] = count
@@ -1758,7 +1799,6 @@ if __name__ == '__main__':
     from wolffialib.chemicalGraph.solvent.WATER import WATER
     from wolffialib.chemicalGraph.solvent.THF import THF
     from wolffialib.chemicalGraph.solvent.DMF import DMF
-    from interface.main.Drawer import Drawer
     
     mix = Mixture()
     agua =  mix.add(WATER())
@@ -1769,10 +1809,4 @@ if __name__ == '__main__':
     for mol in mix.moleculeGenerator(): print(mol)
     
     for atom in mix.atomsGenerator(): print(atom)
-    
-    caja = Drawer()
-    caja.setCellOrigin([0.,0.,0])
-    caja.setCellBasisVectors([[10.,0.,0.],[0.,10.,0.],[0.,0.,10.]])
-    colisiones = mix.overlapingMolecules(agua, caja)
-    print("colisiones: ", colisiones)
     

@@ -36,21 +36,22 @@
     USA National Science Foundation grant number DMR-0934195. 
 """
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from ui_celluloseEditor import Ui_CelluloseEditor 
 
 import sys, os, math
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
+#sys.path.append(os.path.dirname(os.path.realpath(__file__))+'/../../')
 
 from conf.Wolffia_conf import NANOCAD_MOLECULES, WOLFFIA_STYLESHEET
-from lib.chemicalGraph.Mixture import Mixture
-from lib.chemicalGraph.molecule.polymer.Homopolymer import Homopolymer
+from wolffialib.chemicalGraph.Mixture import Mixture
+from wolffialib.chemicalGraph.polymer.Homopolymer import Homopolymer
 from interface.main.MixtureViewer import MixtureViewer
-from interface.main.History import History
+from wolffialib.WolffiaState import History
+from wolffialib.chemicalGraph.polymer.Cellulose import Cellulose, CelluloseCrystal
 
 #-------------------------------------------------------------------------------
 
-class CelluloseEditor(QtGui.QDialog):
+class CelluloseEditor(QtWidgets.QDialog):
 	"""
 	Wolffia's dialogue to produce homopolymers.
 	"""
@@ -83,14 +84,16 @@ class CelluloseEditor(QtGui.QDialog):
 		self.generateCellulose				()
 		self.ui.viewerLayout.addWidget		(self.homopolPreview)
 		self.ui.headerLabel.setText			("Cellulose Crystal Editor")
-		self.ui.lengthDSpinner.setSingleStep(self.poly.DISPL)
-		self.ui.lengthDSpinner.setMinimum	(self.poly.DISPL)
-		self.ui.lengthSlider.setTickInterval(self.poly.DISPL)
-		self.ui.lengthSlider.setMinimum		(self.poly.DISPL)
+		self.ui.lengthDSpinner.setSingleStep(Cellulose.DISPL)
+		self.ui.lengthDSpinner.setMinimum	(Cellulose.DISPL)
+		#self.ui.lengthSlider.setTickInterval(Cellulose.DISPL)
+		#self.ui.lengthSlider.setMinimum		(Cellulose.DISPL)
+		self.ui.lengthSlider.setTickInterval(1)
+		self.ui.lengthSlider.setMinimum		(1)
 		self.ui.nSpinBox.setValue		    (2)
 		
-		image = os.path.dirname(os.path.realpath(__file__))+"/images/" +self.poly.IMAGE
-		self.ui.diagram.setPixmap(QtGui.QPixmap(QtCore.QString.fromUtf8(image)).scaledToHeight(100,1))
+		image = os.path.dirname(os.path.realpath(__file__))+"/images/" +Cellulose.IMAGE
+		self.ui.diagram.setPixmap(QtGui.QPixmap(str(image)).scaledToHeight(100,1))
 
 		if self.settings != None:
 			self.homopolPreview.setHighResolution	(self.settings.highResolution)
@@ -102,11 +105,36 @@ class CelluloseEditor(QtGui.QDialog):
 		try:
 			self.setStyleSheet(open(WOLFFIA_STYLESHEET,'r').read())
 		except:
-			print "WARNING: Could not read style specifications"
+			import sys
+			sys.syserr.write("WARNING: Could not read style specifications")
 		self.homopolPreview.update()
 
 
 	def generateCellulose(self):
+		"""
+		Arguments:
+		n:  number of monomers per chain
+		nx: number of chains per plane
+		nz: number of stacked planes
+		"""
+
+		n = self.ui.nSpinBox.value()
+		nx = self.ui.horizontalSpinBox.value()
+		nz = self.ui.layersSpinBox.value()
+
+		if self.ui.radio100.isChecked(): chirality = '100'
+		elif self.ui.radio110.isChecked(): chirality = '110'
+		elif self.ui.radio010.isChecked(): chirality = '010'
+            
+		if self.ui.buttonA.isChecked(): structure = 'a'
+		else:                           structure = 'b'
+
+		self.history.currentState().reset()
+		self.history.currentState().addMixture(CelluloseCrystal(n, nx, nz, chirality = chirality, structure =structure))
+		self.homopolPreview.update()
+
+	'''
+	def generateCelluloseBAK(self):
 		"""
 		Arguments:
 		n:  number of monomers per chain
@@ -122,7 +150,7 @@ class CelluloseEditor(QtGui.QDialog):
 		nz = self.ui.layersSpinBox.value()
 
 		self.homopol = Mixture()
-		from chemicalGraph.molecule.polymer.Cellulose import Cellulose
+		from wolffialib.chemicalGraph.polymer.Cellulose import Cellulose
 		
 		if self.ui.radio100.isChecked():
 			for i in range(nx):
@@ -160,7 +188,8 @@ class CelluloseEditor(QtGui.QDialog):
 		self.history.currentState().reset()
 		self.history.currentState().addMixture(self.homopol)
 		self.homopolPreview.update()
-
+	'''
+    
 	def getMixture(self):
 		return self.history.currentState().getMixture()
 
@@ -168,17 +197,17 @@ class CelluloseEditor(QtGui.QDialog):
 	# Signal managers
 	def on_nSpinBox_valueChanged(self):
 		self.generateCellulose()
-		length = self.poly.DISPL*self.ui.nSpinBox.value()
+		length = Cellulose.DISPL*self.ui.nSpinBox.value()
 		self.ui.lengthDSpinner.setValue(length)
-		self.ui.lengthSlider.setValue(length)
+		self.ui.lengthSlider.setValue(self.ui.nSpinBox.value())
 
 	def on_lengthDSpinner_valueChanged(self):
-		n = round(self.ui.lengthDSpinner.value()/self.poly.DISPL)
+		n = round(self.ui.lengthDSpinner.value()/Cellulose.DISPL)
 		self.ui.nSpinBox.setValue(n)
-		self.ui.lengthSlider.setValue(n*self.poly.DISPL)
+		self.ui.lengthSlider.setValue(int(n*Cellulose.DISPL))
 
 	def on_lengthSlider_sliderReleased(self):
-		n = int(self.ui.lengthSlider.value()/self.poly.DISPL)
+		n = int(self.ui.lengthSlider.value()/Cellulose.DISPL)
 		self.ui.nSpinBox.setValue(n)
 
 	def on_horizontalSpinBox_valueChanged(self): 
@@ -254,9 +283,9 @@ class CelluloseEditor(QtGui.QDialog):
 #-------------------------------------------------------------------------------
 if __name__ == '__main__':
 	import sys
-	app = QtGui.QApplication(sys.argv)
+	app = QtWidgets.QApplication(sys.argv)
 	# Hay que arreglar esto!! Metodo NanoCADState ya no existe. ~ Radames
-	from interface.main.History import NanoCADState
-	load_gui = CelluloseEditor(NanoCADState())
+	from wolffialib.WolffiaState import WolffiaState
+	load_gui = CelluloseEditor(WolffiaState())
 	load_gui.show()
 	sys.exit(app.exec_())

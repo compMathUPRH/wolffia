@@ -30,7 +30,8 @@
 
 from math import *
 
-from networkx.classes.graph import Graph
+#from networkx.classes.graph import Graph
+from networkx import Graph
 from networkx.algorithms.components.connected import connected_components
 #from networkx.algorithms.components.connected import connected_component_subgraphs
 from networkx.algorithms import isomorphism, could_be_isomorphic, fast_could_be_isomorphic

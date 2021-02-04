@@ -117,9 +117,9 @@ class THF(Molecule):
 
 #==========================================================================
 if __name__ == '__main__':
-	print "Probando THF"
+	print("Probando THF")
 	m = THF()
-	print m
+	print(m)
 	m.writePSF("THF.psf")
 	m.writePDB("THF.pdb")
 
