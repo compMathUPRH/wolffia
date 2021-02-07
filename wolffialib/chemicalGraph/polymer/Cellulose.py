@@ -93,7 +93,7 @@ class Cellulose(Polymer):
 #==========================================================================
 class CelluloseCrystal(Mixture):
 	DISPL_100 = [8.0,0.0,4.0,3.0] # dx, dy, dz, dxz
-	DISPL_010 = [7.3,0.0,4.0]
+	DISPL_010 = [4.0,0.0,7.3]
 	DISPL_110 = [6.5,0.0,7.0]
     
 	def __init__(self, n, nx, nz, chirality='100', structure='a'):
@@ -140,11 +140,12 @@ class CelluloseCrystal(Mixture):
 		if chirality == '010': 
 			for i in range(nx):
 				for j in range(nz):
+					displ = [self.DISPL_010[0] * i, self.DISPL_010[1] * ((i+j)%2), self.DISPL_010[2] * (j+(i%2)/2.)]
 					# alpha or betha structure
 					poly = Cellulose(n, structure)
 					# locate the polymer chain	
-					poly.rotateDeg(0., 0., 90.)	
-					poly.moveby([self.DISPL_010[0] * (i+(j%2)/2.), self.DISPL_010[1] * ((i+j)%2), self.DISPL_010[2] * j])
+					poly.rotateDeg(0., 90., 0.)	
+					poly.moveby(displ)
 					self.add(poly)
 
 		#self.history.currentState().reset()
