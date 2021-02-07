@@ -186,12 +186,35 @@ def distancia(puntos, newCoordinate, dmin):
     return True
 
 #------X--------------------------------------------------------------------------------------------------------
+
+
 def distancias(puntos, newCoordinate):  
     dists = []  
     for atom in puntos:
         dists.append(math.sqrt (((atom[0]-newCoordinate[0])**2) + ((atom[1]-newCoordinate[1])**2) + ((atom[2]-newCoordinate[2])**2)))
     return dists
 
+    
+#------X--------------------------------------------------------------------------------------------------------
+
+def _reduceNames(atomTypes):
+    ''' Reduces the length of the names of the atom types. (a defect in Wolffia)
+    '''
+    atomTypes = sorted(atomTypes)
+    redAtomTypes = [''.join([i for i in t if not i.isdigit()]) for t in  atomTypes]
+
+    symbol = ''
+    for i in range(len(redAtomTypes)):
+        if symbol != redAtomTypes[i]:
+            ind = 0
+            symbol = redAtomTypes[i]
+            continue
+        redAtomTypes[i] += str(ind)
+        ind += 1
+
+    translation = {atomTypes[i]:redAtomTypes[i] for i in range(len(redAtomTypes))}
+    return translation
+      
 #=========================================================================
 
 
@@ -245,6 +268,7 @@ class Mixture(Graph):
         #print "Mixture __buildTranslatorTable__ empezando"
         
         indexTable     = dict()
+        atomTypes = set()
         self.trad           = dict()
         #usedNames      = list()
         #typeWasRenamed = False
@@ -282,7 +306,13 @@ class Mixture(Graph):
                         #print "__buildTranslatorTable__  renameTypes type ", a, "->", t
                         #a.setType(t)
                         self.trad[molecule][a] = t
+                        atomTypes.add(t)
                         #usedNames.append(t)
+        #print("Mixture __buildTranslatorTable__ self.trad", self.trad)
+        redAtomTypes = _reduceNames(atomTypes)
+        atomTypes = list(atomTypes)
+        for molecule in self:
+            self.trad[molecule] = {k:redAtomTypes[self.trad[molecule][k]] for k in self.trad[molecule]}
         #print "Mixture __buildTranslatorTable__ self.trad", self.trad
         #print "Mixture __buildTranslatorTable__ finished", time.process_time() - start
 
@@ -291,29 +321,28 @@ class Mixture(Graph):
         #print self.trad
     
     def _reduceTypeNames(self):
-        atomTypes = set()
+        ''' Reduces the length of the names of the atom types. (a defect in Wolffia)
+        '''
+        #atomTypes = set()
+        atomNames = set()
+        #atomFullnames = set()
         for molid in self.molecules():
             molecule = self.getMolecule(molid)
             for atom in molecule:
-                atomTypes.add(molecule.getAtomAttributes(atom).getInfo().getType())
+                #atomTypes.add(molecule.getAtomAttributes(atom).getInfo().getType())
+                atomNames.add(molecule.getAtomAttributes(atom).getInfo().getName())
+                #atomFullnames.add(molecule.getAtomAttributes(atom).getInfo().getFullname())
 
-        atomTypes = sorted(atomTypes)
-        redAtomTypes = [''.join([i for i in t if not i.isdigit()]) for t in  atomTypes]
+        #typeTranslation = _reduceNames(atomTypes)
+        nameTranslation = _reduceNames(atomNames)
+        #fullNameTranslation = _reduceNames(atomFullnames)
+        #print(atomTypes,typeTranslation)
+        for molid in self.molecules():
+            self.getMolecule(molid).change_types(nameTranslation)
 
-        symbol = ''
-        for i in range(len(redAtomTypes)):
-            if symbol != redAtomTypes[i]:
-                ind = 0
-                symbol = redAtomTypes[i]
-                continue
-            redAtomTypes[i] += str(ind)
-            ind += 1
-
-        translation = {atomTypes[i]:redAtomTypes[i] for i in range(len(redAtomTypes))}
-
-        return translation
-    
-        
+        #return typeTranslation, nameTranslation, fullNameTranslation
+        return nameTranslation
+      
         
     def _len(self):
         
@@ -1574,6 +1603,8 @@ class Mixture(Graph):
         else:
             progress = None
 
+        self._reduceTypeNames()
+        
         #start = time.process_time()
         #print "Mixture writeFiles ", baseFilename
         self.writePDB(baseFilename+".pdb",fixedMolecules)

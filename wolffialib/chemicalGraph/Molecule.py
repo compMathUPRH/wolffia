@@ -436,6 +436,16 @@ class  Molecule(ChemicalGraph):
 
 		#print "Molecule.redefineTypes typeAssignments", typeAssignments
 		return typeAssignments
+
+	def change_types(self, nameTranslation):
+		#print("Molecule change_types", translation)
+		for atom in self:
+			attr    = self.getAtomAttributes(atom).getInfo()
+			#attr.setType(typeTranslation[attr.getType()])
+			attr.setName(nameTranslation[attr.getName()])
+			#attr.setFullname(fullNameTranslation[attr.getFullname()])
+		#self.forceField.renameTypes(nameTranslation)
+       
 	#-------------------------------------------------------------
 
 	def redefineTypes1(self):

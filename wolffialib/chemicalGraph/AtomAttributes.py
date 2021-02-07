@@ -181,8 +181,12 @@ class AtomInfo(object):
 	def typeName(self): return self._type
 	def getType(self): return self._type
 	def setType(self, t): self._type = t
+	def setName(self, t): self._name = t
 	def setResidue(self, t): self._residue = t
+	def getResidue(self): return self._residue
 	
+	def setFullname(self, t): self._fullname = t
+	def getFullname(self): return self._fullname
 
 DEPRECATED_CALLS = list()
 
