@@ -480,11 +480,11 @@ class Mixture(Graph):
 
         #print("checkExistingMoleculeNames starting")
         molecules = [m for m in self.moleculeGenerator() if m != mol]
-        print("Mixture.checkExistingMoleculeNames molecules: ",len(molecules))
+        #print("Mixture.checkExistingMoleculeNames molecules: ",len(molecules))
         oldName = mol.molname()
         while molecules:  # find conflict
             existingMolecule = molecules.pop()
-            print("Mixture.checkExistingMoleculeNames ", mol.molname(),existingMolecule.molname(),existingMolecule.getForceField() == mol.getForceField(), existingMolecule.sameSpeciesAs(mol))
+            #print("Mixture.checkExistingMoleculeNames ", mol.molname(),existingMolecule.molname(),existingMolecule.getForceField() == mol.getForceField(), existingMolecule.sameSpeciesAs(mol))
             if mol == existingMolecule: continue
             if existingMolecule.molname() == mol.molname() \
             and not ( existingMolecule.sameSpeciesAs(mol)  and existingMolecule.getForceField() == mol.getForceField() ):
@@ -492,14 +492,14 @@ class Mixture(Graph):
                 mol.rename(self.newMolName(mol.molname()))
                 mol.setForceField(mol.getForceField().copy())  # jse 20151130 Different molecules should not share FF
                 #warnings.warn("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.", SyntaxWarning)
-                print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
+                #print("Molecule renamed as " + mol.molname() + " since there is an isomorphic molecule named " + oldName + " with a different force field.")
                 return True
             if existingMolecule.getForceField() == mol.getForceField() and existingMolecule.sameSpeciesAs(mol):
                 #print "checkExistingMoleculeNames", existingMolecule.getForceField()._ANGLES.keys(), mol.getForceField()._ANGLES.keys()
                 #mol.rename(self.newMolName(mol.molname()))
                 mol.rename(existingMolecule.molname())
                 #warnings.warn("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.", SyntaxWarning)
-                print("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.")
+                #print("Molecule renamed as " + mol.molname() + " a similar species as " + str(existingMolecule) + " with the same forcefield.")
                 #raise MixtureException(MixtureException.SAME_NAME, "Non-isomorphic molecules with same name " + mol.molname())
                 return True
 
@@ -988,7 +988,7 @@ class Mixture(Graph):
         '''
         self.setChanged()
         for mol in mix:
-            print("Mixture.merge merging ", mix.getMolecule(mol).molname())
+            #print("Mixture.merge merging ", mix.getMolecule(mol).molname())
             self.add(mix.getMolecule(mol), checkForInconsistentNames)
 
     
