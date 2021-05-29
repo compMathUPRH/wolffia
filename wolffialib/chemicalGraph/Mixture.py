@@ -1654,9 +1654,9 @@ class Mixture(Graph):
         for molecule in self:
             mol = self.getMolecule(molecule)
             renumbering[mol] = dict()
-            try:    fixed = mol.molname() in fixedMolecules
+            try:    fixed = molecule in fixedMolecules
             except: fixed = False
-            #print("Mixture.writePDB mol: {} ({},{})".format(molecule, mol,fixed))
+            #print("Mixture.writePDB mol: {} ({},{})".format(molecule, mol.molname(),fixed))
             for atom in mol:
                 #print("Mixture.writePDB mol:", mol, atom, molecule in fixedMolecules)
                 atr = mol.getAtomAttributes(atom)
