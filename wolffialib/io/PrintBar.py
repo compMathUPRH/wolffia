@@ -7,14 +7,14 @@ Created on Tue Apr 28 11:31:42 2020
 """
 
 import progressbar
-import progressbar.utils as utils
+#import progressbar.utils as utils
 class PrintBar(progressbar.ProgressBar):
     ''' Wrapper for ProgressBar to respond to PyQt progress bar methods.
         To install progressbar module use pip3 install progressbar2
     '''
     def __init__(self, min_value=0, max_value=None, widgets=None,
                  left_justify=True, initial_value=0, poll_interval=None,
-                 widget_kwargs=None, custom_len=utils.len_color,
+                 widget_kwargs=None, #custom_len=utils.len_color,
                  max_error=True, prefix=None, suffix=None, variables=None,
                  min_poll_interval=None, **kwargs):
         super(PrintBar, self).__init__(min_value, max_value, widgets,
